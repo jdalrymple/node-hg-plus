@@ -28,6 +28,9 @@
     "babel-eslint": "^7.1.1"
   },
   "dependencies": {
+    "bluebird": "^3.4.6",
+    "child-process-promise": "^2.2.0",
+    "fs-extra-promise": "^0.4.1",
     "lodash": ">= 1.0.0",
     "uuid": "~1.4.0",
     "winston": ">= 0.5.0"

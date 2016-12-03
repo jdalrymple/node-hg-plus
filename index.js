@@ -1,12 +1,12 @@
-import HGRepo from './lib/HGRepo';
+import HgRepo from './lib/HgRepo';
 
 /*
 The public facing API for various common Mercurial tasks.
 */
 class Hg {
   static init(initPath, options, done) {
-    return HGRepo.MakeTempRepo()
-      .then(repo => repo.init(initPath, done))
+    return new HgRepo(initPath)
+      .then(repo => repo.init())
       .catch(() => {})
       .nodeify(done);
   }
