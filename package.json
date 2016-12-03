@@ -4,34 +4,31 @@
   "description": "A Mercurial client for Node",
   "main": "index.js",
   "repository": {
-    "type": "hg",
-    "url": "https://bitbucket.org/jacob4u2/node-hg"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "grunt"
+    "type": "git",
+    "url": "https://github.com/jdalrymple/node-hg"
   },
   "keywords": [
     "mercurial",
     "hg",
     "client"
   ],
-  "author": "Jacob Gable <jacob.gable@gmail.com>",
+  "author": "Justin Dalrymple <justin.s.dalrymple@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "should": "~1.2.2",
-    "grunt-simple-mocha": "~0.3.2",
-    "mocha": "~1.8.1"
-  },
-  "peerDependencies": {
+    "eslint": "^3.11.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^3.0.1",
+    "eslint-plugin-react": "^6.7.1",
     "grunt": "0.4.x",
-    "coffee-script": ">= 1.4.0",
-    "lodash": ">= 1.0.0",
-    "winston": ">= 0.5.0"
+    "grunt-simple-mocha": "~0.4.0",
+    "mocha": "~1.17.1",
+    "should": "~1.2.2",
+    "babel-eslint": "^7.1.1"
   },
   "dependencies": {
-    "uuid": "~1.4.0"
+    "lodash": ">= 1.0.0",
+    "uuid": "~1.4.0",
+    "winston": ">= 0.5.0"
   }
 }
