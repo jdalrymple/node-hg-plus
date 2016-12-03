@@ -15,10 +15,11 @@
   "author": "Justin Dalrymple <justin.s.dalrymple@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-eslint": "^7.1.1",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.1",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
     "grunt": "0.4.x",
     "grunt-simple-mocha": "~0.4.0",

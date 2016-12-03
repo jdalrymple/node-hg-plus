@@ -1,67 +1,53 @@
-import HGCommandServer from "./HGCommandServer";
-import HGRepo from "./HGRepo";
-import Parsers from "./parsers";
+import HGRepo from './lib/HGRepo';
 
 /*
-The public facing API of the node-hg module exposes convenience methods for various common Mercurial tasks.
+The public facing API for various common Mercurial tasks.
 */
-class HGAPI {
-	constructor() {}
+class Hg {
+  static init(initPath, options, done) {
+    return HGRepo.MakeTempRepo()
+      .then(repo => repo.init(initPath, done))
+      .catch(() => {})
+      .nodeify(done);
+  }
 
-	init(initPath, opts, done) {
-		return HGRepo.MakeTempRepo(function(err, repo) {
-			if (err) { return done(err); }
+  static clone(from, to, options, done) {
+    return HGRepo.MakeTempRepo()
+      .then(repo => repo.clone(from, to, options, done))
+      .catch(() => {})
+      .nodify(done);
+  }
 
-			return repo.init(initPath, done);
-		});
-	}
+  static add(path, options, done) {
+    const repo = new HGRepo(path);
 
-	clone(from, to, opts, done) {
-		return HGRepo.MakeTempRepo(function(err, repo) {
-			if (err) { return done(err); }
+    return repo.add(options, done);
+  }
 
-			return repo.clone(from, to, opts, done);
-		});
-	}
+  static commit(path, options, done) {
+    const repo = new HGRepo(path);
 
-	add(path, opts, done) {
-		let repo = new HGRepo(path);
+    return repo.commit(options, done);
+  }
 
-		return repo.add(opts, done);
-	}
+  static summary(path, options, done) {
+    const repo = new HGRepo(path);
 
-	commit(path, opts, done) {
-		let repo = new HGRepo(path);
+    return repo.summary(options, done);
+  }
 
-		return repo.commit(opts, done);
-	}
+  static log(path, options, done) {
+    const repo = new HGRepo(path);
 
-	summary(path, opts, done) {
-		let repo = new HGRepo(path);
+    return repo.log(options, done);
+  }
 
-		return repo.summary(opts, done);
-	}
+  static version(done) {
+    const repo = new HGRepo(null);
 
-	log(path, opts, done) {
-		let repo = new HGRepo(path);
-
-		return repo.log(opts, done);
-	}
-		
-	version(done) {
-		let repo = new HGRepo(null);
-		
-		return repo.version(done);
-	}
-
-	makeParser(done) {
-		return api.version((err, out) => done(err, new Parsers(Parsers.version(out))));
-	}
+    return repo.version(done);
+  }
 }
 
-var api = new HGAPI();
-
-api.HGCommandServer = HGCommandServer;
-api.HGRepo = HGRepo;
-api.Parsers = Parsers;
-export default api;
+const API = new Hg();
+export default API;
