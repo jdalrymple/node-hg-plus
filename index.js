@@ -1,41 +1,31 @@
-import HgRepo from './lib/HgRepo';
+import HgRepo from './HgRepo';
 
 /*
 The public facing API for various common Mercurial tasks.
 */
-class Hg {
-  static init(initPath, done) {
-    return new HgRepo(initPath)
-      .then(repo => repo.init())
+const Hg = {
+  init: (initPath, done) => {
+    const repo = new HgRepo(initPath);
+
+    return repo.init()
       .catch(() => {})
-      .nodeify(done);
-  }
+      .asCallback(done);
+  },
+  // clone: (from, to, done) =>
+  //   new HgRepo(to)
+  //   .then(repo => repo.clone(from))
+  //   .catch(() => {})
+  //   .nodify(done),
+  // add: (path, options, done) =>
+  //   new HgRepo(path)
+  //   .then(repo => repo.add(options, done)),
+  // commit: (path, options, done) =>
+  //   new HgRepo(path)
+  //   .then(repo => repo.commit(options, done)),
+  // version: done =>
+  //   HgRepo.version
+  //   .asCallback(done),
 
-  static clone(from, to, done) {
-    return new HgRepo(to)
-      .then(repo => repo.clone(from))
-      .catch(() => {})
-      .nodify(done);
-  }
+};
 
-  static add(path, options, done) {
-    const repo = new HGRepo(path);
-
-    return repo.add(options, done);
-  }
-
-  static commit(path, options, done) {
-    const repo = new HGRepo(path);
-
-    return repo.commit(options, done);
-  }
-
-  static version(done) {
-    const repo = new HGRepo(null);
-
-    return repo.version(done);
-  }
-}
-
-const API = new Hg();
-export default API;
+export default Hg;

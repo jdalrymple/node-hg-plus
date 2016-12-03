@@ -14,8 +14,12 @@
   ],
   "author": "Justin Dalrymple <justin.s.dalrymple@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "test": "node dist/test.js"
+  },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
+    "babel-preset-latest": "^6.16.0",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
