@@ -4,16 +4,16 @@ import HgRepo from './lib/HgRepo';
 The public facing API for various common Mercurial tasks.
 */
 class Hg {
-  static init(initPath, options, done) {
+  static init(initPath, done) {
     return new HgRepo(initPath)
       .then(repo => repo.init())
       .catch(() => {})
       .nodeify(done);
   }
 
-  static clone(from, to, options, done) {
-    return HGRepo.MakeTempRepo()
-      .then(repo => repo.clone(from, to, options, done))
+  static clone(from, to, done) {
+    return new HgRepo(to)
+      .then(repo => repo.clone(from))
       .catch(() => {})
       .nodify(done);
   }
@@ -28,18 +28,6 @@ class Hg {
     const repo = new HGRepo(path);
 
     return repo.commit(options, done);
-  }
-
-  static summary(path, options, done) {
-    const repo = new HGRepo(path);
-
-    return repo.summary(options, done);
-  }
-
-  static log(path, options, done) {
-    const repo = new HGRepo(path);
-
-    return repo.log(options, done);
   }
 
   static version(done) {
