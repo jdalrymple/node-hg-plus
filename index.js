@@ -1,24 +1,44 @@
-import HgRepo from './HgRepo';
+const HgRepo = require('./HgRepo');
 
 /*
 The public facing API for various common Mercurial tasks.
 */
-const Hg = {
-  init: (initPath, done) => {
-    const repo = new HgRepo(initPath);
+class Hg {
+  constructor(credentials) {
+    this.credentials = credentials;
+  }
+
+  init(to = undefined, done = undefined) {
+    const repo = new HgRepo(this.credentials, to);
 
     return repo.init()
       .catch(() => {})
       .asCallback(done);
-  },
-  // clone: (from, to, done) =>
-  //   new HgRepo(to)
-  //   .then(repo => repo.clone(from))
-  //   .catch(() => {})
-  //   .nodify(done),
-  // add: (path, options, done) =>
-  //   new HgRepo(path)
-  //   .then(repo => repo.add(options, done)),
+  }
+
+  clone(from, to = undefined, done = undefined) {
+    let cloneDir = to;
+
+    if (to === undefined) {
+      if (from.constructor === Array) {
+        throw new Error('Must specify a destination path');
+      } else {
+        cloneDir = from.split('/').pop();
+      }
+    }
+
+    const repo = new HgRepo(this.credentials, cloneDir);
+
+    return repo.clone(from)
+      .catch(() => {})
+      .asCallback(done);
+  }
+
+  // add(path, options, done) {
+  //     const repo = new HgRepo(this.credentials, path);
+
+  //     return repo.add(options, done)
+  //   }
   // commit: (path, options, done) =>
   //   new HgRepo(path)
   //   .then(repo => repo.commit(options, done)),
@@ -26,6 +46,6 @@ const Hg = {
   //   HgRepo.version
   //   .asCallback(done),
 
-};
+}
 
-export default Hg;
+module.exports = credentials => new Hg(credentials);

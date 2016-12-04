@@ -15,7 +15,7 @@
   "author": "Justin Dalrymple <justin.s.dalrymple@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "node dist/test.js"
+    "test": "node test.js"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
