@@ -3,13 +3,9 @@ const Hg = require('./index')({
   password: 'car0line',
 });
 
-// Hg.init('test', function(results) {
-//   console.log(results);
-// });
+const Path  = require('path');
+
 const testRepo = 'https://justindalrymple@bitbucket.org/justindalrymple/node-hg';
-// Hg.init();
+const testRepo2 = 'https://justindalrymple@bitbucket.org/justindalrymple/test';
 
-
-Hg.clone([testRepo, testRepo], 'cool');
-
-// repo.add().commit().push();
+Hg.clone([testRepo,testRepo2], Path.resolve('..','cool'));

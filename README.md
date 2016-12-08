@@ -1,11 +1,11 @@
 Node-hg
 =======
 
-A node js [command server](http://mercurial.selenic.com/wiki/CommandServer) client for [Mercurial](http://mercurial.selenic.com).
-
-
+A node js client for [Mercurial](http://mercurial.selenic.com).
 
 LICENSE
 =======
 
-MIT, Copyright 2013 Jacob Gable
+MIT, Copyright 2016 Justin Dalrymple
+=======
+[MIT](http://opensource.org/licenses/MIT), No Attribution Required, Copyright 2016 [Justin Dalrymple]

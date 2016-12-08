@@ -12,7 +12,9 @@ class Hg {
     const repo = new HgRepo(this.credentials, to);
 
     return repo.init()
-      .catch(() => {})
+      .catch((error) => {
+        console.log(error)
+      })
       .asCallback(done);
   }
 
@@ -30,7 +32,9 @@ class Hg {
     const repo = new HgRepo(this.credentials, cloneDir);
 
     return repo.clone(from)
-      .catch(() => {})
+      .catch((error) => {
+        console.log(error)
+      })
       .asCallback(done);
   }
 
