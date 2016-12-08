@@ -42,27 +42,27 @@ class Hg {
 
   commit(message, done = undefined) {
     return new HgRepo()
-      .then(repo => repo.commit(message, done))
+      .then(repo => repo.commit(message, done));
   }
 
   add(options, done = undefined) {
     return new HgRepo()
-      .then(repo => repo.add(options, done))
+      .then(repo => repo.add(options, done));
   }
 
   push(options, done = undefined) {
     return new HgRepo()
-      .then(repo => repo.push(options, done))
+      .then(repo => repo.push(options, done));
   }
 
   pull(options, done = undefined) {
     return new HgRepo()
-      .then(repo => repo.pull(options, done))
+      .then(repo => repo.pull(options, done));
   }
 
   version(done = undefined) {
     Command.run('--version')
-      .asCallback(done)
+      .asCallback(done);
   }
 }
 

@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const Fs = require('fs-extra-promise');
 const ShortID = require('shortid');
 const Path = require('path');
-const Command = require('utils/Command')
+const Command = require('utils/Command');
 
 module.exports = class HgRepo {
   /*
