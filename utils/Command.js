@@ -11,11 +11,11 @@ function runCommand(command, directory = process.cwd(), options = []) {
         return
       }
 
-      resolve();
+      resolve(stdout);
     })
   });
 }
 
 module.exports = {
-  runCommand: run
+  run: runCommand
 }

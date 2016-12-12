@@ -1,70 +1,88 @@
 const HgRepo = require('./HgRepo');
-const Command = require('utils/Command');
+const Command = require('./utils/Command');
+const Promise = require('bluebird');
+const ShortID = require('shortid');
+const Fs = require('fs-extra-promise');
+const Path = require('path');
 
 /*
 The public facing API for various common Mercurial tasks.
 */
-class Hg {
-  constructor(credentials) {
-    this.credentials = credentials;
-  }
-
-  init(to = undefined, done = undefined) {
-    const repo = new HgRepo(credentials, to);
-
-    return repo.init()
-      .catch((error) => {
-        console.log(error)
-      })
+const Hg = {
+  /**
+   * Cloning
+   * 
+   * @param  {Array<Object>| Object}   from [description]
+   * @param  {url:String, user:String, pass:String, path:String}   to   [description]
+   * @param  {Function} done [description]
+   * 
+   * @return {[type]}        [description]
+   */
+  clone(from, to = undefined, done = undefined) {
+    return cloneOrMergeMany(from, to)
       .asCallback(done);
-  }
+  },
 
-  clone(from, to = undefined, options, done = undefined) {
-    const credentials = options.credentials || this.credentials
-    let cloneDir = to;
+  create(to = undefined, done = undefined) {
+    const newRepo = new HgRepo(to);
 
-    if (to === undefined) {
-      if (from.constructor === Array) {
-        throw new Error('Must specify a destination path');
-      } else {
-        cloneDir = from.split('/').pop();
-      }
-    }
-
-    const repo = new HgRepo(credentials, cloneDir);
-
-    return repo.clone(from)
-      .catch((error) => {
-        console.log(error)
-      })
+    newRepo.init()
+      .then(() => newRepo)
       .asCallback(done);
-  }
-
-  commit(message, done = undefined) {
-    return new HgRepo()
-      .then(repo => repo.commit(message, done));
-  }
-
-  add(options, done = undefined) {
-    return new HgRepo()
-      .then(repo => repo.add(options, done));
-  }
-
-  push(options, done = undefined) {
-    return new HgRepo()
-      .then(repo => repo.push(options, done));
-  }
-
-  pull(options, done = undefined) {
-    return new HgRepo()
-      .then(repo => repo.pull(options, done));
-  }
+  },
 
   version(done = undefined) {
     Command.run('--version')
+      .then(output => console.log(output))
       .asCallback(done);
   }
 }
 
+function mergeRepositories(fromRepo, combinedRepo) {
+  const uuid = `-${ShortID.generate()}`;
+  const repoName = fromRepo.url.split('/').pop();
+  let repoDirectory = repoName
 
-module.exports = credentials => new Hg(credentials);
+  if (!fromRepo.url.includes('https')) throw new Error("OnlyHTTPSSupported");
+
+  authFrom = `https://${fromRepo.username}:${fromRepo.password}@${fromRepo.url.split('@').pop()}`;
+
+  return Command.run('pull', combinedRepo.path, ['-f', authFrom])
+    .then(() => Command.run('update', combinedRepo.path, ['-C', 'tip']))
+    .then(() => Fs.ensureDirAsync(Path.resolve(combinedRepo.path, repoDirectory)))
+    .catch((error) => {
+      repoDirectory += uuid;
+      Fs.ensureDirAsync(Path.resolve(combinedRepo.path, repoDirectory))
+    })
+    .then(() => Command.run('rename', combinedRepo.path, ['*', repoDirectory]))
+    .then(() => Command.run('commit', combinedRepo.path, [`-m "Moving repository ${repoName} into folder ${repoName}"`]))
+    .then(() => Command.run('merge', combinedRepo.path))
+    .then(() => Command.run('commit', combinedRepo.path, [`-m "Merging ${repoName} into combined"`]))
+    .catch((error) => {
+      if (!error.message.includes("nothing to merge")) throw error;
+    })
+}
+
+function cloneOrMergeMany(from, to) {
+  const newRepo = new HgRepo(to)
+  let authFrom = null;
+
+  if (typeof from == 'object' && !Array.isArray(from)) {
+    authFrom = `https://${from.username}:${from.password}@${from.url.split('@').pop()}`;
+
+    return Command.run('clone', newRepo.path, [authFrom])
+      .then(() => newRepo)
+  } else if (Array.isArray(from)) {
+    return newRepo.init()
+      .then(() => {
+        return Promise.each(from, (fromRepo) => {
+          return mergeRepositories(fromRepo, newRepo);
+        })
+      })
+      .then(() => newRepo);
+  } else {
+    throw new TypeError("Incorrect type of from parameter. Must be an array or object")
+  }
+}
+
+module.exports = Hg;
