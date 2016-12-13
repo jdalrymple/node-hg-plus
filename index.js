@@ -27,13 +27,13 @@ const Hg = {
   create(to = undefined, done = undefined) {
     const newRepo = new HgRepo(to);
 
-    newRepo.init()
+    return newRepo.init()
       .then(() => newRepo)
       .asCallback(done);
   },
 
   version(done = undefined) {
-    Command.run('--version')
+    return Command.run('--version')
       .then(output => console.log(output))
       .asCallback(done);
   }
@@ -58,32 +58,32 @@ function mergeRepositories(fromRepo, combinedRepo) {
     .then(() => combinedRepo.rename(['*', repoDirectory]))
     .then(() => combinedRepo.commit(`Moving repository ${repoName} into folder ${repoName}`))
     .then(() => combinedRepo.merge)
-    .then(() => combinedRepo.commit(`Merging ${repoName} into combined`)
-      .catch((error) => {
-        if (!error.message.includes("nothing to merge")) throw error;
-      })
-    }
+    .then(() => combinedRepo.commit(`Merging ${repoName} into combined`))
+    .catch((error) => {
+      if (!error.message.includes("nothing to merge")) throw error;
+    })
+}
 
-  function cloneOrMergeMany(from, to) {
-    const newRepo = new HgRepo(to)
-    let authFrom = null;
+function cloneOrMergeMany(from, to) {
+  const newRepo = new HgRepo(to)
+  let authFrom = null;
 
-    if (typeof from == 'object' && !Array.isArray(from)) {
-      authFrom = `https://${from.username}:${from.password}@${from.url.split('@').pop()}`;
+  if (typeof from == 'object' && !Array.isArray(from)) {
+    authFrom = `https://${from.username}:${from.password}@${from.url.split('@').pop()}`;
 
-      return Command.run('clone', newRepo.path, [authFrom])
-        .then(() => newRepo)
-    } else if (Array.isArray(from)) {
-      return newRepo.init()
-        .then(() => {
-          return Promise.each(from, (fromRepo) => {
-            return mergeRepositories(fromRepo, newRepo);
-          })
+    return Command.run('clone', newRepo.path, [authFrom])
+      .then(() => newRepo)
+  } else if (Array.isArray(from)) {
+    return newRepo.init()
+      .then(() => {
+        return Promise.each(from, (fromRepo) => {
+          return mergeRepositories(fromRepo, newRepo);
         })
-        .then(() => newRepo);
-    } else {
-      throw new TypeError("Incorrect type of from parameter. Must be an array or object")
-    }
+      })
+      .then(() => newRepo);
+  } else {
+    throw new TypeError("Incorrect type of from parameter. Must be an array or object")
   }
+} 
 
-  module.exports = Hg;
+module.exports = Hg;

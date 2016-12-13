@@ -28,37 +28,37 @@ module.exports = class HgRepo {
   }
 
   commit(message, done = undefined) {
-    Command.run('commit', this.path, ['-m', message])
+    return Command.run('commit', this.path, ['-m', message])
       .asCallback(done);
   }
 
   add(options, done = undefined) {
-    Command.run('add', this.path, options)
+    return Command.run('add', this.path, options)
       .asCallback(done);
   }
 
   push(options, done = undefined) {
-    Command.run('push', this.path, options)
+    return Command.run('push', this.path, options)
       .asCallback(done);
   }
 
   pull(options, done = undefined) {
-    Command.run('pull', this.path, options)
+    return Command.run('pull', this.path, options)
       .asCallback(done);
   }
 
   update(options, done = undefined) {
-    Command.run('update', this.path, options)
+    return Command.run('update', this.path, options)
       .asCallback(done);
   }
 
   rename(options, done = undefined) {
-    Command.run('rename', this.path, options)
+    return Command.run('rename', this.path, options)
       .asCallback(done);
   }
 
-  rename(options, done = undefined) {
-    Command.run('merge', this.path, options)
+  merge(options, done = undefined) {
+    return Command.run('merge', this.path, options)
       .asCallback(done);
   }
 };
