@@ -6,8 +6,8 @@ const Fs = require('fs-extra-promise');
 const Exec = require('child_process').exec;
 
 function deleteTestRepositories() {
-  const testDir1 = Path.resolve('TestRepositories', 'repository1');
-  const testDir2 = Path.resolve('TestRepositories', 'repository2');
+  const testDir1 = Path.resolve('tests', 'TestRepositories', 'repository1');
+  const testDir2 = Path.resolve('tests', 'TestRepositories', 'repository2');
   const testFile1 = Path.resolve(testDir1, 'ReadMe1.txt');
   const testFile2 = Path.resolve(testDir2, 'ReadMe2.txt');
 
@@ -16,8 +16,8 @@ function deleteTestRepositories() {
 }
 
 function createTestRepositories() {
-  const testDir1 = Path.resolve('TestRepositories', 'repository1');
-  const testDir2 = Path.resolve('TestRepositories', 'repository2');
+  const testDir1 = Path.resolve('tests', 'TestRepositories', 'repository1');
+  const testDir2 = Path.resolve('tests', 'TestRepositories', 'repository2');
   const testFile1 = Path.resolve(testDir1, 'ReadMe1.txt');
   const testFile2 = Path.resolve(testDir2, 'ReadMe2.txt');
 
@@ -39,13 +39,13 @@ function createTestRepositories() {
 Test('Cloning multiple Hg repositories into one.', (assert) => {
   const testRepo1 = { url: './TestRepositories/repository1' };
   const testRepo2 = { url: './TestRepositories/repository1' };
-  const to = { path: Path.resolve('TestResults', 'CloneMultiple') };
+  const to = { path: Path.resolve('tests', 'TestResults', 'CloneMultiple') };
 
   // Test that files exist
   createTestRepositories()
     .then(() => Hg.clone([testRepo1, testRepo2], to))
     .then(() => {
-      const outputDir = Path.resolve('TestResults', 'CloneMultiple');
+      const outputDir = Path.resolve('tests', 'TestResults', 'CloneMultiple');
       const subFolder1 = Path.resolve(outputDir, 'repository1');
       const file1 = Path.resolve(subFolder1, 'Readme.txt');
       const subFolder2 = Path.resolve(outputDir, 'repository2');
