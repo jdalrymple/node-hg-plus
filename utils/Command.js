@@ -3,19 +3,17 @@ const Promise = require('bluebird');
 
 function runCommand(command, directory = process.cwd(), options = []) {
   return new Promise((resolve, reject) => {
-    const commandString = `hg ${command} ${options.join(' ')}`
-
+    const commandString = `hg ${command} ${options.join(' ')}`;
     Exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
       if (error) {
-        reject(error)
-        return
+        reject({ error, stdout, stderr });
+        return;
       }
-
       resolve(stdout);
-    })
+    });
   });
 }
 
 module.exports = {
-  run: runCommand
-}
+  run: runCommand,
+};

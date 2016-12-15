@@ -8,27 +8,22 @@ module.exports = class HgRepo {
     this.password = to.password;
     this.url = to.url;
 
-    Fs.ensureDir(this.path);
+    Fs.ensureDirSync(this.path);
   }
 
   /**
    * Initialize a new repository at the provided path.
-   * 
    * @param  {url:String, user:String, pass:String, path:String}   to   [description]
    * @param  {Function} done [description]
-   * 
+   *
    * @return {[type]}        [description]
    */
   init(done = undefined) {
     return Command.run('init', this.path)
-      .catch((error) => {
-        console.log(error);
-      })
       .asCallback(done);
   }
-
   commit(message, done = undefined) {
-    return Command.run('commit', this.path, ['-m', message])
+    return Command.run('commit', this.path, ['-m', `"${message}"`])
       .asCallback(done);
   }
 

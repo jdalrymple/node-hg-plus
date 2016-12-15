@@ -20,18 +20,16 @@
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-preset-latest": "^6.16.0",
+    "blue-tape": "^1.0.0",
     "eslint": "^3.12.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.7.1",
-    "grunt": "0.4.x",
-    "grunt-simple-mocha": "~0.4.0",
-    "mocha": "~1.17.1",
-    "should": "~1.2.2",
     "babel-eslint": "^7.1.1",
     "file-exists": "^2.0.0",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "is-there": "^4.3.6"
   },
   "dependencies": {
     "bluebird": "^3.4.6",

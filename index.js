@@ -6,18 +6,24 @@ const Path = require('path');
 const HgRepo = require('./HgRepo');
 const Command = require('./utils/Command');
 
+function getAuthenticatedURL(repoInfo) {
+  let authURL;
+
+  if (repoInfo.url.includes('ssh')) throw new Error('SSHNotSupported');
+  if (repoInfo.url.includes('https')) {
+    authURL = `https://${repoInfo.username}:${repoInfo.password}@${repoInfo.url.split('@').pop()}`;
+  } else {
+    authURL = repoInfo.url;
+  }
+
+  return authURL;
+}
+
 function mergeRepositories(fromRepo, combinedRepo) {
   const uuid = `-${ShortID.generate()}`;
-  const repoName = fromRepo.url.split('/').pop();
+  const repoName = Path.basename(fromRepo.url);
+  const authFrom = getAuthenticatedURL(fromRepo);
   let repoDirectory = repoName;
-  let authFrom;
-
-  if (fromRepo.url.includes('ssh')) throw new Error('SSHNotSupported');
-  if (fromRepo.url.includes('https')) {
-    authFrom = `https://${fromRepo.username}:${fromRepo.password}@${fromRepo.url.split('@').pop()}`;
-  } else {
-    authFrom = fromRepo.url;
-  }
 
   return combinedRepo.pull(['-f', authFrom])
     .then(() => combinedRepo.update(['-C', 'tip']))
@@ -28,28 +34,27 @@ function mergeRepositories(fromRepo, combinedRepo) {
     })
     .then(() => combinedRepo.rename(['*', repoDirectory]))
     .then(() => combinedRepo.commit(`Moving repository ${repoName} into folder ${repoName}`))
-    .then(() => combinedRepo.merge)
+    .then(() => combinedRepo.merge())
     .then(() => combinedRepo.commit(`Merging ${repoName} into combined`))
-    .catch((error) => {
-      if (!error.message.includes('nothing to merge')) throw error;
+    .catch((results) => {
+      if (!results.error.message.includes('nothing to merge')) throw results.error;
     });
 }
 
 function cloneOrMergeMany(from, to) {
   const newRepo = new HgRepo(to);
-  let authFrom = null;
 
   if (typeof from === 'object' && !Array.isArray(from)) {
-    authFrom = `https://${from.username}:${from.password}@${from.url.split('@').pop()}`;
+    const authFrom = getAuthenticatedURL(from);
 
-    return Command.run('clone', newRepo.path, [authFrom])
+    return Command.run('clone', authFrom, [authFrom, newRepo.path])
       .then(() => newRepo);
-  } else if (Array.isArray(from)) {
+  } else if (!Array.isArray(from)) {
+    throw new TypeError('Incorrect type of from parameter. Must be an array or object');
+  } else {
     return newRepo.init()
       .then(() => Promise.each(from, fromRepo => mergeRepositories(fromRepo, newRepo)))
       .then(() => newRepo);
-  } else {
-    throw new TypeError('Incorrect type of from parameter. Must be an array or object');
   }
 }
 
@@ -79,7 +84,10 @@ const Hg = {
 
   version(done = undefined) {
     return Command.run('--version')
-      .then(output => console.log(output))
+      .then((output) => {
+        console.log(output);
+        return output;
+      })
       .asCallback(done);
   },
 };
