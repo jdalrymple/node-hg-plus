@@ -8,7 +8,7 @@ const Promise = require('bluebird');
 
 function deleteTestRepositories() {
   return Fs.removeAsync(Path.resolve('tests', 'test-repositories'))
-    .then(() => Fs.removeAsync(Path.resolve('tests', 'results')));
+    .then(() => Fs.removeAsync(Path.resolve('tests', 'results', 'Hg')));
 }
 
 function createTestRepositories() {
@@ -31,17 +31,23 @@ function createTestRepositories() {
     });
 }
 
+Test('Setup test data', (assert) => {
+  return deleteTestRepositories()
+    .then(createTestRepositories)
+    .then(() => {
+      assert.true(true);
+    });
+});
+
 Test('Cloning multiple Hg repositories into one.', (assert) => {
   const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
   const testRepo2 = { url: Path.resolve('tests', 'test-repositories', 'repository2') };
-  const to = { path: Path.resolve('tests', 'results', 'clone-multiple') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple') };
 
   // Test that files exist
-  return deleteTestRepositories()
-    .then(createTestRepositories)
-    .then(() => Hg.clone([testRepo1, testRepo2], to))
+  return Hg.clone([testRepo1, testRepo2], to)
     .then(() => {
-      const outputDir = Path.resolve('tests', 'results', 'clone-multiple');
+      const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple');
       const subFolder1 = Path.resolve(outputDir, 'repository1');
       const file1 = Path.resolve(subFolder1, 'ReadMe1.txt');
       const subFolder2 = Path.resolve(outputDir, 'repository2');
@@ -54,14 +60,12 @@ Test('Cloning multiple Hg repositories into one.', (assert) => {
 
 Test('Cloning a Hg repository.', (assert) => {
   const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
-  const to = { path: Path.resolve('tests', 'results', 'clone-single') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-single') };
 
   // Test that files exist
-  return deleteTestRepositories()
-    .then(createTestRepositories)
-    .then(() => Hg.clone(testRepo1, to))
+  return Hg.clone(testRepo1, to)
     .then(() => {
-      const outputDir = Path.resolve('tests', 'results', 'clone-single');
+      const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-single');
       const file1 = Path.resolve(outputDir, 'Readme1.txt');
 
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
@@ -69,13 +73,11 @@ Test('Cloning a Hg repository.', (assert) => {
 });
 
 Test('Creating a Hg repository.', (assert) => {
-  const to = { path: Path.resolve('tests', 'results', 'create') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'create') };
 
-  return deleteTestRepositories()
-    .then(createTestRepositories)
-    .then(() => Hg.create(to))
+  return Hg.create(to)
     .then(() => {
-      const outputDir = Path.resolve('tests', 'results', 'create');
+      const outputDir = Path.resolve('tests', 'results', 'Hg', 'create');
 
       assert.true(IsThere(outputDir), 'The combined repo folder does not exist');
     });

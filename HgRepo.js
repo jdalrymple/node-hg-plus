@@ -2,11 +2,11 @@ const Fs = require('fs-extra-promise');
 const Command = require('./utils/Command');
 
 module.exports = class HgRepo {
-  constructor(to = { url: null, username: null, password: null, path: process.cwd() }) {
-    this.path = to.path;
-    this.username = to.username;
-    this.password = to.password;
-    this.url = to.url;
+  constructor({ url = null, username = null, password = null, path = process.cwd() }) {
+    this.path = path;
+    this.username = username;
+    this.password = password;
+    this.url = url;
 
     Fs.ensureDirSync(this.path);
   }
@@ -23,6 +23,8 @@ module.exports = class HgRepo {
       .asCallback(done);
   }
   commit(message, done = undefined) {
+    if (!message) throw new Error('Commit\'s must have a message');
+
     return Command.run('commit', this.path, ['-m', `"${message}"`])
       .asCallback(done);
   }
