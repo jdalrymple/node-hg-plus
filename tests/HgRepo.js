@@ -43,7 +43,6 @@ Test('Setup test data', (assert) => {
 Test('Creating a HgRepo Object.', (assert) => {
   const path = Path.resolve('tests', 'results', 'HgRepo', 'creation');
   const to1 = { url: path, username: 'testUser', password: 'testPass', path };
-
   const testRepo1 = new HgRepo(to1);
 
   // Test proper creation
@@ -103,7 +102,6 @@ Test('Hg pull in a HgRepo.', (assert) => {
   const path = Path.resolve('tests', 'results', 'HgRepo', 'pull');
   const to = { url: path, username: 'testUser', password: 'testPass', path };
   const testDir = Path.resolve('tests', 'test-repositories', 'repository2');
-
   const testRepo = new HgRepo(to);
 
   return testRepo.init()
@@ -116,8 +114,8 @@ Test('Hg pull in a HgRepo.', (assert) => {
 Test('Hg update in a HgRepo.', (assert) => {
   const path = Path.resolve('tests', 'results', 'HgRepo', 'update');
   const to = { url: path, username: 'testUser', password: 'testPass', path };
-
   const testRepo = new HgRepo(to);
+
   return testRepo.init()
     .then(() => Fs.ensureFileAsync(Path.join(testRepo.path, 'ReadMeUpdate1.txt')))
     .then(() => testRepo.add())

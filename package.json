@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.6",
+    "is-there": "^4.3.6",
     "child-process-promise": "^2.2.0",
     "fs-extra-promise": "^0.4.1",
     "shelljs": "^0.7.5",
