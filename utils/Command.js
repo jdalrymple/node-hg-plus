@@ -5,6 +5,8 @@ const Shell = require('shelljs');
 function run(command, directory = process.cwd(), options = [], type = 'hg') {
   return new Promise((resolve, reject) => {
     const commandString = `${type} ${command} ${options.join(' ')}`;
+    console.log(commandString)
+    console.log(directory)
     Exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
       if (error) {
         reject({ error, stdout, stderr });
