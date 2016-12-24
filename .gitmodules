@@ -1,0 +1,3 @@
+[submodule "utils/gitifyhg"]
+	path = utils/gitifyhg
+	url = https://github.com/jdalrymple/gitifyhg.git
