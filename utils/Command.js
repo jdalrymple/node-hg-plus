@@ -1,10 +1,9 @@
 const Exec = require('child_process').exec;
 const Promise = require('bluebird');
-const Shell = require('shelljs');
 
-function run(command, directory = process.cwd(), options = [], type = 'hg') {
+function run(command, directory = process.cwd(), options = []) {
   return new Promise((resolve, reject) => {
-    const commandString = `${type} ${command} ${options.join(' ')}`;
+    const commandString = `${command} ${options.join(' ')}`;
     console.log(commandString)
     console.log(directory)
     Exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
@@ -17,20 +16,6 @@ function run(command, directory = process.cwd(), options = [], type = 'hg') {
   });
 }
 
-function runShell(command, directory = process.cwd(), options = [], type = 'hg') {
-  return new Promise((resolve, reject) => {
-    const commandString = `${type} ${command} ${options.join(' ')}`;
-    Shell.exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
-      if (error) {
-        reject({ error, stdout, stderr });
-        return;
-      }
-      resolve(stdout);
-    });
-  });
-}
-
 module.exports = {
   run,
-  runShell,
 };
