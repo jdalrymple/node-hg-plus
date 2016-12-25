@@ -440,6 +440,13 @@ repo.merge({force: true}, (result) => {
 });
 
 ```
+Tests 
+=====
+Just run:
+
+```javascript
+npm test
+```
 
 Release Notes
 =============
