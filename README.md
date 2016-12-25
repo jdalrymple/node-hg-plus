@@ -43,7 +43,7 @@ const Hg = require('hg-plus')('path/to/python');
 
 Clones a Mercurial repository.
 
-###### *Options:*
+*Options:*
 	{Object} from
 	{String} [from.url = null]
 	{String} [from.username = null]
@@ -58,10 +58,10 @@ Clones a Mercurial repository.
 
 	{Function} [done = undefined] - Callback function
 
-###### *Returns:* 
+*Returns:* 
 	{Promise<String>} - Console output
 
-###### *Example:*
+*Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -87,7 +87,7 @@ Hg.clone(from, null, (results) => {
 
 Creates and initialized a Mercurial repository
 
-###### *Options:*
+*Options:*
 	{Object} [to = undefined]
 	{String} [to.url = null]
 	{String} [to.username = null]
@@ -96,10 +96,10 @@ Creates and initialized a Mercurial repository
 
 	{Function} [done = undefined] - Callback function
 
-###### *Returns:* 
+*Returns:*
 	{Promise<String>} - Console output
 
-###### *Example:*
+*Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -123,15 +123,15 @@ Hg.create(to,(results) => {
 
 Create a git copy of this repository
 
-###### *Options:*
+*Options:*
 	{Object}   [options]
 	{Object}   [options.gitRepoPath = 'python'] - Destination path for the new git repo
 	{Function} [done = undefined] - Callback function
 
-###### *Returns:* 
+*Returns:*
 	{Promise<String>} - Console output
 
-###### *Example:*
+*Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -151,13 +151,13 @@ Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
 
 Gets the version of the installed mercurial package
 
-###### *Options:*
+*Options:*
 	{Function} [done = undefined] - Callback function
 
-###### *Returns:* 
+*Returns:*
 	{Promise<String>} - Console output
 
-###### *Example:*
+*Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -374,7 +374,7 @@ Coverts Hg repo instance into a Git repo.
 
 *Options:*
   {Object} [options]
-  {Object} [options.gitRepoPath] - Destination path for the new git repo
+  {Object} [options.gitRepoPath] - Destination path for the python27 executable
 	{Function} [done = undefined] - Callback function
 
 *Returns:* 
