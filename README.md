@@ -4,8 +4,7 @@
 A node js client for [Mercurial](http://mercurial.selenic.com).
 
 # Installation
-
-    npm install -S hg-plus
+	npm install -S hg-plus
 
 # Basic Examples
 
@@ -45,22 +44,22 @@ const Hg = require('hg-plus')('path/to/python');
 Clones a Mercurial repository.
 
 ###### *Options:*
-  {Object} from
-  {String} [from.url = null]
-  {String} [from.username = null]
-  {String} [from.password = null]
-  {String} [from.path = null]
+	{Object} from
+	{String} [from.url = null]
+	{String} [from.username = null]
+	{String} [from.password = null]
+	{String} [from.path = null]
 
-  {Object} [to = undefined]
-  {String} [to.url = null]
-  {String} [to.username = null]
-  {String} [to.password = null]
-  {String} [to.path = process.cwd()]
+	{Object} [to = undefined]
+	{String} [to.url = null]
+	{String} [to.username = null]
+	{String} [to.password = null]
+	{String} [to.path = process.cwd()]
 
-  {Function} [done] - Callback function
+	{Function} [done] - Callback function
 
 ###### *Returns:* 
-  {Promise<String>} - Console output
+	{Promise<String>} - Console output
 
 ###### *Example:*
 
@@ -92,16 +91,16 @@ Hg.create([to], [done = undefined])
 Creates and initialized a Mercurial repository
 
 ###### *Options:*
-  {Object} [to = undefined]
-  {String} [to.url = null]
-  {String} [to.username = null]
-  {String} [to.password = null]
-  {String} [to.path = process.cwd()]
-  
-  {Function} [done] - Callback function
+	{Object} [to = undefined]
+	{String} [to.url = null]
+	{String} [to.username = null]
+	{String} [to.password = null]
+	{String} [to.path = process.cwd()]
+
+	{Function} [done] - Callback function
 
 ###### *Returns:* 
-  {Promise<String>} - Console output
+	{Promise<String>} - Console output
 
 ###### *Example:*
 
@@ -128,12 +127,12 @@ Hg.create(to,(results) => {
 Create a git copy of this repository
 
 ###### *Options:*
-   {Object}   [options]
-   {Object}   [options.gitRepoPath] - Destination path for the new git repo
-   {Function} [done] - Callback function
+	{Object}   [options]
+	{Object}   [options.gitRepoPath] - Destination path for the new git repo
+	{Function} [done] - Callback function
 
 ###### *Returns:* 
-   {Promise<String>} - Console output
+	{Promise<String>} - Console output
 
 ###### *Example:*
 
@@ -156,10 +155,10 @@ Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
 Gets the version of the installed mercurial package
 
 ###### *Options:*
-   {Function} [done] - Callback function
+	{Function} [done] - Callback function
 
 ###### *Returns:* 
-   {Promise<String>} - Console output
+	{Promise<String>} - Console output
 
 ###### *Example:*
 
