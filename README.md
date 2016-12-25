@@ -5,34 +5,170 @@ A node js client for [Mercurial](http://mercurial.selenic.com).
 
 ### Installation
 
-    npm install hg
+    npm install -S hg-plus
 
 ### Basic Examples
 
 ```javascript
+const Hg = require('hg-plus')
+
+let repo = Hg.clone('some/repo/url')
+
+repo.add()
+.then(() => repo.commit())
+.then(() => repo.push())
 
 ```
-Pass in an optional parameter to output verbose hg messages
+
+Supports both Promises and Standard callbacks!
+
+### API
+
+#### Hg
+
+Hg([pythonPath = 'python'])
+
+Options:
+	{String} pythonPath - Path of python 2.7 installation
+
+Example:
 
 ```javascript
+const Hg = require('hg-plus');
+
+const Hg = require('hg-plus')('path/to/python');
 
 ```
-Ability to use both promises and standard callback structures.
+
+Hg.clone(from, [to = undefined], [done = undefined])
+
+Clones a Mercurial repository.
+
+Options:
+	{Object} from
+  {String} [from.url = null]
+  {String} [from.username = null]
+  {String} [from.password = null]
+  {String} [from.path = null]
+
+  {Object} [to = undefined]
+  {String} [to.url = null]
+  {String} [to.username = null]
+  {String} [to.password = null]
+  {String} [to.path = process.cwd()]
+
+  {Function} [done] - Callback function
+
+Returns: {Promise<String>} - Console output
+
+Example:
 
 ```javascript
+const Hg = require('hg-plus');
+
+let from = {url:'someurl',username:'user',password:'pass',path:'path'};
+Hg.clone(from);
+
+let from = {url:'someurl',username:'user',password:'pass',path:'path'};
+let to = {url:'anotherurl',username:'user2',password:'pass2',path:'path2'};
+Hg.clone(from, to);
+
+let from = {url:'someurl',username:'user',password:'pass',path:'path'};
+Hg.clone(from, null, (results) => {
+	console.log(results);
+});
 
 ```
 
-=======
 ### Exposed Base Class
+=======
+Hg.create([to], [done = undefined])
 
-#### HGRepo
+Creates and initialized a Mercurial repository
 
-The base class for Mercurial Repo interaction.  The exposed API is just wrappers around the functions available in `HGRepo`.
+Options:
+  {Object} [to = undefined]
+  {String} [to.url = null]
+  {String} [to.username = null]
+  {String} [to.password = null]
+  {String} [to.path = process.cwd()]
+  
+  {Function} [done] - Callback function
+
+Returns: {Promise<String>} - Console output
+
+Example:
 
 ```javascript
+const Hg = require('hg-plus');
+
+Hg.create()
+	.then((results) => {
+		console.log(results);
+	});
+
+let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
+Hg.create(to);
+
+let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
+Hg.create(to,(results) => {
+	console.log(results);
+});
 
 ```
+
+Hg.gitify([{gitRepoPath: 'python'}], [done = undefined])
+
+Create a git copy of this repository
+
+Options:
+   {Object}   [options]
+   {Object}   [options.gitRepoPath] - Destination path for the new git repo
+   {Function} [done] - Callback function
+
+Returns: {Promise<String>} - Console output
+
+Example:
+
+```javascript
+const Hg = require('hg-plus');
+
+Hg.gitify()
+	.then((results) => {
+		console.log(results);
+	});
+
+Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
+	console.log(results);
+});
+
+```
+
+Hg.version([{gitRepoPath: 'python'}], [done = undefined])
+
+Gets the version of the installed mercurial package
+
+Options:
+   {Function} [done] - Callback function
+
+Returns: {Promise<String>} - Console output
+
+Example:
+
+```javascript
+const Hg = require('hg-plus');
+
+Hg.version()
+	.then((version) => {
+		console.log(version);
+	});
+
+Hg.version((results) => {
+	console.log(results);
+});
+
+```
+#### HGRepo
 
 Release Notes
 =============
