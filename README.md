@@ -25,7 +25,7 @@ Supports both Promises and Standard callbacks!
 
 ## Hg
 
-##### Hg([pythonPath = 'python'])
+#### Hg([pythonPath = 'python'])
 
 ###### *Options:*
 	{String} pythonPath - Path of python 2.7 installation
@@ -39,7 +39,7 @@ const Hg = require('hg-plus')('path/to/python');
 
 ```
 
-##### Hg.clone(from, [to = undefined], [done = undefined])
+#### Hg.clone(from, [to = undefined], [done = undefined])
 
 Clones a Mercurial repository.
 
@@ -80,13 +80,10 @@ Hg.clone(from, null, (results) => {
 
 ```
 
-<<<<<<< HEAD
 ### Exposed Base Class
 =======
-Hg.create([to], [done = undefined])
-=======
-##### Hg.create([to], [done = undefined])
->>>>>>> d56d810... Fixing formatting
+
+#### Hg.create([to], [done = undefined])
 
 Creates and initialized a Mercurial repository
 
@@ -122,7 +119,7 @@ Hg.create(to,(results) => {
 
 ```
 
-##### Hg.gitify([{gitRepoPath: 'python'}], [done = undefined])
+#### Hg.gitify([{gitRepoPath: 'python'}], [done = undefined])
 
 Create a git copy of this repository
 
@@ -150,7 +147,7 @@ Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
 
 ```
 
-##### Hg.version([{gitRepoPath: 'python'}], [done = undefined])
+#### Hg.version([{gitRepoPath: 'python'}], [done = undefined])
 
 Gets the version of the installed mercurial package
 
