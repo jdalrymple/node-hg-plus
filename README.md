@@ -1,4 +1,4 @@
-# Node-hg-plus
+# node-hg-plus
 =======
 
 A node js client for [Mercurial](http://mercurial.selenic.com).
