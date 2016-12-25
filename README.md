@@ -1,13 +1,13 @@
-node-hg-plus
+# node-hg-plus
 =======
 
 A node js client for [Mercurial](http://mercurial.selenic.com).
 
-### Installation
+# Installation
 
     npm install -S hg-plus
 
-### Basic Examples
+# Basic Examples
 
 ```javascript
 const Hg = require('hg-plus')
@@ -22,16 +22,16 @@ repo.add()
 
 Supports both Promises and Standard callbacks!
 
-### API
+# API
 
-#### Hg
+## Hg
 
-Hg([pythonPath = 'python'])
+##### Hg([pythonPath = 'python'])
 
-Options:
+###### *Options:*
 	{String} pythonPath - Path of python 2.7 installation
 
-Example:
+###### *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -40,12 +40,12 @@ const Hg = require('hg-plus')('path/to/python');
 
 ```
 
-Hg.clone(from, [to = undefined], [done = undefined])
+##### Hg.clone(from, [to = undefined], [done = undefined])
 
 Clones a Mercurial repository.
 
-Options:
-	{Object} from
+###### *Options:*
+  {Object} from
   {String} [from.url = null]
   {String} [from.username = null]
   {String} [from.password = null]
@@ -59,9 +59,10 @@ Options:
 
   {Function} [done] - Callback function
 
-Returns: {Promise<String>} - Console output
+###### *Returns:* 
+  {Promise<String>} - Console output
 
-Example:
+###### *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -80,13 +81,17 @@ Hg.clone(from, null, (results) => {
 
 ```
 
+<<<<<<< HEAD
 ### Exposed Base Class
 =======
 Hg.create([to], [done = undefined])
+=======
+##### Hg.create([to], [done = undefined])
+>>>>>>> d56d810... Fixing formatting
 
 Creates and initialized a Mercurial repository
 
-Options:
+###### *Options:*
   {Object} [to = undefined]
   {String} [to.url = null]
   {String} [to.username = null]
@@ -95,9 +100,10 @@ Options:
   
   {Function} [done] - Callback function
 
-Returns: {Promise<String>} - Console output
+###### *Returns:* 
+  {Promise<String>} - Console output
 
-Example:
+###### *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -117,18 +123,19 @@ Hg.create(to,(results) => {
 
 ```
 
-Hg.gitify([{gitRepoPath: 'python'}], [done = undefined])
+##### Hg.gitify([{gitRepoPath: 'python'}], [done = undefined])
 
 Create a git copy of this repository
 
-Options:
+###### *Options:*
    {Object}   [options]
    {Object}   [options.gitRepoPath] - Destination path for the new git repo
    {Function} [done] - Callback function
 
-Returns: {Promise<String>} - Console output
+###### *Returns:* 
+   {Promise<String>} - Console output
 
-Example:
+###### *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -144,16 +151,17 @@ Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
 
 ```
 
-Hg.version([{gitRepoPath: 'python'}], [done = undefined])
+##### Hg.version([{gitRepoPath: 'python'}], [done = undefined])
 
 Gets the version of the installed mercurial package
 
-Options:
+###### *Options:*
    {Function} [done] - Callback function
 
-Returns: {Promise<String>} - Console output
+###### *Returns:* 
+   {Promise<String>} - Console output
 
-Example:
+###### *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -168,7 +176,7 @@ Hg.version((results) => {
 });
 
 ```
-#### HGRepo
+#### HgRepo
 
 Release Notes
 =============
