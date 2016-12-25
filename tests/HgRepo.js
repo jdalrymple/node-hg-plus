@@ -141,6 +141,6 @@ Test('gitify a HgRepo.', (assert) => {
     .then(() => testRepo.gitify())
     .then(() => {
       assert.true(IsThere(gitPath), 'Git repo exists');
-      assert.true(IsThere(Path.join(gitPath, '.git')), 'Git repo exists');
+      assert.true(IsThere(Path.join(gitPath, '.git')), '.git folder exists');
     });
 });
