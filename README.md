@@ -45,17 +45,16 @@ Clones a Mercurial repository.
 
 **Options:**
 >{Object} from
-{String} [from.url = null]
-{String} [from.username = null]
-{String} [from.password = null]
-{String} [from.path = null]
-{Object} [to = undefined]
-{String} [to.url = null]
-{String} [to.username = null]
-{String} [to.password = null]
-{String} [to.path = process.cwd()]
-
-	{Function} [done = undefined] - Callback function
+>{String} [from.url = null]
+>{String} [from.username = null]
+>{String} [from.password = null]
+>{String} [from.path = null]
+>{Object} [to = undefined]
+>{String} [to.url = null]
+>{String} [to.username = null]
+>{String} [to.password = null]
+>{String} [to.path = process.cwd()]
+>{Function} [done = undefined] - Callback function
 
 **Returns:**
 >{Promise &lt;String&gt;} - Console output
