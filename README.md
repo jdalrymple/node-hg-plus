@@ -309,7 +309,8 @@ repo.push({force: true}, (result) => {
 Pulls files to the Hg repo instance.
 
 **Options:**
->{Object} [options]		
+>{String} [source = this.url]
+{Object} [options]		
 {Boolean} [options.force = false]	
 {Boolean} [options.update = false]	
 {String} [options.revision = null]	
@@ -329,7 +330,7 @@ repo.pull()
 		console.log(result);
 	});
 
-repo.pull({force: true}, (result) => {
+repo.pull({source: 'some/url/', force: true}, (result) => {
 	console.log(result);
 });
 
@@ -389,7 +390,9 @@ repo.gitify()
 Rename files to the Hg repo instance.
 
 **Options:**
->{Object} [options]		
+>{String} source,
+{String} destination
+{Object} [options]		
 {Boolean} [options.after = false]	
 {Boolean} [options.force = false]	
 {String} [options.include = null]	
@@ -402,12 +405,12 @@ Rename files to the Hg repo instance.
 
 *Example:*
 ```javascript
-repo.rename()
+repo.rename('one/path','destination/path')
 	.then((result) => {
 		console.log(result);
 	});
 
-repo.rename({after: true}, (result) => {
+repo.rename('one/path','destination/path',{after: true}, (result) => {
 	console.log(result);
 });
 

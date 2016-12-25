@@ -7,6 +7,8 @@ const IsThere = require('is-there');
 const Fs = require('fs-extra-promise');
 const Promise = require('bluebird');
 
+const PythonPath = 'python2.7';
+
 function deleteTestRepositories() {
   return Fs.removeAsync(Path.resolve('tests', 'test-repositories'))
     .then(() => Fs.removeAsync(Path.resolve('tests', 'results', 'HgRepo')));
@@ -23,22 +25,21 @@ function createTestRepositories() {
     .then(() => Fs.ensureFileAsync(testFile2))
     .then(() => Fs.writeFileAsync(testFile2, 'Readme2'))
     .then(() => Promise.each([testDir1, testDir2], (directory) => {
-      return Command.run('init', directory)
-        .then(() => Command.run('add', directory))
-        .then(() => Command.run('commit', directory, ['-m', '"Init Commit"']));
+      return Command.run('hg init', directory)
+        .then(() => Command.run('hg add', directory))
+        .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']));
     }))
     .catch((error) => {
       console.log(error);
     });
 }
 
-Test('Setup test data', (assert) => {
-  return deleteTestRepositories()
-    .then(createTestRepositories)
-    .then(() => {
-      assert.true(true);
-    });
-});
+Test('Setup test data', assert =>
+  deleteTestRepositories()
+  .then(createTestRepositories)
+  .then(() => {
+    assert.true(true);
+  }));
 
 Test('Creating a HgRepo Object.', (assert) => {
   const path = Path.resolve('tests', 'results', 'HgRepo', 'creation');
@@ -50,7 +51,6 @@ Test('Creating a HgRepo Object.', (assert) => {
   assert.equal(testRepo1.path, path, 'Path property is set correctly');
   assert.equal(testRepo1.username, 'testUser', 'Username property is set correctly');
   assert.equal(testRepo1.password, 'testPass', 'Password property is set correctly');
-
 
   // Test folder creation
   assert.true(IsThere(path), 'HgRepo-creation folder exists');
@@ -94,7 +94,7 @@ Test('Hg add in a HgRepo.', (assert) => {
     .then(() => testRepo.add())
     .then(() => testRepo.commit('Add commit'))
     .then((output) => {
-      assert.true(output === '', 'Adding files was successfull');
+      assert.true(output.stdout === '', 'Adding files was successfull');
     });
 });
 
@@ -105,9 +105,9 @@ Test('Hg pull in a HgRepo.', (assert) => {
   const testRepo = new HgRepo(to);
 
   return testRepo.init()
-    .then(() => testRepo.pull([testDir, '-f']))
+    .then(() => testRepo.pull({ source: testDir, force: true }))
     .then(() => {
-      assert.true(IsThere(Path.join(testDir, 'Readme2.txt')), 'Pulling files into repository was successfull');
+      assert.true(IsThere(Path.join(testDir, 'ReadMe2.txt')), 'Pulling files into repository was successfull');
     });
 });
 
@@ -121,7 +121,7 @@ Test('Hg update in a HgRepo.', (assert) => {
     .then(() => testRepo.add())
     .then(() => testRepo.commit('Adding test data'))
     .then(() => Fs.ensureFileAsync(Path.join(testRepo.path, 'ReadMeUpdate2.txt')))
-    .then(() => testRepo.update(['-C', 'tip']))
+    .then(() => testRepo.update({ clean: true, revision: 'tip' }))
     .then(() => testRepo.commit('There should be nothing to commit'))
     .catch((output) => {
       assert.true(output.stdout.includes('nothing changed'), 'Updating repository was successfull');
@@ -132,7 +132,7 @@ Test('gitify a HgRepo.', (assert) => {
   const path = Path.resolve('tests', 'results', 'HgRepo', 'gitify');
   const to = { url: path, username: 'testUser', password: 'testPass', path };
   const gitPath = Path.resolve('tests', 'results', 'HgRepo', 'gitify-git');
-  const testRepo = new HgRepo(to);
+  const testRepo = new HgRepo(to, PythonPath);
 
   return testRepo.init()
     .then(() => Fs.ensureFileAsync(Path.join(testRepo.path, 'ReadMeUpdate1.txt')))
@@ -141,5 +141,6 @@ Test('gitify a HgRepo.', (assert) => {
     .then(() => testRepo.gitify())
     .then(() => {
       assert.true(IsThere(gitPath), 'Git repo exists');
+      assert.true(IsThere(Path.join(gitPath, '.git')), 'Git repo exists');
     });
 });

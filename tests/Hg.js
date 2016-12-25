@@ -1,7 +1,7 @@
-const Hg = require('../index');
+const Hg = require('../index')();
 const Path = require('path');
 const Test = require('blue-tape');
-const IsThere = require("is-there");
+const IsThere = require('is-there');
 const Fs = require('fs-extra-promise');
 const Command = require('../utils/Command');
 const Promise = require('bluebird');
@@ -22,22 +22,21 @@ function createTestRepositories() {
     .then(() => Fs.ensureFileAsync(testFile2))
     .then(() => Fs.writeFileAsync(testFile2, 'Readme2'))
     .then(() => Promise.each([testDir1, testDir2], (directory) => {
-      return Command.run('init', directory)
-        .then(() => Command.run('add', directory))
-        .then(() => Command.run('commit', directory, ['-m', '"Init Commit"']));
+      return Command.run('hg init', directory)
+        .then(() => Command.run('hg add', directory))
+        .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']));
     }))
     .catch((error) => {
       console.log(error);
     });
 }
 
-Test('Setup test data', (assert) => {
-  return deleteTestRepositories()
-    .then(createTestRepositories)
-    .then(() => {
-      assert.true(true);
-    });
-});
+Test('Setup test data', assert =>
+  deleteTestRepositories()
+  .then(createTestRepositories)
+  .then(() => {
+    assert.true(true);
+  }));
 
 Test('Cloning multiple Hg repositories into one.', (assert) => {
   const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
@@ -66,7 +65,7 @@ Test('Cloning a Hg repository.', (assert) => {
   return Hg.clone(testRepo1, to)
     .then(() => {
       const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-single');
-      const file1 = Path.resolve(outputDir, 'Readme1.txt');
+      const file1 = Path.resolve(outputDir, 'ReadMe1.txt');
 
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
     });
@@ -79,13 +78,12 @@ Test('Creating a Hg repository.', (assert) => {
     .then(() => {
       const outputDir = Path.resolve('tests', 'results', 'Hg', 'create');
 
-      assert.true(IsThere(outputDir), 'The combined repo folder does not exist');
+      assert.true(IsThere(outputDir), 'Repo was successfully created');
     });
 });
 
-Test('Getting the version of Hg on the local machine.', (assert) => {
-  return Hg.version()
+Test('Getting the version of Hg on the local machine.', assert =>
+  Hg.version()
     .then((output) => {
-      assert.true(output.includes('Mercurial Distributed SCM (version'), 'Version function didnt return correctly. Is the mercurial program installed?');
-    });
-});
+      assert.true(output.stdout.includes('Mercurial Distributed SCM (version'), 'Version function returned correctly.');
+    }));
