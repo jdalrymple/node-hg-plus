@@ -3,10 +3,10 @@
 
 A node js client for [Mercurial](http://mercurial.selenic.com).
 
-# Installation
+## Installation
 	npm install -S hg-plus
 
-# Basic Examples
+## Basic Examples
 
 ```javascript
 const Hg = require('hg-plus')
@@ -21,16 +21,16 @@ repo.add()
 
 Supports both Promises and Standard callbacks!
 
-# API
+## API
 
-## Hg
+### Hg
 
 #### Hg([pythonPath = 'python'])
 
-###### *Options:*
+*Options:*
 	{String} pythonPath - Path of python 2.7 installation
 
-###### *Example:*
+*Example:*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -39,7 +39,7 @@ const Hg = require('hg-plus')('path/to/python');
 
 ```
 
-#### Hg.clone(from, [to = undefined], [done = undefined])
+#### Hg.clone(from, [to], [done])
 
 Clones a Mercurial repository.
 
@@ -56,7 +56,7 @@ Clones a Mercurial repository.
 	{String} [to.password = null]
 	{String} [to.path = process.cwd()]
 
-	{Function} [done] - Callback function
+	{Function} [done = undefined] - Callback function
 
 ###### *Returns:* 
 	{Promise<String>} - Console output
@@ -94,7 +94,7 @@ Creates and initialized a Mercurial repository
 	{String} [to.password = null]
 	{String} [to.path = process.cwd()]
 
-	{Function} [done] - Callback function
+	{Function} [done = undefined] - Callback function
 
 ###### *Returns:* 
 	{Promise<String>} - Console output
@@ -119,14 +119,14 @@ Hg.create(to,(results) => {
 
 ```
 
-#### Hg.gitify([{gitRepoPath: 'python'}], [done = undefined])
+#### Hg.gitify([options], [done])
 
 Create a git copy of this repository
 
 ###### *Options:*
 	{Object}   [options]
-	{Object}   [options.gitRepoPath] - Destination path for the new git repo
-	{Function} [done] - Callback function
+	{Object}   [options.gitRepoPath = 'python'] - Destination path for the new git repo
+	{Function} [done = undefined] - Callback function
 
 ###### *Returns:* 
 	{Promise<String>} - Console output
@@ -147,12 +147,12 @@ Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
 
 ```
 
-#### Hg.version([{gitRepoPath: 'python'}], [done = undefined])
+#### Hg.version([done])
 
 Gets the version of the installed mercurial package
 
 ###### *Options:*
-	{Function} [done] - Callback function
+	{Function} [done = undefined] - Callback function
 
 ###### *Returns:* 
 	{Promise<String>} - Console output
@@ -172,8 +172,279 @@ Hg.version((results) => {
 });
 
 ```
-#### HgRepo
 
+### HgRepo
+
+#### HgRepo([options],[pythonPath]) {
+
+HgRepo instance.
+
+*Options:*
+	{Object} options
+	{String} [options.url = null]
+	{String} [options.username = null]
+	{String} [options.password = null]
+	{String} [options.path = null]
+	{String} [pythonPath = 'python']
+
+*Returns:* 
+	{HgRepo}
+
+*Example:*
+```javascript
+const HgRepo = require('hg-plus').HgRepo;
+
+let repo = new HgRepo();
+
+```
+
+#### HgRepo.init([done]) {
+
+Inits the Hg repo instance.
+
+*Options:*
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+
+*Example:*
+```javascript
+const HgRepo = require('hg-plus').HgRepo;
+
+let repo = new HgRepo();
+
+repo.init()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.init((result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.commit(message, [done]) {
+
+Commits new changes in the the Hg repo instance.
+
+*Options:*
+	{String} message
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+
+*Example:*
+```javascript
+repo.commit('my commit message')
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.commit('my commit message',(result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.add([options], [done]) {
+
+Adds untracked files to the Hg repo instance.
+
+*Options:*
+	{Array} [options.files] - Adds all non tracked files if none specified,
+  {String} [options.include = null]
+  {String} [options.exclude = null]
+  {Boolean} [options.subrepos = null]
+  {Boolean} [options.dryRun = null]
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.add()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.add(['file.txt','file2.js'],(result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.push([options], [done]) {
+
+Pushes untracked files to the Hg repo instance.
+
+*Options:*
+  {Object} [options]
+  {Boolean} [options.force = false]
+  {String} [options.revision = null]
+  {String} [options.bookmark = null]
+  {String} [options.branch = false]
+  {String} [options.ssh = null]
+  {Boolean} [options.insecure = false]
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.push()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.push({force: true}, (result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.pull([options], [done]) {
+
+Pulls files to the Hg repo instance.
+
+*Options:*
+  {Object} [options]
+  {Boolean} [options.force = false]
+  {Boolean} [options.update = false]
+  {String} [options.revision = null]
+  {String} [options.bookmark = null]
+  {String} [options.branch = null]
+  {String} [options.ssh = null]
+  {Boolean} [options.insecure = null]
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.pull()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.pull({force: true}, (result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.update([options], [done]) {
+
+Update Hg repo instance.
+
+*Options:*
+  {Object} [options]
+  {Boolean} [options.clean = false]
+  {Boolean} [options.check = false]
+  {String} [options.revision = null]
+  {String} [options.tool = null]
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.update()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.update({clean: true}, (result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.gitify([{gitRepoPath}], [done]) {
+
+Coverts Hg repo instance into a Git repo.
+
+*Options:*
+  {Object} [options]
+  {Object} [options.gitRepoPath] - Destination path for the new git repo
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.gitify()
+	.then((result) => {
+		console.log(result);
+	});
+
+```
+
+#### HgRepo.rename([options], [done]) {
+
+Rename files to the Hg repo instance.
+
+*Options:*
+  {Object} [options]
+  {Boolean} [options.after = false]
+  {Boolean} [options.force = false]
+  {String} [options.include = null]
+  {String} [options.exclude = null]
+  {Boolean} [options.dryRun = null]
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.rename()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.rename({after: true}, (result) => {
+	console.log(result);
+});
+
+```
+
+#### HgRepo.merge([options], [done]) {
+
+Rename files to the Hg repo instance.
+
+*Options:*
+  {Object} [options]
+  {Boolean} [options.force = false]
+  {Boolean} [options.preview = false]
+  {String} [options.revision = null]
+  {String} [options.tool = null]
+	{Function} [done = undefined] - Callback function
+
+*Returns:* 
+	{Promise<String>} - Console output
+
+*Example:*
+```javascript
+repo.merge()
+	.then((result) => {
+		console.log(result);
+	});
+
+repo.merge({force: true}, (result) => {
+	console.log(result);
+});
+
+```
 Release Notes
 =============
 
