@@ -445,7 +445,8 @@ repo.merge({force: true}, (result) => {
 ```
 Tests 
 =====
-Just run:
+First make sure to change the global variable in tests/HgRepo called pythonPath to be a valid
+path to your python2.7.x installation. Then run:
 
 ```javascript
 npm test
