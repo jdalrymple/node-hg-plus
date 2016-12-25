@@ -1,4 +1,4 @@
-# node-hg-plus
+# Node-hg-plus
 =======
 
 A node js client for [Mercurial](http://mercurial.selenic.com).
@@ -44,17 +44,17 @@ const Hg = require('hg-plus')('path/to/python');
 Clones a Mercurial repository.
 
 **Options:**
->{Object} from
->{String} [from.url = null]
->{String} [from.username = null]
->{String} [from.password = null]
->{String} [from.path = null]
->{Object} [to = undefined]
->{String} [to.url = null]
->{String} [to.username = null]
->{String} [to.password = null]
->{String} [to.path = process.cwd()]
->{Function} [done = undefined] - Callback function
+>{Object} from	
+{String} [from.url = null]	
+{String} [from.username = null]		
+{String} [from.password = null]		
+{String} [from.path = null]		
+{Object} [to = undefined]	
+{String} [to.url = null]	
+{String} [to.username = null]	
+{String} [to.password = null]	
+{String} [to.path = process.cwd()]	
+{Function} [done = undefined] - Callback function
 
 **Returns:**
 >{Promise &lt;String&gt;} - Console output
@@ -86,15 +86,15 @@ Hg.clone(from, null, (results) => {
 Creates and initialized a Mercurial repository
 
 **Options:**
->{Object} [to = undefined]
-{String} [to.url = null]
-{String} [to.username = null]
-{String} [to.password = null]
-{String} [to.path = process.cwd()]
+>{Object} [to = undefined]	
+{String} [to.url = null]	
+{String} [to.username = null]	
+{String} [to.password = null]	
+{String} [to.path = process.cwd()]	
 {Function} [done = undefined] - Callback function
 
 *Returns:*
-	>{Promise &lt;String&gt;} - Console output
+>{Promise &lt;String&gt;} - Console output
 
 *Example:*
 
@@ -121,8 +121,8 @@ Hg.create(to,(results) => {
 Create a git copy of this repository
 
 **Options:**
->{Object}   [options]
-{Object}   [options.gitRepoPath = 'python'] - Destination path for the new git repo
+>{Object} [options]		
+{Object} [options.gitRepoPath = 'python'] - Destination path for the new git repo	
 {Function} [done = undefined] - Callback function
 
 *Returns:*
@@ -177,11 +177,11 @@ Hg.version((results) => {
 HgRepo instance.
 
 **Options:**
->{Object} options
-{String} [options.url = null]
-{String} [options.username = null]
-{String} [options.password = null]
-{String} [options.path = null]
+>{Object} options	
+{String} [options.url = null]	
+{String} [options.username = null]	
+{String} [options.password = null]	
+{String} [options.path = null]	
 {String} [pythonPath = 'python']
 
 **Returns:**
@@ -227,7 +227,7 @@ repo.init((result) => {
 Commits new changes in the the Hg repo instance.
 
 **Options:**
->{String} message
+>{String} message	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
@@ -251,11 +251,11 @@ repo.commit('my commit message',(result) => {
 Adds untracked files to the Hg repo instance.
 
 **Options:**
->{Array} [options.files] - Adds all non tracked files if none specified,
-{String} [options.include = null]
-{String} [options.exclude = null]
-{Boolean} [options.subrepos = null]
-{Boolean} [options.dryRun = null]
+>{Array} [options.files] - Adds all non tracked files if none specified		
+{String} [options.include = null]	
+{String} [options.exclude = null]	
+{Boolean} [options.subrepos = null]		
+{Boolean} [options.dryRun = null]	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
@@ -279,13 +279,13 @@ repo.add(['file.txt','file2.js'],(result) => {
 Pushes untracked files to the Hg repo instance.
 
 **Options:**
->{Object} [options]
-{Boolean} [options.force = false]
-{String} [options.revision = null]
-{String} [options.bookmark = null]
-{String} [options.branch = false]
-{String} [options.ssh = null]
-{Boolean} [options.insecure = false]
+>{Object} [options]	
+{Boolean} [options.force = false]	
+{String} [options.revision = null]	
+{String} [options.bookmark = null]	
+{String} [options.branch = false]	
+{String} [options.ssh = null]	
+{Boolean} [options.insecure = false]	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
@@ -309,18 +309,18 @@ repo.push({force: true}, (result) => {
 Pulls files to the Hg repo instance.
 
 **Options:**
->{Object} [options]
-{Boolean} [options.force = false]
-{Boolean} [options.update = false]
-{String} [options.revision = null]
-{String} [options.bookmark = null]
-{String} [options.branch = null]
-{String} [options.ssh = null]
-{Boolean} [options.insecure = null]
+>{Object} [options]		
+{Boolean} [options.force = false]	
+{Boolean} [options.update = false]	
+{String} [options.revision = null]	
+{String} [options.bookmark = null]	
+{String} [options.branch = null]	
+{String} [options.ssh = null]	
+{Boolean} [options.insecure = null]	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
-	>{Promise &lt;String&gt;} - Console output
+>{Promise &lt;String&gt;} - Console output
 
 *Example:*
 ```javascript
@@ -340,15 +340,15 @@ repo.pull({force: true}, (result) => {
 Update Hg repo instance.
 
 **Options:**
->{Object} [options]
-{Boolean} [options.clean = false]
-{Boolean} [options.check = false]
-{String} [options.revision = null]
-{String} [options.tool = null]
+>{Object} [options]		
+{Boolean} [options.clean = false]	
+{Boolean} [options.check = false]	
+{String} [options.revision = null]	
+{String} [options.tool = null]	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
-	>{Promise &lt;String&gt;} - Console output
+>{Promise &lt;String&gt;} - Console output
 
 *Example:*
 ```javascript
@@ -368,12 +368,12 @@ repo.update({clean: true}, (result) => {
 Coverts Hg repo instance into a Git repo.
 
 **Options:**
->{Object} [options]
-{Object} [options.gitRepoPath] - Destination path for the python27 executable
+>{Object} [options]		
+{Object} [options.gitRepoPath] - Destination path for the python27 executable	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
-	>{Promise &lt;String&gt;} - Console output
+>{Promise &lt;String&gt;} - Console output
 
 *Example:*
 ```javascript
@@ -389,12 +389,12 @@ repo.gitify()
 Rename files to the Hg repo instance.
 
 **Options:**
->{Object} [options]
-{Boolean} [options.after = false]
-{Boolean} [options.force = false]
-{String} [options.include = null]
-{String} [options.exclude = null]
-{Boolean} [options.dryRun = null]
+>{Object} [options]		
+{Boolean} [options.after = false]	
+{Boolean} [options.force = false]	
+{String} [options.include = null]	
+{String} [options.exclude = null]	
+{Boolean} [options.dryRun = null]	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
@@ -418,11 +418,11 @@ repo.rename({after: true}, (result) => {
 Rename files to the Hg repo instance.
 
 **Options:**
->{Object} [options]
-{Boolean} [options.force = false]
-{Boolean} [options.preview = false]
-{String} [options.revision = null]
-{String} [options.tool = null]
+>{Object} [options]		
+{Boolean} [options.force = false]	
+{Boolean} [options.preview = false]		
+{String} [options.revision = null]		
+{String} [options.tool = null]	
 {Function} [done = undefined] - Callback function
 
 **Returns:**
