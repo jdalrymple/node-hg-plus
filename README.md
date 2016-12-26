@@ -14,7 +14,7 @@ const Hg = require('hg-plus')
 let repo = Hg.clone('some/repo/url')
 
 repo.add()
-.then(() => repo.commit())
+.then(() => repo.commit('my example commit'))
 .then(() => repo.push())
 
 ```
@@ -28,14 +28,13 @@ Supports both Promises and Standard callbacks!
 ### Hg([pythonPath = 'python'])
 
 **Options:**
->{String} pythonPath - Path of python 2.7 installation
-
+>{String} pythonPath - Path of python 2.7 installation. This is used for the gitify function.
 *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
 
-const Hg = require('hg-plus')('path/to/python');
+const Hg = require('hg-plus')(pythonPath:'path/to/python');
 
 ```
 
@@ -64,14 +63,14 @@ Clones a Mercurial repository.
 ```javascript
 const Hg = require('hg-plus');
 
-let from = {url:'someurl',username:'user',password:'pass',path:'path'};
+let from = {url:'some/url',username:'user',password:'pass',path:'path'};
 Hg.clone(from);
 
-let from = {url:'someurl',username:'user',password:'pass',path:'path'};
-let to = {url:'anotherurl',username:'user2',password:'pass2',path:'path2'};
+let from = {url:'some/url',username:'user',password:'pass',path:'path'};
+let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
 Hg.clone(from, to);
 
-let from = {url:'someurl',username:'user',password:'pass',path:'path'};
+let from = {url:'some/url',username:'user',password:'pass',path:'path'};
 Hg.clone(from, null, (results) => {
 	console.log(results);
 });
@@ -106,7 +105,7 @@ Hg.create()
 		console.log(results);
 	});
 
-let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
+let to = {url: 'some/url', username: 'user', password: 'pass', path: 'path'};
 Hg.create(to);
 
 let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
@@ -122,7 +121,7 @@ Create a git copy of this repository
 
 **Options:**
 >{Object} [options]		
-{Object} [options.gitRepoPath = 'python'] - Destination path for the new git repo	
+{Object} [options.gitRepoPath = 'this.basedirectory/this.name-git'] - Destination path for the new git repo	
 {Function} [done = undefined] - Callback function
 
 *Returns:*
@@ -464,5 +463,5 @@ LICENSE
 =======
 
 MIT, Copyright 2016 Justin Dalrymple
-=======
+
 [MIT](http://opensource.org/licenses/MIT), No Attribution Required, Copyright 2016 [Justin Dalrymple]
