@@ -1,3 +1,8 @@
+[![Coverage Status](https://coveralls.io/repos/github/jdalrymple/node-test/badge.svg?branch=master)](https://coveralls.io/github/jdalrymple/node-test?branch=master)
+
+[![Dependency Status](https://david-dm.org/jdalrymple/node-test/status.svg)](https://david-dm.org/jdalrymple/node-test#info=dependencies)
+[![devDependency Status](https://david-dm.org/jdalrymple/node-test/dev-status.svg)](https://david-dm.org/jdalrymple/node-test#info=devDependencies)
+
 # node-hg-plus
 =======
 
