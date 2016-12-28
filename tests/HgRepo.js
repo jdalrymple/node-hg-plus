@@ -7,7 +7,7 @@ const IsThere = require('is-there');
 const Fs = require('fs-extra-promise');
 const Promise = require('bluebird');
 
-const PythonPath = 'python';
+const PythonPath = 'python2.7';
 
 function deleteTestRepositories() {
   return Fs.removeAsync(Path.resolve('tests', 'test-repositories'))
