@@ -7,7 +7,6 @@ function run(command, directory = process.cwd(), options = []) {
 
     Exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
       const output = { error, stdout, stderr };
-      
       if (error) {
         reject(output);
         return;

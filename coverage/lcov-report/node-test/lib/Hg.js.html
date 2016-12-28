@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for node-test/lib/Hg.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">node-test/lib/</a> Hg.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">84.62% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>44/52</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.67% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>8/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">88.89% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">87.76% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>43/49</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const Promise = require('bluebird');
+const ShortID = require('shortid');
+const Fs = require('fs-extra-promise');
+const Path = require('path');
+&nbsp;
+const HgRepo = require('./HgRepo');
+const Command = require('../utils/Command');
+&nbsp;
+function getAuthenticatedURL(repoInfo) {
+  let authURL;
+&nbsp;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (repoInfo.url.includes('ssh')) <span class="cstat-no" title="statement not covered" >throw new Error('SSHNotSupported');</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (repoInfo.url.includes('https')) {
+<span class="cstat-no" title="statement not covered" >    authURL = `https://${repoInfo.username}:${repoInfo.password}@${repoInfo.url.split('@').pop()}`;</span>
+  } else {
+    authURL = repoInfo.url;
+  }
+&nbsp;
+  return authURL;
+}
+&nbsp;
+function mergeRepositories(fromRepo, combinedRepo) {
+  const uuid = `-${ShortID.generate()}`;
+  const repoName = Path.basename(fromRepo.url);
+  const authFrom = getAuthenticatedURL(fromRepo);
+  let repoDirectory = repoName;
+&nbsp;
+  return combinedRepo.pull({ source: authFrom, force: true })
+    .then(() =&gt; combinedRepo.update({ clean: true, revision: 'tip' }))
+    .then(() =&gt; Fs.ensureDirAsync(Path.resolve(combinedRepo.path, repoDirectory)))
+    .catch(() =&gt; {
+<span class="cstat-no" title="statement not covered" >      repoDirectory += uuid;</span>
+<span class="cstat-no" title="statement not covered" >      Fs.ensureDirAsync(Path.resolve(combinedRepo.path, repoDirectory));</span>
+    })
+    .then(() =&gt; combinedRepo.rename('*', repoDirectory))
+    .then(() =&gt; combinedRepo.commit(`Moving repository ${repoName} into folder ${repoName}`))
+    .then(() =&gt; combinedRepo.merge())
+    .then(() =&gt; combinedRepo.commit(`Merging ${repoName} into combined`))
+    .catch((results) =&gt; {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!results.error.message.includes('nothing to merge')) <span class="cstat-no" title="statement not covered" >throw results.error;</span>
+    });
+}
+&nbsp;
+function cloneOrMergeMany(from, to, pythonPath) {
+  const newRepo = new HgRepo(to, pythonPath);
+&nbsp;
+  if (typeof from === 'object' &amp;&amp; !Array.isArray(from)) {
+    const authFrom = getAuthenticatedURL(from);
+&nbsp;
+    return Command.run('hg clone', authFrom, [authFrom, newRepo.path])
+      .then(() =&gt; newRepo);
+  } else <span class="missing-if-branch" title="if path not taken" >I</span>if (!Array.isArray(from)) {
+<span class="cstat-no" title="statement not covered" >    throw new TypeError('Incorrect type of from parameter. Must be an array or object');</span>
+  } else {
+    return newRepo.init()
+      .then(() =&gt; Promise.each(from, fromRepo =&gt; mergeRepositories(fromRepo, newRepo)))
+      .then(() =&gt; newRepo);
+  }
+}
+&nbsp;
+/*
+The public facing API for various common Mercurial tasks.
+*/
+class Hg {
+  constructor({ pythonPath = 'python' }) {
+    this.pythonPath = pythonPath;
+  }
+&nbsp;
+  /**
+   * Hg clone
+   *
+   * @params {Object} from
+   * @params {String} [from.url = null]
+   * @params {String} [from.username = null]
+   * @params {String} [from.password = null]
+   * @params {String} [from.path = null]
+   * @params {Object} [to = undefined]
+   * @params {String} [to.url = null]
+   * @params {String} [to.username = null]
+   * @params {String} [to.password = null]
+   * @params {String} [to.path = null]
+   * @params  {Function} [done] - Callback function
+   *
+   * @return {HgRepo}
+   */
+  clone(from, to = undefined, done = undefined) {
+    return cloneOrMergeMany(from, to, this.pythonPath)
+      .asCallback(done);
+  }
+&nbsp;
+  /**
+   * Creates a new Hg repo
+   *
+   * @params {Object} [to = undefined]
+   * @params {String} [to.url = null]
+   * @params {String} [to.username = null]
+   * @params {String} [to.password = null]
+   * @params {String} [to.path = process.cwd()]
+   * @params  {Function} [done] - Callback function
+   *
+   * @return {HgRepo}
+   */
+  create(to = undefined, done = undefined) {
+    const newRepo = new HgRepo(to, this.pythonPath);
+&nbsp;
+    return newRepo.init()
+      .then(() =&gt; newRepo)
+      .asCallback(done);
+  }
+&nbsp;
+  /**
+   * Create a git copy of this repository
+   *
+   * @param  {Object}   [options]
+   * @param  {Object}   [options.gitRepoPath] - Destination path for the new git repo
+   * @param  {Function} [done]  - Callback function
+   *
+   * @return {Promise&lt;String&gt;} - Console output
+   */
+  gitify<span class="fstat-no" title="function not covered" >({ gitRepoPath = Path.dirname(this.path) }, done = undefined) {</span>
+<span class="cstat-no" title="statement not covered" >    const repo = new HgRepo({}, this.pythonPath);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return repo.gitify({ gitRepoPath })</span>
+      .asCallback(done);
+  }
+&nbsp;
+  /**
+   * Hg version
+   *
+   * @params  {Function} [done] - Callback function
+   *
+   * @return {Promise&lt;String&gt;} - Console output
+   */
+  version(done = undefined) {
+    return this.constructor.version(done);
+  }
+&nbsp;
+  static version(done = undefined) {
+    return Command.run('hg --version')
+      .asCallback(done);
+  }
+}
+&nbsp;
+&nbsp;
+module.exports = Hg;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Dec 28 2016 10:20:20 GMT-0500 (EST)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

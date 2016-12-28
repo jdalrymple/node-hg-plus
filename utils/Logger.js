@@ -1,10 +1,12 @@
-import winston from "winston";
+const Winston = require('winston');
 
 class Logger {
-	constructor(logger) {
-		this.logger = logger ||{ 
-			log: winston.log,
-			info: winston.info
-		};
-	}
+  constructor(logger) {
+    this.logger = logger || {
+      log: Winston.log,
+      info: Winston.info,
+    };
+  }
 }
+
+module.exports = Logger;
