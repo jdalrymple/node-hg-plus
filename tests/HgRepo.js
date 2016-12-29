@@ -1,5 +1,3 @@
-'use-strict';
-
 const HgRepo = require('../lib/HgRepo');
 const Command = require('../utils/Command');
 

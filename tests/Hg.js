@@ -1,5 +1,3 @@
-'use-strict';
-
 const Hg = require('../index')();
 const Path = require('path');
 const Test = require('blue-tape');

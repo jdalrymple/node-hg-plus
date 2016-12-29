@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "node"
   - "6"
-  - "5"
+  - "6.0.0"
 
 before_install:
 - sudo apt-get update
