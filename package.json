@@ -19,7 +19,8 @@
     "_deps-check": "npm-check-updates --error-level 2 with --semverLevel major",
     "lint": "eslint -f unix .",
     "pretest": "npm run lint && npm run nsp && npm run _deps-check",
-    "test": "node ./node_modules/istanbul/lib/cli.js cover tape tests/**/*.js"
+    "test": "node ./node_modules/istanbul/lib/cli.js cover tape tests/**/*.js",
+    "coverall": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
