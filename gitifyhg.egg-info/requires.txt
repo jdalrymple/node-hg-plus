@@ -1,0 +1,2 @@
+path.py>=2.5
+Mercurial>=1.9.1
