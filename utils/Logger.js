@@ -1,3 +1,5 @@
+'use-strict';
+
 const Winston = require('winston');
 
 class Logger {

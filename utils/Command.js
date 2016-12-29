@@ -1,3 +1,5 @@
+'use-strict';
+
 const Exec = require('child_process').exec;
 const Promise = require('bluebird');
 
