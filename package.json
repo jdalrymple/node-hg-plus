@@ -29,22 +29,18 @@
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
-    "babel-eslint": "^7.1.1",
-    "file-exists": "^2.0.0",
-    "tape": "^4.6.3",
-    "is-there": "^4.3.6",
     "eslint-plugin-react": "^6.8.0",
     "istanbul": "^0.4.5",
     "npm-check-updates": "^2.8.9",
-    "nsp": "^2.6.2"
+    "nsp": "^2.6.2",
+    "tape": "^4.6.3"
   },
   "dependencies": {
     "blue-tape": "^1.0.0",
     "bluebird": "^3.4.6",
-    "is-there": "^4.3.6",
     "child-process-promise": "^2.2.0",
     "fs-extra-promise": "^0.4.1",
-    "shelljs": "^0.7.5",
+    "is-there": "^4.3.6",
     "shortid": "^2.2.6",
     "winston": ">= 0.5.0"
   }
