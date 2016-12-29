@@ -128,7 +128,7 @@ Hg.create(to,(results) => {
 
 ### Hg.gitify([options], [done])
 
-Create a git copy of this repository
+Create a git copy of this repository using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
 **Options:**
 >{Object} [options]		
@@ -376,7 +376,7 @@ repo.update({clean: true}, (result) => {
 
 ### HgRepo.gitify([{gitRepoPath}], [done]) {
 
-Coverts Hg repo instance into a Git repo.
+Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
 **Options:**
 >{Object} [options]		
