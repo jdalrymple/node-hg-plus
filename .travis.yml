@@ -9,5 +9,6 @@ before_install:
 - sudo apt-get install python2.7
 - cd utils/gitifyhg/
 - sudo python2.7 setup.py install
+- cd $TRAVIS_BUILD_DIR
 
 after_script: "npm run-script coverall"
