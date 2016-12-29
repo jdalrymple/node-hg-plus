@@ -1,7 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/jdalrymple/node-test/badge.svg?branch=master)](https://coveralls.io/github/jdalrymple/node-test?branch=master)
-
-[![Dependency Status](https://david-dm.org/jdalrymple/node-test/status.svg)](https://david-dm.org/jdalrymple/node-test#info=dependencies)
-[![devDependency Status](https://david-dm.org/jdalrymple/node-test/dev-status.svg)](https://david-dm.org/jdalrymple/node-test#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/github/jdalrymple/node-hg-plus/badge.svg?branch=master)](https://coveralls.io/github/jdalrymple/node-hg-plus?branch=master)[![Build Status](https://travis-ci.org/jdalrymple/node-hg-plus.svg?branch=master)](https://travis-ci.org/jdalrymple/node-hg-plus)[![Dependency Status](https://david-dm.org/jdalrymple/node-test/status.svg)](https://david-dm.org/jdalrymple/node-test#info=dependencies)[![devDependency Status](https://david-dm.org/jdalrymple/node-test/dev-status.svg)](https://david-dm.org/jdalrymple/node-test#info=devDependencies)
 
 # node-hg-plus
 =======
