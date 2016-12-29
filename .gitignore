@@ -1,3 +1,4 @@
 test-repositories/
 results/
 node_modules/
+coverage/
