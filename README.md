@@ -11,11 +11,11 @@ A node js client for [Mercurial](http://mercurial.selenic.com).
 ## Installation
 	npm install -S hg-plus
 
-	To use the gitify ability, must also have python2.7.x installed and install the gitifyhg python addon. 
-	To install the addon run: 
+	To use the gitify function, you must also have python2.7.x installed as well as the shipped gitifyhg python addon. 
+	To install the addon simply run: 
 
 	python2.7 node_modules/hg-plus/utils/gitifyhg/setup.py install
-	
+
 ## Basic Examples
 
 ```javascript
