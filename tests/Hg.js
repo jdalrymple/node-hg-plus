@@ -142,7 +142,6 @@ Test('Cloning a Hg repository.', (assert) => {
     });
 });
 
-
 Test('Creating a Hg repository.', (assert) => {
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'create') };
 
