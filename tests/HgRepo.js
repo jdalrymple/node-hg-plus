@@ -112,6 +112,25 @@ Test('Hg pull in a HgRepo.', (assert) => {
     });
 });
 
+Test('Hg push in a HgRepo.', (assert) => {
+  const destSub = Path.resolve('tests', 'results', 'HgRepo', 'push', 'dest');
+  const sourceSub = Path.resolve('tests', 'results', 'HgRepo', 'push', 'source');
+  const sourceRepo = new HgRepo({ url: sourceSub, username: 'testUser', password: 'testPass', path: sourceSub });
+  const destRepo = new HgRepo({ url: destSub, username: 'testUser', password: 'testPass', path: destSub });
+
+  return sourceRepo.init()
+    .then(() => Fs.ensureFileAsync(Path.join(sourceSub, 'ReadMePush1.txt')))
+    .then(() => sourceRepo.add())
+    .then(() => sourceRepo.commit('Making push test data'))
+    .then(() => destRepo.init())
+    .then(() => sourceRepo.push({ force: true, destination: destSub }))
+    .then(() => destRepo.update())
+    .then(() => {
+      assert.true(IsThere(Path.join(destSub, 'ReadMePush1.txt')),
+      'Pushing files into repository was successfull');
+    });
+});
+
 Test('Hg update in a HgRepo.', (assert) => {
   const path = Path.resolve('tests', 'results', 'HgRepo', 'update');
   const to = { url: path, username: 'testUser', password: 'testPass', path };

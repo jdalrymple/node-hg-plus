@@ -231,13 +231,15 @@ repo.init((result) => {
 
 ```
 
-### HgRepo.commit(message, [done]) {
+### HgRepo.commit(message, [options], [done]) {
 
 Commits new changes in the the Hg repo instance.
 
 **Options:**
 >{String} message	
 {Function} [done = undefined] - Callback function
+{Boolean} [options.add = false]		
+
 
 **Returns:**
 >{Promise &lt;String&gt;} - Console output
@@ -466,8 +468,7 @@ Release Notes
 
 TODO
 =============
-1. Add tests for push command
-2. Add tests for credentials handling
+1. Add tests for credentials handling
 
 LICENSE
 =======

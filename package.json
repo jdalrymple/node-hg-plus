@@ -1,11 +1,11 @@
 {
   "name": "hg",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A Mercurial client for Node",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jdalrymple/node-hg"
+    "url": "https://github.com/jdalrymple/node-hg-plus"
   },
   "keywords": [
     "mercurial",
