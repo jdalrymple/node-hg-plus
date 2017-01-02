@@ -15,6 +15,8 @@ To install the addon simply run:
 
 	cd node_modules/hg-plus/utils/gitifyhg/
 	python2.7 setup.py install
+	
+Note this feature currently doesnt work on windows. Working on building that functionality for the next release.
 
 ## Basic Examples
 
