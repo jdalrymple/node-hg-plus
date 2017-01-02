@@ -75,7 +75,8 @@ Test('Hg commit in a HgRepo.', (assert) => {
   return testRepo.init()
     .then(() => testRepo.commit())
     .catch((error) => {
-      assert.true(error.message.includes('Commit\'s must have a message'), 'Trigger error when no commit message is passed');
+      assert.true(error.message.includes('Commit\'s must have a message'),
+      'Trigger error when no commit message is passed');
     })
     .then(() => testRepo.commit('Fake commit'))
     .catch((output) => {
@@ -106,7 +107,8 @@ Test('Hg pull in a HgRepo.', (assert) => {
   return testRepo.init()
     .then(() => testRepo.pull({ source: testDir, force: true }))
     .then(() => {
-      assert.true(IsThere(Path.join(testDir, 'ReadMe2.txt')), 'Pulling files into repository was successfull');
+      assert.true(IsThere(Path.join(testDir, 'ReadMe2.txt')),
+      'Pulling files into repository was successfull');
     });
 });
 
@@ -123,7 +125,8 @@ Test('Hg update in a HgRepo.', (assert) => {
     .then(() => testRepo.update({ clean: true, revision: 'tip' }))
     .then(() => testRepo.commit('There should be nothing to commit'))
     .catch((output) => {
-      assert.true(output.stdout.includes('nothing changed'), 'Updating repository was successfull');
+      assert.true(output.stdout.includes('nothing changed'),
+      'Updating repository was successfull');
     });
 });
 

@@ -6,6 +6,8 @@ const Fs = require('fs-extra-promise');
 const Command = require('../utils/Command');
 const Promise = require('bluebird');
 
+const Log = console;
+
 function deleteTestRepositories() {
   return Fs.removeAsync(Path.resolve('tests', 'test-repositories'))
     .then(() => Fs.removeAsync(Path.resolve('tests', 'results', 'Hg')));
@@ -23,8 +25,8 @@ function createTestRepositories() {
     .then(() => Fs.writeFileAsync(testFile2, 'Readme2'))
     .then(() => Promise.each([testDir1, testDir2], directory =>
       Command.run('hg init', directory)
-        .then(() => Command.run('hg add', directory))
-        .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']))))
+      .then(() => Command.run('hg add', directory))
+      .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']))))
     .catch((error) => {
       throw error;
     });
@@ -53,6 +55,76 @@ Test('Cloning multiple Hg repositories into one.', (assert) => {
 
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
       assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
+    })
+    .catch((error) => {
+      Log.error(error);
+    });
+});
+
+Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple-clash');
+
+  const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
+  const testRepo2 = {
+    url: Path.resolve('tests', 'test-repositories', 'repository2'),
+    path: Path.resolve('tests', 'test-repositories', 'repository1'),
+  };
+
+  const to = { path: outputDir };
+
+  return Hg.clone([testRepo1, testRepo2], to)
+    .then(() => Fs.readdirAsync(outputDir))
+    .then((directories) => {
+      const noHiddenDirectories = directories.filter(directory => !directory.includes('.'));
+
+      noHiddenDirectories.forEach((directory) => {
+        assert.true(directory.includes('repository1'));
+
+        if (directory === 'repository1') {
+          assert.true(IsThere(Path.resolve(outputDir, directory, 'ReadMe1.txt')),
+            'The file ReadMe1.txt in repository1 exists');
+        } else {
+          assert.true(IsThere(Path.resolve(outputDir, directory, 'ReadMe2.txt')),
+            'The file ReadMe2.txt in repository1 exists');
+        }
+      });
+    });
+});
+
+Test('Cloning multiple Hg repositories into one with invalid array input params.', (assert) => {
+  const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
+  const testRepo2 = 'myRepo';
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-array') };
+
+  // Test that it fails when
+  // 1. Array but one repo is not correct
+  return Hg.clone([testRepo1, testRepo2], to)
+    .catch(TypeError, (error) => {
+      assert.true(error.message.includes('Incorrect type of from parameter.'));
+    });
+});
+
+Test('Cloning multiple Hg repositories into one with invalid object input params.', (assert) => {
+  const testRepo = { url: Path.resolve('tests', 'test-repositories', 'repository3') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-object') };
+
+  // Test that it fails when
+  // 2. Object but not correct
+  return Hg.clone(testRepo, to)
+    .catch(TypeError, (error) => {
+      assert.true(error.message.includes('Incorrect type of from parameter.'));
+    });
+});
+
+Test('Cloning multiple Hg repositories into one with completely invalid input params.', (assert) => {
+  const testRepo = 'myRepo';
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-complete') };
+
+  // Test that it fails when
+  // 3. Not an object or array
+  return Hg.clone(testRepo, to)
+    .catch(TypeError, (error) => {
+      assert.true(error.message.includes('Incorrect type of from parameter.'));
     });
 });
 
@@ -70,6 +142,7 @@ Test('Cloning a Hg repository.', (assert) => {
     });
 });
 
+
 Test('Creating a Hg repository.', (assert) => {
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'create') };
 
@@ -83,6 +156,6 @@ Test('Creating a Hg repository.', (assert) => {
 
 Test('Getting the version of Hg on the local machine.', assert =>
   Hg.version()
-    .then((output) => {
-      assert.true(output.stdout.includes('Mercurial Distributed SCM (version'), 'Version function returned correctly.');
-    }));
+  .then((output) => {
+    assert.true(output.includes('Mercurial Distributed SCM (version'), 'Version function returned correctly.');
+  }));
