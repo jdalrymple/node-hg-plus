@@ -131,25 +131,39 @@ Test('Cloning multiple Hg repositories into one with completely invalid input pa
 Test('Cloning a Hg repository.', (assert) => {
   const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-single') };
+  const file1 = Path.resolve('tests', 'results', 'Hg', 'clone-single', 'ReadMe1.txt');
 
   // Test that files exist
   return Hg.clone(testRepo1, to)
     .then(() => {
-      const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-single');
-      const file1 = Path.resolve(outputDir, 'ReadMe1.txt');
-
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
     });
 });
 
-Test('Creating a Hg repository.', (assert) => {
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'create') };
+Test('Creating a Hg repository with basic arguments.', (assert) => {
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'create', 'basic') };
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'create', 'basic');
 
   return Hg.create(to)
     .then(() => {
-      const outputDir = Path.resolve('tests', 'results', 'Hg', 'create');
-
       assert.true(IsThere(outputDir), 'Repo was successfully created');
+    });
+});
+
+
+Test('Creating a Hg repository with default args.', (assert) => {
+  const originalDir = process.cwd();
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'create', 'default');
+
+  return Fs.ensureDirAsync(outputDir)
+    .then(() => {
+      process.chdir(outputDir);
+      return Promise.resolve();
+    })
+    .then(() => Hg.create())
+    .then(() => {
+      assert.true(IsThere(outputDir), 'Repo was successfully created');
+      process.chdir(originalDir);
     });
 });
 

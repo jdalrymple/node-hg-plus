@@ -18,7 +18,7 @@
     "nsp": "nsp check",
     "_deps-check": "npm-check-updates --error-level 2 with --semverLevel major",
     "lint": "eslint -f unix .",
-    "pretest":"nsp && npm run _deps-check",
+    "pretest":"npm run nsp && npm run _deps-check",
     "test": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/tape/bin/tape tests/**/*.js",
     "coverall": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
