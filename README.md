@@ -31,7 +31,19 @@ repo.add()
 
 ```
 
-Supports both Promises and Standard callbacks!
+Supports both Promises and Standard callbacks following this structure
+
+Promise
+.then(()=>{
+	
+})
+.catch((error)=>{
+	
+});
+
+Callback((error, output)=>{
+	
+})
 
 ## API
 
@@ -83,7 +95,7 @@ let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
 Hg.clone(from, to);
 
 let from = {url:'some/url',username:'user',password:'pass',path:'path'};
-Hg.clone(from, null, (results) => {
+Hg.clone(from, null, (error, results) => {
 	console.log(results);
 });
 
@@ -121,7 +133,7 @@ let to = {url: 'some/url', username: 'user', password: 'pass', path: 'path'};
 Hg.create(to);
 
 let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
-Hg.create(to,(results) => {
+Hg.create(to,(error, results) => {
 	console.log(results);
 });
 
@@ -149,7 +161,7 @@ Hg.gitify()
 		console.log(results);
 	});
 
-Hg.gitify({gitRepoPath: 'some/path/here'}, (results) => {
+Hg.gitify({gitRepoPath: 'some/path/here'}, (error, results) => {
 	console.log(results);
 });
 
@@ -175,7 +187,7 @@ Hg.version()
 		console.log(version);
 	});
 
-Hg.version((results) => {
+Hg.version((error, results) => {
 	console.log(results);
 });
 
@@ -227,7 +239,7 @@ repo.init()
 		console.log(result);
 	});
 
-repo.init((result) => {
+repo.init((error, result) => {
 	console.log(result);
 });
 
@@ -253,7 +265,7 @@ repo.commit('my commit message')
 		console.log(result);
 	});
 
-repo.commit('my commit message',(result) => {
+repo.commit('my commit message',(error, result) => {
 	console.log(result);
 });
 
@@ -281,7 +293,7 @@ repo.add()
 		console.log(result);
 	});
 
-repo.add(['file.txt','file2.js'],(result) => {
+repo.add(['file.txt','file2.js'],(error, result) => {
 	console.log(result);
 });
 
@@ -311,7 +323,7 @@ repo.push()
 		console.log(result);
 	});
 
-repo.push({force: true}, (result) => {
+repo.push({force: true}, (error, result) => {
 	console.log(result);
 });
 
@@ -343,7 +355,7 @@ repo.pull()
 		console.log(result);
 	});
 
-repo.pull({source: 'some/url/', force: true}, (result) => {
+repo.pull({source: 'some/url/', force: true}, (error, result) => {
 	console.log(result);
 });
 
@@ -371,7 +383,7 @@ repo.update()
 		console.log(result);
 	});
 
-repo.update({clean: true}, (result) => {
+repo.update({clean: true}, (error, result) => {
 	console.log(result);
 });
 
@@ -423,7 +435,7 @@ repo.rename('one/path','destination/path')
 		console.log(result);
 	});
 
-repo.rename('one/path','destination/path',{after: true}, (result) => {
+repo.rename('one/path','destination/path',{after: true}, (error, result) => {
 	console.log(result);
 });
 
@@ -451,7 +463,7 @@ repo.merge()
 		console.log(result);
 	});
 
-repo.merge({force: true}, (result) => {
+repo.merge({force: true}, (error, result) => {
 	console.log(result);
 });
 
