@@ -34,6 +34,7 @@ repo.add()
 
 Supports both Promises and Standard callbacks following this structure
 
+```javascript
 Promise
 .then(()=>{
 	
@@ -46,19 +47,17 @@ Callback((error, output)=>{
 	
 })
 
+```
+
 ## API
 
 ### **Hg**
 
-### Hg([pythonPath = 'python'])
-
-**Options**
+### Hg([pythonPath])
 
 | Argument      | Description           | Type      | Required | Default           |
 |---------------|-----------------------|-----------|----------|-------------------|
-| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | null |
-
-*Returns*
+| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -77,19 +76,15 @@ const Hg = require('hg-plus')(pythonPath:'path/to/python');
 
 Clones a Mercurial repository.
 
-**Options**
-
-| Argument      | Description           | Type      | Required | Default           |
-|---------------|-----------------------|-----------|----------|-------------------|
-| from          |                       | String    | Yes      |                   |
-| to            |                       | Object    | Yes      |                   |
-| to.url        |                       | String    | No       | null              |
-| to.username   |                       | String    | No       | null              |
-| to.password   |                       | String    | No       | null              |
-| to.path       |                       | String    | No       | Current Directory |
-| done          |                       | Function  | No       | null              |
-
-**Returns**
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| from          |                       | String   | Yes      |                   |
+| to            |                       | Object   | No       |                   |
+| to.url        |                       | String   | No       | null              |
+| to.username   |                       | String   | No       | null              |
+| to.password   |                       | String   | No       | null              |
+| to.path       |                       | String   | No       | Current Directory |
+| done          | Callback function     | Function | No       | null              |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -121,8 +116,6 @@ Hg.clone(from, null, (error, results) => {
 
 Creates and initialized a Mercurial repository
 
-**Options**
-
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
 | to            |                       | Object   | No       |                   |
@@ -130,9 +123,7 @@ Creates and initialized a Mercurial repository
 | to.username   |                       | String   | No       | null              |
 | to.password   |                       | String   | No       | null              |
 | to.path       |                       | String   | No       | Current Directory |
-| done          |                       | Function | No       | null              |
-
-**Returns**
+| done          | Callback function     | Function | No       | null              |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -162,15 +153,11 @@ Hg.create(to,(error, results) => {
 
 Create a git copy of this repository using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
-**Options**
-
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
 | options       |                       | Object   | No       |                   |
 | options.gitRepoPath   |               | String   | No       | Base Directory / Current Hg repo name-git              |
-| done          |                       | Function | No       | null              |
-
-*Returns*
+| done          | Callback function     | Function | No       | null              |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -196,11 +183,13 @@ Hg.gitify({gitRepoPath: 'some/path/here'}, (error, results) => {
 
 Gets the version of the installed mercurial package
 
-**Options:**
->{Function} [done = undefined] - Callback function
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| done          | Callback function     | Function | No       | null              |
 
-*Returns:*
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 
