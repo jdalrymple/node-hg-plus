@@ -72,7 +72,7 @@ const Hg = require('hg-plus');
 
 | Argument      | Description           | Type      | Required | Default           |
 |---------------|-----------------------|-----------|----------|-------------------|
-| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
+| path    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
 
 *Example*
 
