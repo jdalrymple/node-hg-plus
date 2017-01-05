@@ -63,6 +63,7 @@ Callback((error, output)=>{
 |------------------------|------------------|
 | Hg Instance            |                  |
 
+
 *Example*
 
 ```javascript
@@ -102,15 +103,11 @@ Hg.clone(from);
 let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
 Hg.clone(from, to);
 
-let from = {url:'some/url',username:'user',password:'pass',path:'path'};
 Hg.clone(from, null, (error, results) => {
 	console.log(results);
 });
 
 ```
-
-### Exposed Base Class
-=======
 
 #### Hg.create([to], [done = undefined])
 
@@ -128,6 +125,7 @@ Creates and initialized a Mercurial repository
 | Returns                | Description      |
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 
@@ -163,6 +161,7 @@ Create a git copy of this repository using the [gitifyhg](https://github.com/buc
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
+
 *Example:*
 
 ```javascript
@@ -190,6 +189,7 @@ Gets the version of the installed mercurial package
 | Returns                | Description      |
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 
