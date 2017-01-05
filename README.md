@@ -6,6 +6,7 @@
 A node js client for [Mercurial](http://mercurial.selenic.com).
 
 Supported node version => 6.0.0
+
 ## Installation
 
 	npm install -S hg-plus
@@ -18,12 +19,12 @@ To install the addon simply run:
 	
 Note this feature currently doesnt work on windows. Working on building that functionality for the next release.
 
-## Basic Examples
+## Usage
 
 ```javascript
 const Hg = require('hg-plus')
 
-let repo = Hg.clone('some/repo/url')
+let repo = Hg.clone('some/url')
 
 repo.add()
 .then(() => repo.commit('my example commit'))
@@ -39,9 +40,12 @@ Supports both Promises and Standard callbacks!
 
 ### Hg([pythonPath = 'python'])
 
-**Options:**
->{String} pythonPath - Path of python 2.7 installation. This is used for the gitify function.
-*Example:*
+**Options**
+| Argument      | Description           | Type      | Required | Default           |
+|---------------|-----------------------|-----------|----------|-------------------|
+| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | null |
+
+*Example*
 
 ```javascript
 const Hg = require('hg-plus');
@@ -54,31 +58,31 @@ const Hg = require('hg-plus')(pythonPath:'path/to/python');
 
 Clones a Mercurial repository.
 
-**Options:**
->{Object} from	
-{String} [from.url = null]	
-{String} [from.username = null]		
-{String} [from.password = null]		
-{String} [from.path = null]		
-{Object} [to = undefined]	
-{String} [to.url = null]	
-{String} [to.username = null]	
-{String} [to.password = null]	
-{String} [to.path = process.cwd()]	
-{Function} [done = undefined] - Callback function
+**Options**
+| Argument      | Description           | Type      | Required | Default           |
+|---------------|-----------------------|-----------|----------|-------------------|
+| from          |                       | String    | Yes      |                   |
+| to            |                       | Object    | Yes      |                   |
+| to.url        |                       | String    | No       | null              |
+| to.username   |                       | String    | No       | null              |
+| to.password   |                       | String    | No       | null              |
+| to.path       |                       | String    | No       | Current Directory |
+| done          |                       | Function  | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+**Returns**
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 
 ```javascript
 const Hg = require('hg-plus');
 
-let from = {url:'some/url',username:'user',password:'pass',path:'path'};
+let from = 'some/url';
 Hg.clone(from);
 
-let from = {url:'some/url',username:'user',password:'pass',path:'path'};
 let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
 Hg.clone(from, to);
 
@@ -96,16 +100,20 @@ Hg.clone(from, null, (results) => {
 
 Creates and initialized a Mercurial repository
 
-**Options:**
->{Object} [to = undefined]	
-{String} [to.url = null]	
-{String} [to.username = null]	
-{String} [to.password = null]	
-{String} [to.path = process.cwd()]	
-{Function} [done = undefined] - Callback function
+**Options**
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| to            |                       | Object   | No       |                   |
+| to.url        |                       | String   | No       | null              |
+| to.username   |                       | String   | No       | null              |
+| to.password   |                       | String   | No       | null              |
+| to.path       |                       | String   | No       | Current Directory |
+| done          |                       | Function | No       | null              |
 
-*Returns:*
->{Promise &lt;String&gt;} - Console output
+**Returns**
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 
@@ -131,13 +139,17 @@ Hg.create(to,(results) => {
 
 Create a git copy of this repository using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
-**Options:**
->{Object} [options]		
-{Object} [options.gitRepoPath = 'this.basedirectory/this.name-git'] - Destination path for the new git repo	
-{Function} [done = undefined] - Callback function
+**Options**
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| options       |                       | Object   | No       |                   |
+| options.gitRepoPath   |               | String   | No       | Base Directory / Current Hg repo name-git              |
+| done          |                       | Function | No       | null              |
 
-*Returns:*
->{Promise &lt;String&gt;} - Console output
+*Returns*
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 
