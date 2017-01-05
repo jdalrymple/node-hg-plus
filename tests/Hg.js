@@ -1,4 +1,4 @@
-const Hg = require('../index')();
+const Hg = require('../index');
 const Path = require('path');
 const Test = require('blue-tape');
 const IsThere = require('is-there');
@@ -44,16 +44,21 @@ Test('Setup test data', assert =>
     assert.true(true);
   }));
 
-// Test('Requiring the Hg Library', (assert) => {
-//   const HgLib1 = require('../index'); // eslint-disable-line global-require
-//   const HgLib2 = require('../index')(); // eslint-disable-line global-require
-//   const HgLib3 = require('../index')({ pythonPath: 'fake path' }); // eslint-disable-line global-require
+Test('Requiring the Hg Library', (assert) => {
+  const HgLib1 = require('../index'); // eslint-disable-line global-require
 
-//   assert.true(HgLib1 instanceof Hg);
-//   assert.true(HgLib2 instanceof Hg);
-//   assert.true(HgLib3 instanceof Hg);
-//   assert.end();
-// });
+  assert.true(HgLib1.clone instanceof Function);
+  assert.end();
+});
+
+Test('Setting the python path', (assert) => {
+  const HgLib1 = require('../index'); // eslint-disable-line global-require
+
+  HgLib1.setPythonPath('test');
+
+  assert.true(HgLib1.pythonPath === 'test');
+  assert.end();
+});
 
 Test('Cloning multiple Hg repositories into one.', (assert) => {
   const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
