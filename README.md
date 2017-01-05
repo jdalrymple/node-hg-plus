@@ -212,6 +212,10 @@ Hg.version((error, results) => {
 ### HgRepo([options],[pythonPath]) {
 
 HgRepo instance. 
+
+Mercurial repository wrapper to handle all the sub functions for mecurial repositories such as:
+init,commit,add,push,pull,rename and merge
+
 Note: These are only created through Hg.clone or Hg.create
 
 | Argument      | Description           | Type     | Required | Default           |
@@ -271,14 +275,16 @@ repo.init((error, result) => {
 
 Commits new changes in the the Hg repo instance.
 
-**Options:**
->{String} message	
-{Function} [done = undefined] - Callback function
-{Boolean} [options.add = false]		
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| message       | Commit message        | String   | Yes      | N/A               |
+| options       |                       | Object   | No       | N/A               |
+| options.add   |                       | Boolean  | No       | false             |
+| done          | Callback function     | Function | No       | null              |
 
-
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 ```javascript
@@ -287,7 +293,7 @@ repo.commit('my commit message')
 		console.log(result);
 	});
 
-repo.commit('my commit message',(error, result) => {
+repo.commit('my commit message', (error, result) => {
 	console.log(result);
 });
 
@@ -297,16 +303,20 @@ repo.commit('my commit message',(error, result) => {
 
 Adds untracked files to the Hg repo instance.
 
-**Options:**
->{Array} [options.files] - Adds all non tracked files if none specified		
-{String} [options.include = null]	
-{String} [options.exclude = null]	
-{Boolean} [options.subrepos = null]		
-{Boolean} [options.dryRun = null]	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| options          |                       | Object       | No       | N/A               |
+| options.files    |                       | Array<String>| No       | All Files         |
+| options.include  |                       | String       | No       | null              |
+| options.exclude  |                       | String       | No       | null              |
+| options.subrepos |                       | Boolean      | No       | false             |
+| options.dryRun   |                       | Boolean      | No       | false             |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 ```javascript
@@ -315,7 +325,7 @@ repo.add()
 		console.log(result);
 	});
 
-repo.add(['file.txt','file2.js'],(error, result) => {
+repo.add(['file.txt','file2.js'], (error, result) => {
 	console.log(result);
 });
 
@@ -325,18 +335,21 @@ repo.add(['file.txt','file2.js'],(error, result) => {
 
 Pushes untracked files to the Hg repo instance.
 
-**Options:**
->{Object} [options]	
-{Boolean} [options.force = false]	
-{String} [options.revision = null]	
-{String} [options.bookmark = null]	
-{String} [options.branch = false]	
-{String} [options.ssh = null]	
-{Boolean} [options.insecure = false]	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| options          |                       | Object       | No       | N/A               |
+| options.force    |                       | Boolean      | No       | false             |
+| options.revision |                       | String       | No       | null              |
+| options.bookmark |                       | String       | No       | null              |
+| options.branch   |                       | String       | No       | null              |
+| options.ssh      |                       | String       | No       | null              |
+| options.insecure |                       | Boolean      | No       | false             |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 ```javascript
@@ -355,20 +368,22 @@ repo.push({force: true}, (error, result) => {
 
 Pulls files to the Hg repo instance.
 
-**Options:**
->{String} [source = this.url]
-{Object} [options]		
-{Boolean} [options.force = false]	
-{Boolean} [options.update = false]	
-{String} [options.revision = null]	
-{String} [options.bookmark = null]	
-{String} [options.branch = null]	
-{String} [options.ssh = null]	
-{Boolean} [options.insecure = null]	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| source           |                       | String       | No       | this.url          |
+| options          |                       | Object       | No       | N/A               |
+| options.force    |                       | Boolean      | No       | false             |
+| options.update   |                       | Boolean      | No       | false              |
+| options.revision |                       | String       | No       | null              |
+| options.bookmark |                       | String       | No       | null              |
+| options.branch   |                       | String       | No       | null              |
+| options.ssh      |                       | String       | No       | null              |
+| options.insecure |                       | Boolean      | No       | false             |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 ```javascript
@@ -387,16 +402,18 @@ repo.pull({source: 'some/url/', force: true}, (error, result) => {
 
 Update Hg repo instance.
 
-**Options:**
->{Object} [options]		
-{Boolean} [options.clean = false]	
-{Boolean} [options.check = false]	
-{String} [options.revision = null]	
-{String} [options.tool = null]	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| options          |                       | Object       | No       | N/A               |
+| options.clean    |                       | Boolean      | No       | false             |
+| options.check    |                       | Boolean      | No       | false              |
+| options.revision |                       | String       | No       | null              |
+| options.tool     |                       | Boolean      | No       | false             |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 ```javascript
@@ -415,13 +432,16 @@ repo.update({clean: true}, (error, result) => {
 
 Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
-**Options:**
->{Object} [options]		
-{Object} [options.gitRepoPath] - Destination path for the python27 executable	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| options          |                       | Object       | No       | N/A               |
+| options.gitRepoPath | New git repository path | Boolean | No       | Current base directory/current hg repo name-git            |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 ```javascript
@@ -436,19 +456,21 @@ repo.gitify()
 
 Rename files to the Hg repo instance.
 
-**Options:**
->{String} source,
-{String} destination
-{Object} [options]		
-{Boolean} [options.after = false]	
-{Boolean} [options.force = false]	
-{String} [options.include = null]	
-{String} [options.exclude = null]	
-{Boolean} [options.dryRun = null]	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| source           |                       | String       | Yes      | N/A               |
+| destination      |                       | String       | Yes      | N/A               |
+| options          |                       | Object       | No       | N/A               |
+| options.after    |                       | Boolean      | No       | false             |
+| options.force    |                       | Boolean      | No       | false             |
+| options.include  |                       | String       | No       | null              |
+| options.exclude  |                       | String       | No       | null              |
+| options.dryRun   |                       | Boolean      | No       | false             |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 ```javascript
@@ -467,16 +489,18 @@ repo.rename('one/path','destination/path',{after: true}, (error, result) => {
 
 Rename files to the Hg repo instance.
 
-**Options:**
->{Object} [options]		
-{Boolean} [options.force = false]	
-{Boolean} [options.preview = false]		
-{String} [options.revision = null]		
-{String} [options.tool = null]	
-{Function} [done = undefined] - Callback function
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| options          |                       | Object       | No       | N/A               |
+| options.force    |                       | Boolean      | No       | false             |
+| options.preview  |                       | Boolean      | No       | false             |
+| options.revision |                       | String       | No       | null              |
+| options.tool     |                       | String       | No       | null              |
+| done             | Callback function     | Function     | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
 
 *Example:*
 ```javascript
