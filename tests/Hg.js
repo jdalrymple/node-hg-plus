@@ -16,14 +16,19 @@ function deleteTestRepositories() {
 function createTestRepositories() {
   const testDir1 = Path.resolve('tests', 'test-repositories', 'repository1');
   const testDir2 = Path.resolve('tests', 'test-repositories', 'repository2');
+  const testDir3 = Path.resolve('tests', 'test-repositories', 'duplicate', 'repository2');
+
   const testFile1 = Path.resolve(testDir1, 'ReadMe1.txt');
   const testFile2 = Path.resolve(testDir2, 'ReadMe2.txt');
+  const testFile3 = Path.resolve(testDir3, 'ReadMe3.txt');
 
   return Fs.ensureFileAsync(testFile1)
     .then(() => Fs.writeFileAsync(testFile1, 'Readme1'))
     .then(() => Fs.ensureFileAsync(testFile2))
     .then(() => Fs.writeFileAsync(testFile2, 'Readme2'))
-    .then(() => Promise.each([testDir1, testDir2], directory =>
+    .then(() => Fs.ensureFileAsync(testFile3))
+    .then(() => Fs.writeFileAsync(testFile3, 'Readme3'))
+    .then(() => Promise.each([testDir1, testDir2, testDir3], directory =>
       Command.run('hg init', directory)
       .then(() => Command.run('hg add', directory))
       .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']))))
@@ -39,9 +44,20 @@ Test('Setup test data', assert =>
     assert.true(true);
   }));
 
+// Test('Requiring the Hg Library', (assert) => {
+//   const HgLib1 = require('../index'); // eslint-disable-line global-require
+//   const HgLib2 = require('../index')(); // eslint-disable-line global-require
+//   const HgLib3 = require('../index')({ pythonPath: 'fake path' }); // eslint-disable-line global-require
+
+//   assert.true(HgLib1 instanceof Hg);
+//   assert.true(HgLib2 instanceof Hg);
+//   assert.true(HgLib3 instanceof Hg);
+//   assert.end();
+// });
+
 Test('Cloning multiple Hg repositories into one.', (assert) => {
-  const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
-  const testRepo2 = { url: Path.resolve('tests', 'test-repositories', 'repository2') };
+  const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
+  const testRepo2 = Path.resolve('tests', 'test-repositories', 'repository2');
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple') };
 
   // Test that files exist
@@ -63,13 +79,8 @@ Test('Cloning multiple Hg repositories into one.', (assert) => {
 
 Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
   const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple-clash');
-
-  const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
-  const testRepo2 = {
-    url: Path.resolve('tests', 'test-repositories', 'repository2'),
-    path: Path.resolve('tests', 'test-repositories', 'repository1'),
-  };
-
+  const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository2');
+  const testRepo2 = Path.resolve('tests', 'test-repositories', 'duplicate', 'repository2');
   const to = { path: outputDir };
 
   return Hg.clone([testRepo1, testRepo2], to)
@@ -78,22 +89,22 @@ Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
       const noHiddenDirectories = directories.filter(directory => !directory.includes('.'));
 
       noHiddenDirectories.forEach((directory) => {
-        assert.true(directory.includes('repository1'));
+        assert.true(directory.includes('repository2'));
 
-        if (directory === 'repository1') {
-          assert.true(IsThere(Path.resolve(outputDir, directory, 'ReadMe1.txt')),
-            'The file ReadMe1.txt in repository1 exists');
-        } else {
+        if (directory === 'repository2') {
           assert.true(IsThere(Path.resolve(outputDir, directory, 'ReadMe2.txt')),
-            'The file ReadMe2.txt in repository1 exists');
+            'The file ReadMe2.txt in repository2 exists');
+        } else {
+          assert.true(IsThere(Path.resolve(outputDir, directory, 'ReadMe3.txt')),
+            'The file ReadMe3.txt in repository2 exists');
         }
       });
     });
 });
 
 Test('Cloning multiple Hg repositories into one with invalid array input params.', (assert) => {
-  const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
-  const testRepo2 = 'myRepo';
+  const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
+  const testRepo2 = 3312312;
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-array') };
 
   // Test that it fails when
@@ -104,20 +115,8 @@ Test('Cloning multiple Hg repositories into one with invalid array input params.
     });
 });
 
-Test('Cloning multiple Hg repositories into one with invalid object input params.', (assert) => {
-  const testRepo = { url: Path.resolve('tests', 'test-repositories', 'repository3') };
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-object') };
-
-  // Test that it fails when
-  // 2. Object but not correct
-  return Hg.clone(testRepo, to)
-    .catch(TypeError, (error) => {
-      assert.true(error.message.includes('Incorrect type of from parameter.'));
-    });
-});
-
 Test('Cloning multiple Hg repositories into one with completely invalid input params.', (assert) => {
-  const testRepo = 'myRepo';
+  const testRepo = 213123;
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-complete') };
 
   // Test that it fails when
@@ -129,7 +128,7 @@ Test('Cloning multiple Hg repositories into one with completely invalid input pa
 });
 
 Test('Cloning a Hg repository.', (assert) => {
-  const testRepo1 = { url: Path.resolve('tests', 'test-repositories', 'repository1') };
+  const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
   const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-single') };
   const file1 = Path.resolve('tests', 'results', 'Hg', 'clone-single', 'ReadMe1.txt');
 
