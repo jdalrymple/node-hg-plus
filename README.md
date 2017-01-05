@@ -53,9 +53,16 @@ Callback((error, output)=>{
 ### Hg([pythonPath = 'python'])
 
 **Options**
+
 | Argument      | Description           | Type      | Required | Default           |
 |---------------|-----------------------|-----------|----------|-------------------|
 | pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | null |
+
+*Returns*
+
+| Returns                | Description      |
+|------------------------|------------------|
+| Hg Instance            |                  |
 
 *Example*
 
@@ -71,6 +78,7 @@ const Hg = require('hg-plus')(pythonPath:'path/to/python');
 Clones a Mercurial repository.
 
 **Options**
+
 | Argument      | Description           | Type      | Required | Default           |
 |---------------|-----------------------|-----------|----------|-------------------|
 | from          |                       | String    | Yes      |                   |
@@ -82,6 +90,7 @@ Clones a Mercurial repository.
 | done          |                       | Function  | No       | null              |
 
 **Returns**
+
 | Returns                | Description      |
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
@@ -113,6 +122,7 @@ Hg.clone(from, null, (error, results) => {
 Creates and initialized a Mercurial repository
 
 **Options**
+
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
 | to            |                       | Object   | No       |                   |
@@ -123,6 +133,7 @@ Creates and initialized a Mercurial repository
 | done          |                       | Function | No       | null              |
 
 **Returns**
+
 | Returns                | Description      |
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
@@ -152,6 +163,7 @@ Hg.create(to,(error, results) => {
 Create a git copy of this repository using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
 **Options**
+
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
 | options       |                       | Object   | No       |                   |
@@ -159,6 +171,7 @@ Create a git copy of this repository using the [gitifyhg](https://github.com/buc
 | done          |                       | Function | No       | null              |
 
 *Returns*
+
 | Returns                | Description      |
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
