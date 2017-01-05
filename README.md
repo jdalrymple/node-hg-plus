@@ -22,13 +22,13 @@ Note this feature currently doesnt work on windows. Working on building that fun
 ## Usage
 
 ```javascript
-const Hg = require('hg-plus')
+const Hg = require('hg-plus');
 
-let repo = Hg.clone('some/url')
+let repo = Hg.clone('some/url');
 
 repo.add()
 .then(() => repo.commit('my example commit'))
-.then(() => repo.push())
+.then(() => repo.push({password: 'myPassword',username:'username'}))
 
 ```
 
@@ -53,11 +53,8 @@ Callback((error, output)=>{
 
 ### **Hg**
 
-### Hg([pythonPath])
+### Hg
 
-| Argument      | Description           | Type      | Required | Default           |
-|---------------|-----------------------|-----------|----------|-------------------|
-| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -69,7 +66,20 @@ Callback((error, output)=>{
 ```javascript
 const Hg = require('hg-plus');
 
-const Hg = require('hg-plus')(pythonPath:'path/to/python');
+```
+
+### Hg.setPythonPath(path)
+
+| Argument      | Description           | Type      | Required | Default           |
+|---------------|-----------------------|-----------|----------|-------------------|
+| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
+
+*Example*
+
+```javascript
+const Hg = require('hg-plus');
+
+Hg.setPythonPath('python');
 
 ```
 
