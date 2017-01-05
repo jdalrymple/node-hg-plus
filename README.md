@@ -109,7 +109,7 @@ Hg.clone(from, null, (error, results) => {
 
 ```
 
-#### Hg.create([to], [done = undefined])
+### Hg.create([to], [done = undefined])
 
 Creates and initialized a Mercurial repository
 
@@ -211,24 +211,29 @@ Hg.version((error, results) => {
 
 ### HgRepo([options],[pythonPath]) {
 
-HgRepo instance.
+HgRepo instance. 
+Note: These are only created through Hg.clone or Hg.create
 
-**Options:**
->{Object} options	
-{String} [options.url = null]	
-{String} [options.username = null]	
-{String} [options.password = null]	
-{String} [options.path = null]	
-{String} [pythonPath = 'python']
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| to            |                       | Object   | No       |                   |
+| to.url        |                       | String   | No       | null              |
+| to.username   |                       | String   | No       | null              |
+| to.password   |                       | String   | No       | null              |
+| to.path       |                       | String   | No       | Current Directory |
+| pythonPath    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
 
-**Returns:**
->{HgRepo}
+| Returns                | Description      |
+|------------------------|------------------|
+| HgRepo Instance        |                  |
 
 *Example:*
 ```javascript
-const HgRepo = require('hg-plus').HgRepo;
+const Hg = require('hg-plus');
 
-let repo = new HgRepo();
+let repo = Hg.create();
+
+let repo2 = Hg.clone('some/url');
 
 ```
 
@@ -236,17 +241,20 @@ let repo = new HgRepo();
 
 Inits the Hg repo instance.
 
-**Options:**
->{Function} [done = undefined] - Callback function
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| done          | Callback function     | Function | No       | null              |
 
-**Returns:**
->{Promise &lt;String&gt;} - Console output
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
 
 *Example:*
 ```javascript
-const HgRepo = require('hg-plus').HgRepo;
+const Hg = require('hg-plus');
 
-let repo = new HgRepo();
+let repo = Hg.create();
 
 repo.init()
 	.then((result) => {
