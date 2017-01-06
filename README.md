@@ -53,9 +53,6 @@ Callback((error, output)=>{
 
 ### **Hg**
 
-### Hg
-
-
 | Returns                | Description      |
 |------------------------|------------------|
 | Hg Instance            |                  |
