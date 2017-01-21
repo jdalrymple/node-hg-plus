@@ -13,6 +13,7 @@ function run(command, directory = process.cwd(), options = []) {
         reject(output);
         return;
       }
+
       resolve(output);
     });
   });

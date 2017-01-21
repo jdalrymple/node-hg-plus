@@ -26,8 +26,8 @@ function createTestRepositories() {
     .then(() => Fs.writeFileAsync(testFile2, 'Readme2'))
     .then(() => Promise.each([testDir1, testDir2], directory =>
       Command.run('hg init', directory)
-        .then(() => Command.run('hg add', directory))
-        .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']))))
+      .then(() => Command.run('hg add', directory))
+      .then(() => Command.run('hg commit', directory, ['-m', '"Init Commit"']))))
     .catch((error) => {
       throw error;
     });

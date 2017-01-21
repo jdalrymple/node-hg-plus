@@ -17,20 +17,47 @@ To install the addon simply run:
 	cd node_modules/hg-plus/utils/gitifyhg/
 	python2.7 setup.py install
 	
-Note this feature currently doesnt work on windows. Working on building that functionality for the next release.
+Note this feature currently has mixed results on windows. Working on fixing that functionality for the next release.
+
 
 ## Usage
-
+### Basic
 ```javascript
 const Hg = require('hg-plus');
 
-let repo = Hg.clone('some/url');
+let repo = Hg.clone('my/repository/url');
 
 repo.add()
 .then(() => repo.commit('my example commit'))
 .then(() => repo.push({password: 'myPassword',username:'username'}))
 
 ```
+
+### Pushing repository
+
+```javascript
+const Hg = require('hg-plus');
+
+let repo = Hg.create(let to = {url: 'my/repository/url', username: 'user', password: 'pass', path: 'path'});
+
+repo.push()
+
+```
+
+### Cloning from multiple repositories into a new one
+
+```javascript
+const Hg = require('hg-plus');
+
+let combinedRepo = Hg.clone(['my/repository/url1', 'my/repository/url2', 'my/repository/url3']);
+
+combinedRepo.commit('I just created a repository from three other repositories!'))
+.then(() => repo.push({password: 'myPassword',username:'username'}))
+
+```
+
+
+## API
 
 Supports both Promises and Standard callbacks following this structure
 
@@ -48,8 +75,6 @@ Callback((error, output)=>{
 })
 
 ```
-
-## API
 
 ### **Hg**
 
@@ -104,7 +129,7 @@ Clones a Mercurial repository.
 ```javascript
 const Hg = require('hg-plus');
 
-let from = 'some/url';
+let from = 'my/repository/url';
 Hg.clone(from);
 
 let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
@@ -144,7 +169,7 @@ Hg.create()
 		console.log(results);
 	});
 
-let to = {url: 'some/url', username: 'user', password: 'pass', path: 'path'};
+let to = {url: 'my/repository/url', username: 'user', password: 'pass', path: 'path'};
 Hg.create(to);
 
 let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
@@ -244,7 +269,7 @@ const Hg = require('hg-plus');
 
 let repo = Hg.create();
 
-let repo2 = Hg.clone('some/url');
+let repo2 = Hg.clone('my/repository/url');
 
 ```
 
@@ -399,7 +424,7 @@ repo.pull()
 		console.log(result);
 	});
 
-repo.pull({source: 'some/url/', force: true}, (error, result) => {
+repo.pull({source: 'my/repository/url/', force: true}, (error, result) => {
 	console.log(result);
 });
 
