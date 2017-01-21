@@ -1,5 +1,5 @@
 {
-  "name": "hg",
+  "name": "hg-plus",
   "version": "0.5.0",
   "description": "A Mercurial client for Node",
   "main": "index.js",
