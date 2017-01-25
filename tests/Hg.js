@@ -78,14 +78,11 @@ Test('Cloning multiple local Hg repositories into one.', (assert) => {
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
       assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
     })
-    .catch((error) => {
-      Log.error(error);
-    });
 });
 
 Test('Cloning multiple live Hg repositories into one.', (assert) => {
-  const testRepo1 = 'https://bitbucket.org/jespern/django-piston';
-  const testRepo2 = 'https://bitbucket.org/pypy/pypy';
+  const testRepo1 = 'https://bitbucket.org/mchaput/whoosh';
+  const testRepo2 = 'https://bitbucket.org/durin42/hg-git';
   const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
 
   const to = { path: outputDir };
@@ -101,9 +98,6 @@ Test('Cloning multiple live Hg repositories into one.', (assert) => {
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
       assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
     })
-    .catch((error) => {
-      Log.error(error);
-    });
 });
 
 Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
