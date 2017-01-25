@@ -60,15 +60,39 @@ Test('Setting the python path', (assert) => {
   assert.end();
 });
 
-Test('Cloning multiple Hg repositories into one.', (assert) => {
+Test('Cloning multiple local Hg repositories into one.', (assert) => {
   const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
   const testRepo2 = Path.resolve('tests', 'test-repositories', 'repository2');
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple') };
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple','local');
+
+  const to = { path: outputDir };
 
   // Test that files exist
   return Hg.clone([testRepo1, testRepo2], to)
     .then(() => {
-      const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple');
+      const subFolder1 = Path.resolve(outputDir, 'repository1');
+      const file1 = Path.resolve(subFolder1, 'ReadMe1.txt');
+      const subFolder2 = Path.resolve(outputDir, 'repository2');
+      const file2 = Path.resolve(subFolder2, 'ReadMe2.txt');
+
+      assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
+      assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
+    })
+    .catch((error) => {
+      Log.error(error);
+    });
+});
+
+Test('Cloning multiple live Hg repositories into one.', (assert) => {
+  const testRepo1 ='https://github.com/jdorfman/awesome-json-datasets.git'
+  const testRepo2 = 'https://github.com/abhishekbanthia/Public-APIs.git'
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple','live');
+
+  const to = { path: outputDir) };
+
+  // Test that files exist
+  return Hg.clone([testRepo1, testRepo2], to)
+    .then(() => {
       const subFolder1 = Path.resolve(outputDir, 'repository1');
       const file1 = Path.resolve(subFolder1, 'ReadMe1.txt');
       const subFolder2 = Path.resolve(outputDir, 'repository2');
@@ -83,7 +107,7 @@ Test('Cloning multiple Hg repositories into one.', (assert) => {
 });
 
 Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
-  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple-clash');
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'clash');
   const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository2');
   const testRepo2 = Path.resolve('tests', 'test-repositories', 'duplicate', 'repository2');
   const to = { path: outputDir };
@@ -110,7 +134,7 @@ Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
 Test('Cloning multiple Hg repositories into one with invalid array input params.', (assert) => {
   const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
   const testRepo2 = 3312312;
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-array') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple','invalid-array') };
 
   // Test that it fails when
   // 1. Array but one repo is not correct
@@ -122,7 +146,7 @@ Test('Cloning multiple Hg repositories into one with invalid array input params.
 
 Test('Cloning multiple Hg repositories into one with completely invalid input params.', (assert) => {
   const testRepo = 213123;
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple-invalid-complete') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple','invalid-array') };
 
   // Test that it fails when
   // 3. Not an object or array
