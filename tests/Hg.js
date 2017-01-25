@@ -88,7 +88,7 @@ Test('Cloning multiple live Hg repositories into one.', (assert) => {
   const testRepo2 = 'https://github.com/abhishekbanthia/Public-APIs.git'
   const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple','live');
 
-  const to = { path: outputDir) };
+  const to = { path: outputDir };
 
   // Test that files exist
   return Hg.clone([testRepo1, testRepo2], to)
