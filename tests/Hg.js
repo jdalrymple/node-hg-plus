@@ -6,8 +6,6 @@ const Fs = require('fs-extra-promise');
 const Command = require('../utils/Command');
 const Promise = require('bluebird');
 
-const Log = console;
-
 function deleteTestRepositories() {
   return Fs.removeAsync(Path.resolve('tests', 'test-repositories'))
     .then(() => Fs.removeAsync(Path.resolve('tests', 'results', 'Hg')));
@@ -77,7 +75,7 @@ Test('Cloning multiple local Hg repositories into one.', (assert) => {
 
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
       assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
-    })
+    });
 });
 
 Test('Cloning multiple live Hg repositories into one.', (assert) => {
@@ -97,7 +95,7 @@ Test('Cloning multiple live Hg repositories into one.', (assert) => {
 
       assert.true(IsThere(file1), 'The file ReadMe1.txt in repository1 exists');
       assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
-    })
+    });
 });
 
 Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
