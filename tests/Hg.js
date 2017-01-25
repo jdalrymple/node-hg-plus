@@ -63,7 +63,7 @@ Test('Setting the python path', (assert) => {
 Test('Cloning multiple local Hg repositories into one.', (assert) => {
   const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
   const testRepo2 = Path.resolve('tests', 'test-repositories', 'repository2');
-  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple','local');
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'local');
 
   const to = { path: outputDir };
 
@@ -84,9 +84,9 @@ Test('Cloning multiple local Hg repositories into one.', (assert) => {
 });
 
 Test('Cloning multiple live Hg repositories into one.', (assert) => {
-  const testRepo1 ='https://github.com/jdorfman/awesome-json-datasets.git'
-  const testRepo2 = 'https://github.com/abhishekbanthia/Public-APIs.git'
-  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple','live');
+  const testRepo1 = 'https://github.com/jdorfman/awesome-json-datasets.git';
+  const testRepo2 = 'https://github.com/abhishekbanthia/Public-APIs.git';
+  const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
 
   const to = { path: outputDir };
 
@@ -134,7 +134,7 @@ Test('Cloning multiple clashing Hg repositories into one.', (assert) => {
 Test('Cloning multiple Hg repositories into one with invalid array input params.', (assert) => {
   const testRepo1 = Path.resolve('tests', 'test-repositories', 'repository1');
   const testRepo2 = 3312312;
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple','invalid-array') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'invalid-array') };
 
   // Test that it fails when
   // 1. Array but one repo is not correct
@@ -146,7 +146,7 @@ Test('Cloning multiple Hg repositories into one with invalid array input params.
 
 Test('Cloning multiple Hg repositories into one with completely invalid input params.', (assert) => {
   const testRepo = 213123;
-  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple','invalid-array') };
+  const to = { path: Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'invalid-array') };
 
   // Test that it fails when
   // 3. Not an object or array
