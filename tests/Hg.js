@@ -84,8 +84,8 @@ Test('Cloning multiple local Hg repositories into one.', (assert) => {
 });
 
 Test('Cloning multiple live Hg repositories into one.', (assert) => {
-  const testRepo1 = 'https://github.com/jdorfman/awesome-json-datasets.git';
-  const testRepo2 = 'https://github.com/abhishekbanthia/Public-APIs.git';
+  const testRepo1 = 'https://bitbucket.org/jespern/django-piston';
+  const testRepo2 = 'https://bitbucket.org/pypy/pypy';
   const outputDir = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
 
   const to = { path: outputDir };
