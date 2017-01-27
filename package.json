@@ -41,6 +41,7 @@
     "bluebird": "^3.4.6",
     "child-process-promise": "^2.2.0",
     "fs-extra-promise": "^0.4.1",
+    "globby": "^6.1.0",
     "is-there": "^4.3.6",
     "shortid": "^2.2.6",
     "winston": ">= 0.5.0"
