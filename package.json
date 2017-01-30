@@ -40,6 +40,7 @@
     "blue-tape": "^1.0.0",
     "bluebird": "^3.4.6",
     "child-process-promise": "^2.2.0",
+    "dir-compare": "^1.3.0",
     "fs-extra-promise": "^0.4.1",
     "globby": "^6.1.0",
     "is-there": "^4.3.6",
