@@ -49,7 +49,8 @@ repo.push()
 ```javascript
 const Hg = require('hg-plus');
 
-let combinedRepo = Hg.clone(['my/repository/url1', 'my/repository/url2', 'my/repository/url3']);
+let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
+let combinedRepo = Hg.clone(['my/repository/url1', 'my/repository/url2', 'my/repository/url3'], to);
 
 combinedRepo.commit('I just created a repository from three other repositories!'))
 .then(() => repo.push({password: 'myPassword',username:'username'}))
@@ -111,12 +112,12 @@ Clones a Mercurial repository.
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
-| from          |                       | String   | Yes      |                   |
-| to            |                       | Object   | No       |                   |
+| from          |                       | String OR Array<String>   | Yes  |      |
+| to            |                       | Object   | Yes when cloning from many origins, No otherwise       |                   |
 | to.url        |                       | String   | No       | null              |
 | to.username   |                       | String   | No       | null              |
 | to.password   |                       | String   | No       | null              |
-| to.path       |                       | String   | No       | Current Directory |
+| to.path       |                       | String   | No       | Current Directory/<Cloned repo name> |
 | done          | Callback function     | Function | No       | null              |
 
 | Returns                | Description      |
