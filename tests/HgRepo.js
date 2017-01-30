@@ -149,10 +149,27 @@ Test('Hg update in a HgRepo.', (assert) => {
     });
 });
 
-Test('gitify a HgRepo.', (assert) => {
-  const path = Path.resolve('tests', 'results', 'HgRepo', 'gitify');
+Test('Hg rename in a HgRepo.', (assert) => {
+  const path = Path.resolve('tests', 'results', 'HgRepo', 'rename');
   const to = { url: path, username: 'testUser', password: 'testPass', path };
-  const gitPath = Path.resolve('tests', 'results', 'HgRepo', 'gitify-git');
+  const innerDir = Path.join(path, 'inner-dir');
+  const testRepo = new HgRepo(to);
+
+  return testRepo.init()
+    .then(() => Fs.ensureFileAsync(Path.join(testRepo.path, 'ReadMeUpdate1.txt')))
+    .then(() => testRepo.add())
+    .then(() => testRepo.commit('Adding test data'))
+    .then(() => Fs.ensureDirAsync(innerDir))
+    .then(() => testRepo.rename('*', innerDir))
+    .then(() => {
+      assert.true(IsThere(Path.join(innerDir, 'ReadMeUpdate1.txt')), 'Repo files successfully renamed');
+    });
+});
+
+Test('gitify a HgRepo.', (assert) => {
+  const path = Path.resolve('tests', 'results', 'HgRepo', 'gitify', 'original');
+  const to = { url: path, username: 'testUser', password: 'testPass', path };
+  const gitPath = Path.resolve('tests', 'results', 'HgRepo', 'gitify', 'original-git');
   const testRepo = new HgRepo(to, PythonPath);
 
   return testRepo.init()

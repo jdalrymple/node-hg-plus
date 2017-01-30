@@ -191,6 +191,32 @@ Test('Creating a Hg repository with default args.', (assert) => {
     });
 });
 
+Test('gitify a Hg repository.', (assert) => {
+  const base = Path.resolve('tests', 'results', 'Hg', 'gitify');
+  const path = Path.resolve(base, 'original');
+  const gitPath = Path.resolve(base, 'gitified');
+  const origDirectory = process.cwd;
+
+  const to = { url: path, username: 'testUser', password: 'testPass', path };
+
+  const testRepo = Hg.create(to);
+
+  return testRepo.init()
+    .then(() => Fs.ensureFileAsync(Path.join(testRepo.path, 'ReadMeUpdate1.txt')))
+    .then(() => testRepo.add())
+    .then(() => testRepo.commit('Adding test data'))
+    .then(() => {
+      process.chdir(base);
+
+      return Hg.gitify(gitPath);
+    })
+    .then(() => {
+      assert.true(IsThere(gitPath), 'Git repo exists');
+      assert.true(IsThere(Path.join(gitPath, '.git')), '.git folder exists');
+      process.chdir(origDirectory);
+    });
+});
+
 Test('Getting the version of Hg on the local machine.', assert =>
   Hg.version()
   .then((output) => {
