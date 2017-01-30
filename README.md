@@ -112,12 +112,12 @@ Clones a Mercurial repository.
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
-| from          |                       | String OR Array<String>   | Yes  |      |
+| from          |                       | String OR Array&lt;String&gt;  | Yes  |      |
 | to            |                       | Object   | Yes when cloning from many origins, No otherwise       |                   |
 | to.url        |                       | String   | No       | null              |
 | to.username   |                       | String   | No       | null              |
 | to.password   |                       | String   | No       | null              |
-| to.path       |                       | String   | No       | Current Directory/<Cloned repo name> |
+| to.path       |                       | String   | No       | Current Directory/&lt;Cloned repo name&gt; |
 | done          | Callback function     | Function | No       | null              |
 
 | Returns                | Description      |
