@@ -197,11 +197,13 @@ Test('gitify a Hg repository.', (assert) => {
   const origDirectory = process.cwd;
 
   const to = { url: path, username: 'testUser', password: 'testPass', path };
+  let testRepo;
 
-  const testRepo = Hg.create(to);
-
-  testRepo
-    .then(() => Fs.ensureFileAsync(Path.join(path, 'ReadMeUpdate1.txt')))
+  return Hg.create(to)
+    .then((repo) => {
+      testRepo = repo;
+      return Fs.ensureFileAsync(Path.join(path, 'ReadMeUpdate1.txt'));
+    })
     .then(() => testRepo.add())
     .then(() => testRepo.commit('Adding test data'))
     .then(() => {
