@@ -1,6 +1,6 @@
 {
   "name": "hg-plus",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A Mercurial client for Node",
   "main": "index.js",
   "repository": {
