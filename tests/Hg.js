@@ -56,6 +56,9 @@ Test('Setting the python path', (assert) => {
   HgLib1.setPythonPath('test');
 
   assert.true(HgLib1.pythonPath === 'test');
+
+  HgLib1.setPythonPath('python');
+
   assert.end();
 });
 
@@ -194,7 +197,7 @@ Test('gitify a Hg repository.', (assert) => {
   const base = Path.resolve('tests', 'results', 'Hg', 'gitify');
   const path = Path.resolve(base, 'original');
   const gitPath = Path.resolve(base, 'gitified');
-  const origDirectory = process.cwd;
+  const origDirectory = process.cwd();
 
   const to = { url: path, username: 'testUser', password: 'testPass', path };
   let testRepo;
@@ -207,9 +210,9 @@ Test('gitify a Hg repository.', (assert) => {
     .then(() => testRepo.add())
     .then(() => testRepo.commit('Adding test data'))
     .then(() => {
-      process.chdir(base);
+      process.chdir(path);
 
-      return Hg.gitify(gitPath);
+      return Hg.gitify({ gitRepoPath: gitPath });
     })
     .then(() => {
       assert.true(IsThere(gitPath), 'Git repo exists');
