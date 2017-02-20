@@ -174,7 +174,6 @@ Test('Creating a Hg repository with basic arguments.', (assert) => {
     });
 });
 
-
 Test('Creating a Hg repository with default args.', (assert) => {
   const originalDir = process.cwd();
   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default');
@@ -201,8 +200,8 @@ Test('gitify a Hg repository.', (assert) => {
 
   const testRepo = Hg.create(to);
 
-  return testRepo.init()
-    .then(() => Fs.ensureFileAsync(Path.join(testRepo.path, 'ReadMeUpdate1.txt')))
+  testRepo
+    .then(() => Fs.ensureFileAsync(Path.join(path, 'ReadMeUpdate1.txt')))
     .then(() => testRepo.add())
     .then(() => testRepo.commit('Adding test data'))
     .then(() => {

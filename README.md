@@ -25,11 +25,11 @@ Note this feature currently has mixed results on windows. Working on fixing that
 ```javascript
 const Hg = require('hg-plus');
 
-let repo = Hg.clone('my/repository/url');
-
-repo.add()
-.then(() => repo.commit('my example commit'))
-.then(() => repo.push({password: 'myPassword',username:'username'}))
+let repo = await Hg.clone('my/repository/url')
+	
+await repo.add()
+await repo.commit('my example commit')
+await repo.push({ password: 'myPassword', username: 'username' })
 
 ```
 
@@ -38,9 +38,10 @@ repo.add()
 ```javascript
 const Hg = require('hg-plus');
 
-let repo = Hg.create(let to = {url: 'my/repository/url', username: 'user', password: 'pass', path: 'path'});
+let to = { url: 'my/repository/url', username: 'user', password: 'pass', path: 'path' }
+let repo = await Hg.create(to);
 
-repo.push()
+await repo.push()
 
 ```
 
@@ -49,11 +50,13 @@ repo.push()
 ```javascript
 const Hg = require('hg-plus');
 
-let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
-let combinedRepo = Hg.clone(['my/repository/url1', 'my/repository/url2', 'my/repository/url3'], to);
+let to = {url: 'another/url', username:'user2', password: 'pass2', path: 'path2'};
+let from = ['my/repository/url1', 'my/repository/url2', 'my/repository/url3']
 
-combinedRepo.commit('I just created a repository from three other repositories!'))
-.then(() => repo.push({password: 'myPassword',username:'username'}))
+let repo = await Hg.clone(from, to);
+
+await repo.commit('I just created a repository from three other repositories!')
+await repo.push({ password: 'myPassword', username: 'username' })
 
 ```
 
@@ -122,7 +125,7 @@ Clones a Mercurial repository.
 
 | Returns                | Description      |
 |------------------------|------------------|
-| Promise &lt;String&gt; | Console output   |
+| Promise&lt;HgRepo&gt;  | Console output   |
 
 
 *Example:*
@@ -131,53 +134,56 @@ Clones a Mercurial repository.
 const Hg = require('hg-plus');
 
 let from = 'my/repository/url';
-Hg.clone(from);
+let to = { url: 'another/url', username: 'user2', password: 'pass2', path: 'path2' };
 
-let to = {url:'another/url',username:'user2',password:'pass2',path:'path2'};
-Hg.clone(from, to);
+let repo1 = await Hg.clone(from);
 
-Hg.clone(from, null, (error, results) => {
+let repo2 = await Hg.clone(from, to);
+
+Hg.clone(from, to, (error, results) => {
 	console.log(results);
 });
 
 ```
 
-### Hg.create([to], [done = undefined])
+### Hg.create([options], [done = undefined])
 
-Creates and initialized a Mercurial repository
+Creates and initialized a Mercurial repository.
 
-| Argument      | Description           | Type     | Required | Default           |
-|---------------|-----------------------|----------|----------|-------------------|
-| to            |                       | Object   | No       |                   |
-| to.url        |                       | String   | No       | null              |
-| to.username   |                       | String   | No       | null              |
-| to.password   |                       | String   | No       | null              |
-| to.path       |                       | String   | No       | Current Directory |
-| done          | Callback function     | Function | No       | null              |
+| Argument              | Description   | Type     | Required | Default           |
+|-----------------------|---------------|----------|----------|-------------------|
+| options.to            |               | Object   | No       |                   |
+| options.to.url        |               | String   | No       | null              |
+| options.to.username   |               | String   | No       | null              |
+| options.to.password   |               | String   | No       | null              |
+| options.to.path       |               | String   | No       | Current Directory |
 
-| Returns                | Description      |
-|------------------------|------------------|
-| Promise &lt;String&gt; | Console output   |
+| Returns                          | Description      |
+|----------------------------------|------------------|
+| Promise&lt;HgRepo&gt;            |                  |
 
 
 *Example:*
 
+To create a repo instance that is not initalized
+
 ```javascript
 const Hg = require('hg-plus');
 
-Hg.create()
-	.then((results) => {
-		console.log(results);
-	});
+const repo = await Hg.create();
 
-let to = {url: 'my/repository/url', username: 'user', password: 'pass', path: 'path'};
-Hg.create(to);
+await repo.init()
 
-let to = {url: 'someurl', username: 'user', password: 'pass', path: 'path'};
-Hg.create(to,(error, results) => {
-	console.log(results);
-});
+await repo.add()
+.then((output) => {
+	console.log(output)
+})
 
+```
+
+```javascript
+let to = { url: 'my/repository/url', username: 'user', password: 'pass', path: 'path' };
+let repo = await Hg.create(to);
 ```
 
 ### Hg.gitify([options], [done])
@@ -242,7 +248,7 @@ Hg.version((error, results) => {
 
 ### **HgRepo**
 
-### HgRepo([options],[pythonPath]) {
+### HgRepo([to],[pythonPath]) {
 
 HgRepo instance. 
 
@@ -268,9 +274,9 @@ Note: These are only created through Hg.clone or Hg.create
 ```javascript
 const Hg = require('hg-plus');
 
-let repo = Hg.create();
+let repo1 = await Hg.create();
 
-let repo2 = Hg.clone('my/repository/url');
+let repo2 = await Hg.clone('my/repository/url');
 
 ```
 
@@ -291,7 +297,7 @@ Inits the Hg repo instance.
 ```javascript
 const Hg = require('hg-plus');
 
-let repo = Hg.create();
+let repo = await Hg.create();
 
 repo.init()
 	.then((result) => {
