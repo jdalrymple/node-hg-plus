@@ -6,6 +6,7 @@
 		},
 		"extends": "airbnb",
 		rules:{
-		  arrow-body-style: [2, "as-needed"]
+		  arrow-body-style: [2, "as-needed"],
+		  no-await-in-loop: [1]
 		}
 }
