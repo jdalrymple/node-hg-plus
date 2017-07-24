@@ -5,6 +5,8 @@ const Globby = require('globby');
 const HgRepo = require('./HgRepo');
 const Command = require('./Command');
 const Utils = require('./Utils');
+const { URL } = require('url');
+const Promise = require('bluebird');
 
 async function getSourceInfo(source) {
   let sourceRepoPath;
@@ -12,20 +14,21 @@ async function getSourceInfo(source) {
   let sourceURL = null;
   let tmpRepo = null;
 
-  if (source.constructor !== String || source.constructor !== Object) {
+  if (source.constructor !== String && source.constructor !== Object) {
     throw new TypeError('Incorrect type of from parameter. Clone source in the array is an invalid type. Must be an String or an Object');
   }
 
   if (source.constructor === Object) sourceURL = source.url;
   if (source.constructor === String) sourceURL = source;
 
-  if (new URL(sourceURL).hostname) {
+  try {
+    const url = new URL(sourceURL).hostname;
     const tmpDir = Tempy.directory;
 
     tmpRepo = await cloneSingle(source, { path: tmpDir, url: sourceURL });
     sourceRepoPath = tmpRepo.path;
     sourceRepoName = tmpRepo.name;
-  } else {
+  } catch (error) {
     sourceRepoPath = source;
     sourceRepoName = Path.basename(source);
   }
@@ -59,12 +62,13 @@ async function cloneSingle(from, to, pythonPath) {
 
 async function cloneMultipleAndMerge(from, to) {
   const mergedRepos = [];
-  const combinedRepo = new HgRepo(to.name, to);
+  const combinedRepo = new HgRepo(to);
 
   await combinedRepo.init();
 
-  for (let repo of from) {
-    const [repoName, repoPath] = getSourceInfo(repo);
+  await Promise.each(from, async (repo) => {
+    console.log(repo);
+    const [repoName, repoPath] = await getSourceInfo(repo);
     let repoDir;
 
     if (mergedRepos.includes(repoName)) {
@@ -83,27 +87,27 @@ async function cloneMultipleAndMerge(from, to) {
 
     try {
       await combinedRepo.remove({ after: true });
-    } catch (errorInfo) {
-      if (!errorInfo.error.message.includes('still exists')) throw errorInfo.error;
+    } catch (error) {
+      if (!error.message.includes('still exists')) throw error;
     }
 
     await combinedRepo.commit(`Moving repository ${repoName} into folder ${repoDir}`);
 
-    if (!mergedRepos.length) break;
+    if (!mergedRepos.length) return;
 
     await combinedRepo.merge();
 
     try {
       await combinedRepo.commit(`Merging ${repoName} into combined`);
-    } catch (errorInfo) {
-      if (!errorInfo.error.message.includes('nothing to merge') &&
-        !errorInfo.error.message.includes('merging with a working directory ancestor')) {
-        throw errorInfo.error;
+    } catch (error) {
+      if (!error.message.includes('nothing to merge') &&
+        !error.message.includes('merging with a working directory ancestor')) {
+        throw error;
       }
     }
 
     mergedRepos.push(repoName);
-  }
+  });
 
   return combinedRepo;
 }
