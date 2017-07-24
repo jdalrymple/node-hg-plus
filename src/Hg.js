@@ -67,7 +67,6 @@ async function cloneMultipleAndMerge(from, to) {
   await combinedRepo.init();
 
   await Promise.each(from, async (repo) => {
-    console.log(repo);
     const [repoName, repoPath] = await getSourceInfo(repo);
     let repoDir;
 
@@ -81,8 +80,9 @@ async function cloneMultipleAndMerge(from, to) {
     await combinedRepo.update({ clean: true, revision: 'default' });
 
     const files = await Globby(['*', '!.hg'], { dot: true, cwd: combinedRepo.path });
+    const subDirectory = Path.join(combinedRepo.path, repoName);
 
-    await Utils.moveFiles(combinedRepo.path, Path.join(combinedRepo.path, repoName), files);
+    await Utils.moveFiles(combinedRepo.path, subDirectory, files);
     await combinedRepo.add();
 
     try {
@@ -91,9 +91,11 @@ async function cloneMultipleAndMerge(from, to) {
       if (!error.message.includes('still exists')) throw error;
     }
 
-    await combinedRepo.commit(`Moving repository ${repoName} into folder ${repoDir}`);
+    await combinedRepo.commit(`Moving repository ${repoName} into folder ${subDirectory}`);
 
-    if (!mergedRepos.length) return;
+    mergedRepos.push(repoName);
+
+    if (mergedRepos.length === 1) return;
 
     await combinedRepo.merge();
 
@@ -105,8 +107,6 @@ async function cloneMultipleAndMerge(from, to) {
         throw error;
       }
     }
-
-    mergedRepos.push(repoName);
   });
 
   return combinedRepo;
@@ -145,7 +145,7 @@ class Hg {
   }
 
   async create(to, done) {
-    const repo = new HgRepo(to.name, to, this.pythonPath);
+    const repo = new HgRepo(to, this.pythonPath);
 
     await repo.init();
 
@@ -153,7 +153,7 @@ class Hg {
   }
 
   async gitify({ gitRepoPath } = {}, done) {
-    const repo = new HgRepo(undefined, undefined, this.pythonPath);
+    const repo = new HgRepo({ name: ' ' }, this.pythonPath);
 
     await repo.gitify({ gitRepoPath });
 
@@ -167,7 +167,7 @@ class Hg {
   static async version(done) {
     const output = await Command.run('hg --version');
 
-    return Utils.asCallback(output, done);
+    return Utils.asCallback(output.stdout, done);
   }
 }
 
