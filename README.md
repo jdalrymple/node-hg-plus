@@ -577,5 +577,4 @@ Changelog
 - Cleaned up folder structure
 - Fixed the setting of the default url if none is passed in by the user
 - Fixed cloning from urls and not local paths
-
-
+- Added various callback tests to ensure the callback backwards compatibility is maintained

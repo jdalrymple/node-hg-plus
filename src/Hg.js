@@ -109,7 +109,7 @@ async function cloneMultipleAndMerge(from, to) {
 }
 
 class Hg {
-  constructor({ path = 'python' }) {
+  constructor({ path = 'python' } = { path: 'python' }) {
     this.pythonPath = path;
   }
 
