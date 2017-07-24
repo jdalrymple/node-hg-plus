@@ -573,3 +573,15 @@ LICENSE
 =======
 
 [MIT](http://opensource.org/licenses/MIT), No Attribution Required, Copyright 2016 Justin Dalrymple
+
+Changelog
+=========
+[0.9.0](https://github.com/jdalrymple/node-hg-plus/commit/) (2017-07-20)
+------------------
+- Cleaned up old promise logic and replaced with async/await
+- Removed usless rest param arguments from many of the Hg functions for clarity
+- Added Object input to the Hg.Clone function (See API Docs above)
+- Cleaned up folder structure
+- Fixed the setting of the default url if none is passed in by the user
+ 
+

@@ -5,8 +5,8 @@ const Path = require('path');
 const Globby = require('globby');
 
 const HgRepo = require('./HgRepo');
-const Command = require('../utils/Command');
-
+const Command = require('./Command');
+const Utils = require('./Utils');
 
 function moveFiles(source, destination, files) {
   const movePromises = files.map((file) => {
@@ -19,7 +19,7 @@ function moveFiles(source, destination, files) {
   return Promise.all(movePromises);
 }
 
-function cloneMultipleAndMerge(fromRepos, combinedRepo) {
+async function cloneMultipleAndMerge(fromRepos, combinedRepo) {
   const mergedRepos = [];
 
   for (repo of fromRepos) {
@@ -40,6 +40,7 @@ function cloneMultipleAndMerge(fromRepos, combinedRepo) {
 
     await moveFiles(combinedRepo.path, Path.join(combinedRepo.path, name), files)
     await combinedRepo.add()
+
     try {
       await combinedRepo.remove({ after: true })
     } catch (errorInfo) {
@@ -51,9 +52,9 @@ function cloneMultipleAndMerge(fromRepos, combinedRepo) {
     if (!mergedRepos.length) return;
 
     await combinedRepo.merge()
+
     try {
       await combinedRepo.commit(`Merging ${name} into combined`)
-
     } catch (errorInfo) {
       if (!errorInfo.error.message.includes('nothing to merge') &&
         !errorInfo.error.message.includes('merging with a working directory ancestor')) {
@@ -68,82 +69,87 @@ function cloneMultipleAndMerge(fromRepos, combinedRepo) {
 }
 
 async function cloneSingleOrMultiple(from, to, pythonPath) {
-  const newRepo = new HgRepo(to, pythonPath);
-
   switch (from.constructor) {
-    case String:
-      try {
-        await Command.run('hg clone', newRepo.path, [from, newRepo.path])
-      } catch (error) {
-        if (results.error.message.includes('not found')) {
-          throw new TypeError('Incorrect type of from parameter. Clone source not found');
-        }
-      }
-
-      return newRepo;
-    case Object:
-      let url;
-
-      if (from.password && from.username) {
-        url = `https://${from.username}:${from.password}@${from.url.split('@').pop()}`;
-      } else {
-        url = from.url;
-      }
-
-      try {
-        await Command.run('hg clone', newRepo.path, [url, newRepo.path])
-      } catch (error) {
-        if (error.error.message.includes('not found')) {
-          throw new TypeError('Incorrect type of from parameter. Clone source not found');
-        }
-      }
-
-      return newRepo;
     case Array:
-      return newRepo.init()
-        .then(() => cloneMultipleAndMerge(from, newRepo));
+      {
+        const newRepo = new HgRepo(to, pythonPath);
+
+        await newRepo.init();
+
+        return cloneMultipleAndMerge(from, newRepo);
+      }
+    case Object:
+      {
+        const newRepo = new HgRepo(to || {
+          url: from.url,
+          password: from.password,
+          username: from.username,
+        }, pythonPath);
+
+        const url = Utils.buildRepoURL(from);
+
+        await Command.run('hg clone', newRepo.path, [url, newRepo.path]);
+
+        return newRepo;
+      }
+    case String:
+      {
+        const newRepo = new HgRepo(to || {
+          url: from,
+        }, pythonPath);
+
+        await Command.run('hg clone', newRepo.path, [from, newRepo.path]);
+
+        return newRepo;
+      }
     default:
-      return Promise.reject(new TypeError('Incorrect type of from parameter. Must be an array or an object'));
+      return new TypeError('Incorrect type of from parameter. Must be an array or an object');
   }
 }
 
 class Hg {
-  constructor() {
-    this.pythonPath = null;
-  }
-
-  setPythonPath(path = 'python') {
+  constructor(path = 'python') {
     this.pythonPath = path;
   }
 
-  clone(from, to = undefined, done = undefined) {
-    return cloneSingleOrMultiple(from, to, this.pythonPath)
-      .asCallback(done);
+  async clone(from, to = undefined, done = undefined) {
+    try {
+      const repo = await cloneSingleOrMultiple(from, to, this.pythonPath);
+
+      return Utils.asCallback(repo, done);
+    } catch (e) {
+      if (e.error.message.includes('not found')) {
+        throw new TypeError('Incorrect type of from parameter. Clone source not found');
+      } else {
+        throw e;
+      }
+    }
   }
 
-  create(to, done = undefined) {
+  async create(to, done = undefined) {
     const repo = new HgRepo(to, this.pythonPath);
 
-    return repo.init()
-      .then(() => repo)
-      .asCallback(done);
+    await repo.init();
+
+    return Utils.asCallback(repo, done);
   }
 
-  gitify({ gitRepoPath = undefined } = {}, done = undefined) {
+  async gitify({ gitRepoPath = undefined } = {}, done = undefined) {
     const repo = new HgRepo(undefined, this.pythonPath);
 
-    return repo.gitify({ gitRepoPath })
-      .asCallback(done);
+    await repo.gitify({ gitRepoPath });
+
+    return Utils.asCallback(null, done);
   }
 
   version(done = undefined) {
     return this.constructor.version(done);
   }
 
-  static version(done = undefined) {
-    return Command.run('hg --version')
-      .then(output => Promise.resolve(output.stdout))
-      .asCallback(done);
+  static async version(done = undefined) {
+    const output = await Command.run('hg --version');
+
+    return Utils.asCallback(output, done);
   }
 }
 

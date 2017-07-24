@@ -6,7 +6,7 @@ const Promise = require('bluebird');
 function run(command, directory = process.cwd(), options = []) {
   return new Promise((resolve, reject) => {
     const commandString = `${command} ${options.join(' ')}`;
-
+    console.log(commandString);
     Exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
       const output = { error, stdout, stderr };
       if (error) {
