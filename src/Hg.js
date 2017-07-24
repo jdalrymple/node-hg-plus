@@ -118,7 +118,7 @@ class Hg {
 
       return Utils.asCallback(repo, done);
     } catch (e) {
-      if (e.error.message.includes('not found')) {
+      if (e.message.includes('not found')) {
         throw new TypeError('Incorrect type of from parameter. Clone source not found');
       } else {
         throw e;

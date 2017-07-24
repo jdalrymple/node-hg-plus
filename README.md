@@ -5,7 +5,7 @@
 
 A node js client for [Mercurial](http://mercurial.selenic.com).
 
-Supported node version => 6.0.0
+Supported node version => 7.6.0
 
 ## Installation
 

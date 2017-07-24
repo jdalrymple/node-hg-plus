@@ -1,4 +1,5 @@
 const Path = require('path');
+const { URL } = require('url');
 
 function asCallback(args, callback) {
   if (callback) {
@@ -12,7 +13,7 @@ function buildRepoURL(urlObject) {
   if (urlObject.password && urlObject.username) {
     const parsedURL = new URL(urlObject.url);
 
-    return `${parsedURL.host}://${urlObject.username}:${urlObject.password}@${parsedURL.host}${parsedURL.pathname}`;
+    return `${parsedURL.protocol}//${urlObject.username}:${urlObject.password}@${parsedURL.host}${parsedURL.pathname}`;
   }
 
   return urlObject.url;

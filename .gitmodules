@@ -1,3 +1,3 @@
-[submodule "utils/gitifyhg"]
-	path = utils/gitifyhg
+[submodule "libs/gitifyhg"]
+	path = libs/gitifyhg
 	url = https://github.com/jdalrymple/gitifyhg.git
