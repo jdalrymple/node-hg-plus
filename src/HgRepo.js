@@ -16,12 +16,14 @@ async function ensureGitify(pythonPath) {
 }
 
 class HgRepo {
-  constructor({ url, username = '', password = '', path, name } = {}, pythonPath = 'python') {
-    this.path = path || Utils.generateRepoPath(url);
+  constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
+    if (!name) throw new Error('Must supply a name for a new repository');
+
+    this.path = path || Path.join(process.cwd(), name);
     this.username = username;
     this.password = password;
     this.url = url;
-    this.name = name || Path.basename(Utils.generateRepoPath(url));
+    this.name = name;
     this.pythonPath = pythonPath;
 
     Fs.ensureDirSync(this.path);

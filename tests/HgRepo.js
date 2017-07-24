@@ -1,5 +1,5 @@
-const HgRepo = require('../lib/HgRepo');
-const Command = require('../utils/Command');
+const HgRepo = require('../src/HgRepo');
+const Command = require('../src/Command');
 
 const Path = require('path');
 const Test = require('blue-tape');

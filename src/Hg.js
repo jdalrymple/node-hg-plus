@@ -30,7 +30,7 @@ async function getSourceInfo(source) {
     sourceRepoName = Path.basename(source);
   }
 
-  return sourceRepoName , sourceRepoPath;
+  return [sourceRepoName, sourceRepoPath];
 }
 
 async function cloneSingle(from, to, pythonPath) {
@@ -57,10 +57,13 @@ async function cloneSingle(from, to, pythonPath) {
   return repo;
 }
 
-async function cloneMultipleAndMerge(fromRepos, combinedRepo) {
+async function cloneMultipleAndMerge(from, to) {
   const mergedRepos = [];
+  const combinedRepo = new HgRepo(to.name, to);
 
-  for (let repo of fromRepos) {
+  await combinedRepo.init();
+
+  for (let repo of from) {
     const [repoName, repoPath] = getSourceInfo(repo);
     let repoDir;
 
@@ -106,21 +109,21 @@ async function cloneMultipleAndMerge(fromRepos, combinedRepo) {
 }
 
 class Hg {
-  constructor(path = 'python') {
+  constructor({ path = 'python' }) {
     this.pythonPath = path;
   }
 
-  async clone(from, to = undefined, done = undefined) {
+  async clone(from, to, done) {
     let repo;
 
     try {
       switch (from.constructor) {
-        case Array:
-          {
-            repo = await cloneMultipleAndMerge(from, to);
-            break;
-          }
-        case String || Object:
+        case Array: {
+          repo = await cloneMultipleAndMerge(from, to);
+          break;
+        }
+        case String:
+        case Object:
           repo = await cloneSingle(from, to, this.pythonPath);
           break;
         default:
@@ -137,27 +140,27 @@ class Hg {
     return Utils.asCallback(repo, done);
   }
 
-  async create(to, done = undefined) {
-    const repo = new HgRepo(to, this.pythonPath);
+  async create(to, done) {
+    const repo = new HgRepo(to.name, to, this.pythonPath);
 
     await repo.init();
 
     return Utils.asCallback(repo, done);
   }
 
-  async gitify({ gitRepoPath = undefined } = {}, done = undefined) {
-    const repo = new HgRepo(undefined, this.pythonPath);
+  async gitify({ gitRepoPath } = {}, done) {
+    const repo = new HgRepo(undefined, undefined, this.pythonPath);
 
     await repo.gitify({ gitRepoPath });
 
     return Utils.asCallback(null, done);
   }
 
-  version(done = undefined) {
+  version(done) {
     return this.constructor.version(done);
   }
 
-  static async version(done = undefined) {
+  static async version(done) {
     const output = await Command.run('hg --version');
 
     return Utils.asCallback(output, done);
