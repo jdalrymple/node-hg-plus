@@ -562,13 +562,6 @@ path to your python2.7.x installation. Then run:
 npm test
 ```
 
-Release Notes
-=============
-
-TODO
-=============
-1. Add tests for credentials handling
-
 LICENSE
 =======
 
@@ -583,5 +576,6 @@ Changelog
 - Added Object input to the Hg.Clone function (See API Docs above)
 - Cleaned up folder structure
 - Fixed the setting of the default url if none is passed in by the user
- 
+- Fixed cloning from urls and not local paths
+
 

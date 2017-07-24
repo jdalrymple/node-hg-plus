@@ -1,5 +1,7 @@
 const Path = require('path');
 const { URL } = require('url');
+const Fs = require('fs-extra-promise');
+const Promise = require('bluebird');
 
 function asCallback(args, callback) {
   if (callback) {
@@ -26,8 +28,20 @@ function generateRepoPath(url) {
   return Path.join(process.cwd(), split[split.length - 1]);
 }
 
+function moveFiles(source, destination, files) {
+  const movePromises = files.map((file) => {
+    const sourcePath = Path.join(source, file);
+    const destinationPath = Path.join(destination, file);
+
+    return Fs.moveAsync(sourcePath, destinationPath);
+  });
+
+  return Promise.all(movePromises);
+}
+
 module.exports = {
   asCallback,
   buildRepoURL,
   generateRepoPath,
+  moveFiles,
 };
