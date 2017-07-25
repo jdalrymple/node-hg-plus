@@ -11,7 +11,7 @@ function run(command, directory = process.cwd(), options = []) {
       const output = { error, stdout, stderr };
 
       if (error) {
-        reject(error);
+        reject(output);
         return;
       }
 

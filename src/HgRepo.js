@@ -42,9 +42,17 @@ class HgRepo {
 
     optionalArgs.push(`-m "${message}"`);
 
-    const output = await Command.run('hg commit', this.path, optionalArgs);
+    try {
+      const output = await Command.run('hg commit', this.path, optionalArgs);
 
-    return Utils.asCallback(output, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      if (output.stdout.includes('nothing changed') || !output.error) {
+        return Utils.asCallback(output.stdout, done);
+      }
+
+      throw output.error;
+    }
   }
 
   async add({ files = [''], include, exclude, subrepos = false, dryRun = false } = {}, done) {
@@ -57,9 +65,13 @@ class HgRepo {
     if (subrepos) optionArgs.push(' -S');
     if (dryRun) optionArgs.push(' -n');
 
-    const output = await Command.run('hg add', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg add', this.path, optionArgs);
 
-    return Utils.asCallback(output, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async remove({ files = [''], include, exclude, subrepos = false, force = false, after = false } = {}, done) {
@@ -73,9 +85,13 @@ class HgRepo {
     if (force) optionArgs.push(' -f');
     if (after) optionArgs.push(' -A');
 
-    const output = await Command.run('hg remove', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg remove', this.path, optionArgs);
 
-    return Utils.asCallback(output, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
@@ -91,9 +107,13 @@ class HgRepo {
     if (ssh) optionArgs.push(` -e ${ssh}`);
     if (insecure) optionArgs.push(' --insecure');
 
-    const output = await Command.run('hg push', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg push', this.path, optionArgs);
 
-    return Utils.asCallback(output, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async pull({ source = this.url, force = false, update = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false, } = {}, done) {
@@ -110,9 +130,13 @@ class HgRepo {
     if (ssh) optionArgs.push(` -e ${ssh}`);
     if (insecure) optionArgs.push(' --insecure');
 
-    const output = await Command.run('hg pull', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg pull', this.path, optionArgs);
 
-    return Utils.asCallback(output, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async update({ clean = false, check = false, revision, tool } = {}, done) {
@@ -123,9 +147,13 @@ class HgRepo {
     if (check) optionArgs.push(' -c');
     if (tool) optionArgs.push(` -t ${tool}`);
 
-    const output = await Command.run('hg update', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg update', this.path, optionArgs);
 
-    return Utils.asCallback(output, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async gitify(gitRepoPath = Path.resolve(Path.dirname(this.path), `${this.name}-git`), done) {
@@ -137,9 +165,12 @@ class HgRepo {
 
     await ensureGitify(this.pythonPath);
 
-    const gitifyOutput = Command.run(`git clone gitifyhg::${this.path} ${gitRepoPath}`);
-
-    return Utils.asCallback(gitifyOutput, done);
+    try {
+      const output = await Command.run(`git clone gitifyhg::${this.path}  ${gitRepoPath}`);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {
@@ -154,9 +185,13 @@ class HgRepo {
     if (exclude) optionArgs.push(` -X ${exclude}`);
     if (dryRun) optionArgs.push(' -n');
 
-    const renameOutput = await Command.run('hg rename', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg rename', this.path, optionArgs);
 
-    return Utils.asCallback(renameOutput, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 
   async merge({ force = false, revision, preview = false, tool } = {}, done) {
@@ -167,9 +202,13 @@ class HgRepo {
     if (preview) optionArgs.push(' -p');
     if (tool) optionArgs.push(` -t ${tool}`);
 
-    const mergeOutput = await Command.run('hg merge', this.path, optionArgs);
+    try {
+      const output = await Command.run('hg merge', this.path, optionArgs);
 
-    return Utils.asCallback(mergeOutput, done);
+      return Utils.asCallback(output.stdout, done);
+    } catch (output) {
+      throw output.error;
+    }
   }
 }
 

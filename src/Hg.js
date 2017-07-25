@@ -68,19 +68,17 @@ async function cloneMultipleAndMerge(from, to) {
 
   await Promise.each(from, async (repo) => {
     const [repoName, repoPath] = await getSourceInfo(repo);
-    let repoDir;
+    let repoDir = repoName;
 
     if (mergedRepos.includes(repoName)) {
       repoDir += `-${ShortID.generate()}`;
-    } else {
-      repoDir = repoName;
     }
 
     await combinedRepo.pull({ source: repoPath, force: true });
     await combinedRepo.update({ clean: true, revision: 'default' });
 
     const files = await Globby(['*', '!.hg'], { dot: true, cwd: combinedRepo.path });
-    const subDirectory = Path.join(combinedRepo.path, repoName);
+    const subDirectory = Path.join(combinedRepo.path, repoDir);
 
     await Utils.moveFiles(combinedRepo.path, subDirectory, files);
     await combinedRepo.add();
@@ -93,7 +91,7 @@ async function cloneMultipleAndMerge(from, to) {
 
     await combinedRepo.commit(`Moving repository ${repoName} into folder ${subDirectory}`);
 
-    mergedRepos.push(repoName);
+    mergedRepos.push(repoDir);
 
     if (mergedRepos.length === 1) return;
 
@@ -155,7 +153,7 @@ class Hg {
   async gitify({ gitRepoPath } = {}, done) {
     const repo = new HgRepo({ name: ' ' }, this.pythonPath);
 
-    await repo.gitify({ gitRepoPath });
+    await repo.gitify(gitRepoPath);
 
     return Utils.asCallback(null, done);
   }
