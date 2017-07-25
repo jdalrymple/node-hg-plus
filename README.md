@@ -121,3 +121,5 @@ npm test
 - Added default state tests for the HgRepo Object
 - Removed old dependancies now that Promises are more widely supported
 - Standardized the callback support to return in the form callback(error, results) always
+
+NOTE: Upgrading from 0.8.0 to 1.0 will break your project. Ensure to add the function call to your require statement - require('hg-plus')()
