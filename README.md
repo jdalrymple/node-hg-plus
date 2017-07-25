@@ -40,7 +40,7 @@ Note this feature currently has mixed results on windows. Working on fixing that
 Usage
 =====
 
-Basic 
+## Basic 
 
 ```javascript
 // Initialize with default python path ('python')
@@ -54,7 +54,7 @@ await repo.commit('my example commit')
 await repo.push({ password: 'myPassword', username: 'username' })
 ```
 
-Create and push a repository
+## Create and push a repository
 
 ```javascript
 const Hg = require('hg-plus')();
@@ -71,7 +71,7 @@ await repo.push()
 
 ```
 
-Cloning from multiple repositories into a new one
+## Cloning from multiple repositories into a new one
 
 ```javascript
 const Hg = require('hg-plus')();
