@@ -21,11 +21,13 @@ function buildRepoURL(urlObject) {
   return urlObject.url;
 }
 
-function generateRepoPath(url) {
+function getRemoteRepoName(url) {
+  if (!url) return null;
+
   const parsedURL = new URL(url);
   const split = parsedURL.pathname.split('/');
 
-  return Path.join(process.cwd(), split[split.length - 1]);
+  return split[split.length - 1];
 }
 
 function moveFiles(source, destination, files) {
@@ -42,6 +44,6 @@ function moveFiles(source, destination, files) {
 module.exports = {
   asCallback,
   buildRepoURL,
-  generateRepoPath,
+  getRemoteRepoName,
   moveFiles,
 };

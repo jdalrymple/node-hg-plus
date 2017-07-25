@@ -17,13 +17,13 @@ async function ensureGitify(pythonPath) {
 
 class HgRepo {
   constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
-    if (!name) throw new Error('Must supply a name for a new repository');
+    if (!name && !url) throw new Error('Must supply a name or remote url when creating a HgRepo instance');
 
-    this.path = path || Path.join(process.cwd(), name);
+    this.url = url;
     this.username = username;
     this.password = password;
-    this.url = url;
-    this.name = name;
+    this.name = Utils.getRemoteRepoName(url) || name;
+    this.path = path || Path.join(process.cwd(), this.name);
     this.pythonPath = pythonPath;
 
     Fs.ensureDirSync(this.path);
