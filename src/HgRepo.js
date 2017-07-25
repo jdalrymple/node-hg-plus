@@ -54,7 +54,6 @@ class HgRepo {
       if (!e.stdout.includes('nothing changed')) output.error = e;
     }
 
-    console.log(output);
     return Utils.asCallback(output.error, output.stdout, done);
   }
 
@@ -129,7 +128,7 @@ class HgRepo {
     return Command.runWithHandling('hg update', this.path, optionArgs, done);
   }
 
-  async gitify(gitRepoPath = Path.resolve(Path.dirname(this.path), `${this.name}-git`), done) {
+  async gitify(path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), done) {
     const checkVersion = await Command.run(`${this.pythonPath} -V`);
 
     if (!checkVersion.stderr.includes('2.7')) {
@@ -138,7 +137,7 @@ class HgRepo {
 
     await ensureGitify(this.pythonPath);
 
-    return Command.runWithHandling(`git clone gitifyhg::${this.path}  ${gitRepoPath}`, done);
+    return Command.runWithHandling(`git clone gitifyhg::${this.path}  ${path}`, done);
   }
 
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {

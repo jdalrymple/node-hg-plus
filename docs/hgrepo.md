@@ -1,10 +1,15 @@
 ## HgRepo
 
 * [Information about a HgRepo Object](#hgrepo-instance)
-* [Init a repo](#init-a-repo)
-* [Commit repo changes](#commit-repo-changes)
-* [Edit a hook](#edit-a-hook) 
-* [Remove a hook](#remove-a-hook) 
+* [Hg init](#hg-init)
+* [Hg commit](#hg-commit)
+* [Hg add](#hg-add) 
+* [Hg push](#hg-push) 
+* [Hg pull](#hg-pull) 
+* [Hg update](#hg-update) 
+* [Hg rename](#hg-rename) 
+* [Hg merge](#hg-merge) 
+* [Convert repo from Hg to Git](#convert-repo-from-hg-to-git) 
 
 ### HgRepo instance
 
@@ -39,13 +44,13 @@ let repo2 = await Hg.clone({ url: 'http://hostname.com/my/repository/url' });
 
 ```
 
-### Init a repo
+### Hg init
 
 Inits the Hg repo instance.
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
-| done          | Callback function     | Function | No       | null              |
+| done          | Callback function     | Function | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -58,7 +63,7 @@ const Hg = require('hg-plus')();
 
 let repo = await Hg.create({ name: 'my-fancy-repo' });
 
-let output = await repo.init()
+let output = await repo.init();
 
 console.log(result);
 
@@ -70,7 +75,7 @@ repo.init((error, result) => {
 
 ```
 
-### Commit repo changes
+### Hg commit
 
 Commits new changes in the the Hg repo instance.
 
@@ -88,7 +93,10 @@ Commits new changes in the the Hg repo instance.
 *Example:*
 ```javascript
 let output = repo.commit('my commit message');
+
 console.log(output);
+
+// OR
 
 repo.commit('my commit message', (error, result) => {
 	console.log(result);
@@ -96,7 +104,7 @@ repo.commit('my commit message', (error, result) => {
 
 ```
 
-### HgRepo.add([options], [done]) {
+### Hg add
 
 Adds untracked files to the Hg repo instance.
 
@@ -108,7 +116,7 @@ Adds untracked files to the Hg repo instance.
 | options.exclude  |                       | String       | No       | null              |
 | options.subrepos |                       | Boolean      | No       | false             |
 | options.dryRun   |                       | Boolean      | No       | false             |
-| done             | Callback function     | Function     | No       | null              |
+| done             | Callback function     | Function     | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -117,10 +125,11 @@ Adds untracked files to the Hg repo instance.
 
 *Example:*
 ```javascript
-repo.add()
-	.then((result) => {
-		console.log(result);
-	});
+let output = await repo.add();
+
+console.log(result);
+
+// OR
 
 repo.add(['file.txt','file2.js'], (error, result) => {
 	console.log(result);
@@ -128,7 +137,7 @@ repo.add(['file.txt','file2.js'], (error, result) => {
 
 ```
 
-### HgRepo.push([options], [done]) {
+### Hg push
 
 Pushes untracked files to the Hg repo instance.
 
@@ -141,7 +150,7 @@ Pushes untracked files to the Hg repo instance.
 | options.branch   |                       | String       | No       | null              |
 | options.ssh      |                       | String       | No       | null              |
 | options.insecure |                       | Boolean      | No       | false             |
-| done             | Callback function     | Function     | No       | null              |
+| done             | Callback function     | Function     | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -150,10 +159,11 @@ Pushes untracked files to the Hg repo instance.
 
 *Example:*
 ```javascript
-repo.push()
-	.then((result) => {
-		console.log(result);
-	});
+let output = await repo.push();
+
+console.log(result);
+	
+// OR
 
 repo.push({force: true}, (error, result) => {
 	console.log(result);
@@ -161,7 +171,7 @@ repo.push({force: true}, (error, result) => {
 
 ```
 
-### HgRepo.pull([options], [done]) {
+### Hg pull
 
 Pulls files to the Hg repo instance.
 
@@ -170,13 +180,13 @@ Pulls files to the Hg repo instance.
 | source           |                       | String       | No       | this.url          |
 | options          |                       | Object       | No       | N/A               |
 | options.force    |                       | Boolean      | No       | false             |
-| options.update   |                       | Boolean      | No       | false              |
+| options.update   |                       | Boolean      | No       | false             |
 | options.revision |                       | String       | No       | null              |
 | options.bookmark |                       | String       | No       | null              |
 | options.branch   |                       | String       | No       | null              |
 | options.ssh      |                       | String       | No       | null              |
 | options.insecure |                       | Boolean      | No       | false             |
-| done             | Callback function     | Function     | No       | null              |
+| done             | Callback function     | Function     | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -184,10 +194,11 @@ Pulls files to the Hg repo instance.
 
 *Example:*
 ```javascript
-repo.pull()
-	.then((result) => {
-		console.log(result);
-	});
+let output = await repo.pull();
+
+console.log(result);
+
+// OR
 
 repo.pull({source: 'my/repository/url/', force: true}, (error, result) => {
 	console.log(result);
@@ -195,7 +206,7 @@ repo.pull({source: 'my/repository/url/', force: true}, (error, result) => {
 
 ```
 
-### HgRepo.update([options], [done]) {
+### Hg update
 
 Update Hg repo instance.
 
@@ -203,10 +214,10 @@ Update Hg repo instance.
 |------------------|-----------------------|--------------|----------|-------------------|
 | options          |                       | Object       | No       | N/A               |
 | options.clean    |                       | Boolean      | No       | false             |
-| options.check    |                       | Boolean      | No       | false              |
+| options.check    |                       | Boolean      | No       | false             |
 | options.revision |                       | String       | No       | null              |
 | options.tool     |                       | Boolean      | No       | false             |
-| done             | Callback function     | Function     | No       | null              |
+| done             | Callback function     | Function     | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -214,10 +225,11 @@ Update Hg repo instance.
 
 *Example:*
 ```javascript
-repo.update()
-	.then((result) => {
-		console.log(result);
-	});
+let output = await repo.update();
+
+console.log(result);
+
+// OR
 
 repo.update({clean: true}, (error, result) => {
 	console.log(result);
@@ -225,31 +237,7 @@ repo.update({clean: true}, (error, result) => {
 
 ```
 
-### HgRepo.gitify([{gitRepoPath}], [done]) {
-
-Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
-
-| Argument         | Description           | Type         | Required | Default           |
-|------------------|-----------------------|--------------|----------|-------------------|
-| options          |                       | Object       | No       | N/A               |
-| options.gitRepoPath | New git repository path | Boolean | No       | Current base directory/current hg repo name-git            |
-| done             | Callback function     | Function     | No       | null              |
-
-| Returns                | Description      |
-|------------------------|------------------|
-| Promise &lt;String&gt; | Console output   |
-
-
-*Example:*
-```javascript
-repo.gitify()
-	.then((result) => {
-		console.log(result);
-	});
-
-```
-
-### HgRepo.rename([options], [done]) {
+### Hg rename
 
 Rename files to the Hg repo instance.
 
@@ -263,7 +251,7 @@ Rename files to the Hg repo instance.
 | options.include  |                       | String       | No       | null              |
 | options.exclude  |                       | String       | No       | null              |
 | options.dryRun   |                       | Boolean      | No       | false             |
-| done             | Callback function     | Function     | No       | null              |
+| done             | Callback function     | Function     | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -271,10 +259,11 @@ Rename files to the Hg repo instance.
 
 *Example:*
 ```javascript
-repo.rename('one/path','destination/path')
-	.then((result) => {
-		console.log(result);
-	});
+output = await repo.rename('one/path','destination/path');
+
+console.log(result);
+
+// OR
 
 repo.rename('one/path','destination/path',{after: true}, (error, result) => {
 	console.log(result);
@@ -282,7 +271,7 @@ repo.rename('one/path','destination/path',{after: true}, (error, result) => {
 
 ```
 
-### HgRepo.merge([options], [done]) {
+### Hg merge
 
 Rename files to the Hg repo instance.
 
@@ -293,7 +282,7 @@ Rename files to the Hg repo instance.
 | options.preview  |                       | Boolean      | No       | false             |
 | options.revision |                       | String       | No       | null              |
 | options.tool     |                       | String       | No       | null              |
-| done             | Callback function     | Function     | No       | null              |
+| done             | Callback function     | Function     | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -301,13 +290,42 @@ Rename files to the Hg repo instance.
 
 *Example:*
 ```javascript
-repo.merge()
-	.then((result) => {
-		console.log(result);
-	});
+let output = await repo.merge();
+
+console.log(result);
+
+// OR
 
 repo.merge({force: true}, (error, result) => {
 	console.log(result);
 });
 
+```
+
+### Convert repo from Hg to Git
+
+Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
+
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| options          |                       | Object       | No       | N/A               |
+| options.path | New git repository path | Boolean | No       | Current base directory/current hg repo name-git            |
+| done             | Callback function     | Function     | No       |                   |
+
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
+
+*Example:*
+```javascript
+let output = await repo.gitify();
+console.log(result);
+
+
+// OR
+
+repo.gitify({ path:'my/git/repo/path' }, (error, result) => {
+	console.log(result);
+});
 ```

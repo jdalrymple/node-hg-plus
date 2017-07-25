@@ -29,7 +29,7 @@ async function getSourceInfo(source, pythonPath) {
 
     await cloneSingle(source, { path: sourceRepoPath, url: sourceURL }, pythonPath);
   } catch (error) {
-    if (error.code !== 'ERR_INVALID_URL') throw error;
+    if (error.code !== 'ERR_INVALID_URL' || !error.message.includes('Invalid URL')) throw error;
 
     sourceRepoPath = source;
     sourceRepoName = Path.basename(source);

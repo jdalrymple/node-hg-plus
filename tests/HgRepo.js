@@ -111,13 +111,9 @@ Test('Hg commit in a HgRepo.', async (assert) => {
       'Trigger error when no commit message is passed');
   }
 
-  try {
   const output = await testRepo.commit('Fake commit');
-    assert.true(output.includes('nothing changed'), 'Committing files was successfull');
 
-}catch(e){
-  console.log(e);
-}
+  assert.true(output.includes('nothing changed'), 'Committing files was successfull');
 });
 
 Test('Hg add in a HgRepo.', async (assert) => {

@@ -123,3 +123,4 @@ Changelog
 - Added various callback tests to ensure the callback backwards compatibility is maintained
 - Added default state tests for the HgRepo Object
 - Removed old dependancies now that Promises are more widely supported
+- Standardized the callback support to return in the form callback(error, results) always

@@ -1,4 +1,16 @@
-### **Hg**
+## Hg
+
+* [Hg Instance](#hg-instance)
+* [Hg clone](#hg-clone)
+* [Hg create](#hg-create)
+* [Hg version](#hg-version) 
+
+### Hg Instance
+
+| Argument      | Description              | Type     | Required | Default           |
+|---------------|--------------------------|----------|----------|-------------------|
+| path          | Python installation path | String   | No       |  'python'         |
+
 
 | Returns                | Description      |
 |------------------------|------------------|
@@ -8,38 +20,30 @@
 *Example*
 
 ```javascript
-const Hg = require('hg-plus');
+const Hg = require('hg-plus')();
+
+// OR
+
+const Hg = require('hg-plus')({ path: 'python2.7' });
 
 ```
 
-### Hg.setPythonPath(path)
-
-| Argument      | Description           | Type      | Required | Default           |
-|---------------|-----------------------|-----------|----------|-------------------|
-| path    | Path of python 2.7 installation. This is used for the gitify function | String    | No       | 'python' |
-
-*Example*
-
-```javascript
-const Hg = require('hg-plus');
-
-Hg.setPythonPath('python');
-
-```
-
-### Hg.clone(from, [to], [done])
+### Hg clone
 
 Clones a Mercurial repository.
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
-| from          |                       | String OR Array&lt;String&gt;  | Yes  |      |
-| to            |                       | Object   | Yes when cloning from many origins, No otherwise       |                   |
-| to.url        |                       | String   | No       | null              |
+| from          |                       | Object OR String OR Array&lt;String&gt;  | Yes  |      |
+| to            |                       | Object   | Yes      |                   |
+| to.url*       |                       | String   | Yes      | null              |
+| to.name*      |                       | String   | Yes      | null              |
 | to.username   |                       | String   | No       | null              |
 | to.password   |                       | String   | No       | null              |
 | to.path       |                       | String   | No       | Current Directory/&lt;Cloned repo name&gt; |
-| done          | Callback function     | Function | No       | null              |
+| done          | Callback function     | Function | No       |                   |
+
+* Only one of these must be passed.
 
 | Returns                | Description      |
 |------------------------|------------------|
