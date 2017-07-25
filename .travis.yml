@@ -8,7 +8,7 @@ before_install:
 - sudo apt-get update
 - sudo apt-get install python2.7
 - sudo pip install -q https://www.mercurial-scm.org/release/mercurial-4.0.tar.gz
-- cd utils/gitifyhg/
+- cd libs/gitifyhg/
 - sudo python2.7 setup.py install
 - cd $TRAVIS_BUILD_DIR
 
