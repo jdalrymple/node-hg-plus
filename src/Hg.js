@@ -8,11 +8,10 @@ const Utils = require('./Utils');
 const { URL } = require('url');
 const Promise = require('bluebird');
 
-async function getSourceInfo(source) {
+async function getSourceInfo(source, pythonPath) {
   let sourceRepoPath;
   let sourceRepoName;
   let sourceURL = null;
-  let tmpRepo = null;
 
   if (source.constructor !== String && source.constructor !== Object) {
     throw new TypeError('Incorrect type of from parameter. Clone source in the array is an invalid type. Must be an String or an Object');
@@ -25,11 +24,14 @@ async function getSourceInfo(source) {
     const url = new URL(sourceURL).hostname;
     const tmpDir = Tempy.directory();
 
-    tmpRepo = await cloneSingle(source, { path: tmpDir, url: sourceURL });
+    sourceRepoName = Utils.getRemoteRepoName(sourceURL);
+    sourceRepoPath = Path.join(tmpDir, sourceRepoName);
 
-    sourceRepoPath = tmpRepo.path;
-    sourceRepoName = tmpRepo.name;
+    await cloneSingle(source, { path: sourceRepoPath, url: sourceURL }, pythonPath);
   } catch (error) {
+    console.log(error);
+    if (!error.message.includes('INVALID_URL')) throw error;
+
     sourceRepoPath = source;
     sourceRepoName = Path.basename(source);
   }
@@ -61,14 +63,14 @@ async function cloneSingle(from, to, pythonPath) {
   return repo;
 }
 
-async function cloneMultipleAndMerge(from, to) {
+async function cloneMultipleAndMerge(from, to, pythonPath) {
   const mergedRepos = [];
-  const combinedRepo = new HgRepo(to);
+  const combinedRepo = new HgRepo(to, pythonPath);
 
   await combinedRepo.init();
 
   await Promise.each(from, async (repo) => {
-    const [repoName, repoPath] = await getSourceInfo(repo);
+    const [repoName, repoPath] = await getSourceInfo(repo, pythonPath);
     let repoDir = repoName;
 
     if (mergedRepos.includes(repoName)) {
@@ -119,25 +121,18 @@ class Hg {
   async clone(from, to, done) {
     let repo;
 
-    try {
-      switch (from.constructor) {
-        case Array: {
-          repo = await cloneMultipleAndMerge(from, to);
-          break;
-        }
-        case String:
-        case Object:
-          repo = await cloneSingle(from, to, this.pythonPath);
-          break;
-        default:
-          return new TypeError('Incorrect type of from parameter. Must be an array or an object');
+    switch (from.constructor) {
+      case Array: {
+        repo = await cloneMultipleAndMerge(from, to, this.pythonPath);
+        break;
       }
-    } catch (e) {
-      if (e.message.includes('not found')) {
-        throw new TypeError('Incorrect type of from parameter. Clone source not found');
-      } else {
-        throw e;
+      case String:
+      case Object: {
+        repo = await cloneSingle(from, to, this.pythonPath);
+        break;
       }
+      default:
+        return new TypeError('Incorrect type of from parameter. Must be an array or an object');
     }
 
     return Utils.asCallback(repo, done);
@@ -154,7 +149,11 @@ class Hg {
   async gitify({ gitRepoPath } = {}, done) {
     const repo = new HgRepo({ name: ' ' }, this.pythonPath);
 
-    await repo.gitify(gitRepoPath);
+    try {
+      await repo.gitify(gitRepoPath);
+    } catch(e) {
+      console.log(e);
+    }
 
     return Utils.asCallback(null, done);
   }
