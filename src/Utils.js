@@ -1,6 +1,6 @@
 const Path = require('path');
 const { URL } = require('url');
-const Fs = require('fs-extra-promise');
+const Fs = require('fs-extra');
 const Promise = require('bluebird');
 
 function asCallback(args, callback) {
@@ -35,7 +35,7 @@ function moveFiles(source, destination, files) {
     const sourcePath = Path.join(source, file);
     const destinationPath = Path.join(destination, file);
 
-    return Fs.moveAsync(sourcePath, destinationPath);
+    return Fs.move(sourcePath, destinationPath);
   });
 
   return Promise.all(movePromises);

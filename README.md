@@ -569,13 +569,14 @@ LICENSE
 
 Changelog
 =========
-[0.9.0](https://github.com/jdalrymple/node-hg-plus/commit/) (2017-07-20)
+[1.0.0](https://github.com/jdalrymple/node-hg-plus/commit/) (2017-07-20)
 ------------------
 - Cleaned up old promise logic and replaced with async/await
 - Removed usless rest param arguments from many of the Hg functions for clarity
 - Added Object input to the Hg.Clone function (See API Docs above)
 - Cleaned up folder structure
 - Fixed the setting of the default url if none is passed in by the user
-- Fixed cloning from urls and not local paths
+- Fixed cloning from urls instead of local paths
 - Added various callback tests to ensure the callback backwards compatibility is maintained
 - Added default state tests for the HgRepo Object
+- Removed old dependancies now that Promises are more widely supported

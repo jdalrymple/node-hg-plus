@@ -1,4 +1,4 @@
-const Fs = require('fs-extra-promise');
+const Fs = require('fs-extra');
 const Path = require('path');
 const Command = require('./Command');
 const Utils = require('./Utils');
@@ -25,6 +25,8 @@ class HgRepo {
     this.name = Utils.getRemoteRepoName(url) || name;
     this.path = path || Path.join(process.cwd(), this.name);
     this.pythonPath = pythonPath;
+
+    if (Fs.pathExistsSync(this.path)) throw new Error(`Repository already exists at this path: ${this.path}`);
 
     Fs.ensureDirSync(this.path);
   }

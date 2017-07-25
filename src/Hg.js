@@ -19,13 +19,14 @@ async function getSourceInfo(source) {
   }
 
   if (source.constructor === Object) sourceURL = source.url;
-  if (source.constructor === String) sourceURL = source;
+  else if (source.constructor === String) sourceURL = source;
 
   try {
     const url = new URL(sourceURL).hostname;
-    const tmpDir = Tempy.directory;
+    const tmpDir = Tempy.directory();
 
     tmpRepo = await cloneSingle(source, { path: tmpDir, url: sourceURL });
+
     sourceRepoPath = tmpRepo.path;
     sourceRepoName = tmpRepo.name;
   } catch (error) {

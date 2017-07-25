@@ -2,14 +2,14 @@ const Hg = require('../src/index')({ path: 'python2.7' });
 const Path = require('path');
 const Test = require('blue-tape');
 const IsThere = require('is-there');
-const Fs = require('fs-extra-promise');
+const Fs = require('fs-extra');
 const Command = require('../src/Command');
 const Promise = require('bluebird');
 const DirectoryCompare = require('dir-compare');
 
 async function deleteTestRepositories() {
-  await Fs.removeAsync(Path.resolve('tests', 'test-repositories'));
-  await Fs.removeAsync(Path.resolve('tests', 'results', 'Hg'));
+  await Fs.remove(Path.resolve('tests', 'test-repositories'));
+  await Fs.remove(Path.resolve('tests', 'results', 'Hg'));
 }
 
 async function createTestRepositories() {
@@ -21,12 +21,12 @@ async function createTestRepositories() {
   const testFile2 = Path.resolve(testDir2, 'ReadMe2.txt');
   const testFile3 = Path.resolve(testDir3, 'ReadMe3.txt');
 
-  await Fs.ensureFileAsync(testFile1);
-  await Fs.writeFileAsync(testFile1, 'Readme1');
-  await Fs.ensureFileAsync(testFile2);
-  await Fs.writeFileAsync(testFile2, 'Readme2');
-  await Fs.ensureFileAsync(testFile3);
-  await Fs.writeFileAsync(testFile3, 'Readme3');
+  await Fs.ensureFile(testFile1);
+  await Fs.writeFile(testFile1, 'Readme1');
+  await Fs.ensureFile(testFile2);
+  await Fs.writeFile(testFile2, 'Readme2');
+  await Fs.ensureFile(testFile3);
+  await Fs.writeFile(testFile3, 'Readme3');
 
   await Promise.each([testDir1, testDir2, testDir3], async (directory) => {
     await Command.run('hg init', directory);
@@ -109,7 +109,7 @@ Test('Cloning multiple clashing Hg repositories into one.', async (assert) => {
 
   await Hg.clone([testRepo1, testRepo2], to);
 
-  const directories = await Fs.readdirAsync(outputDirectory);
+  const directories = await Fs.readdir(outputDirectory);
   const noHiddenDirectories = directories.filter(directory => !directory.includes('.'));
 
   noHiddenDirectories.forEach((directory) => {
@@ -185,7 +185,7 @@ Test('Creating a Hg repository with default args.', async (assert) => {
   const originalDir = process.cwd();
   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default');
 
-  await Fs.ensureDirAsync(outputDirectory);
+  await Fs.ensureDir(outputDirectory);
 
   process.chdir(outputDirectory);
 
@@ -205,7 +205,7 @@ Test('gitify a Hg repository.', async (assert) => {
   const to = { name: 'original', username: 'testUser', password: 'testPass', path };
   const testRepo = await Hg.create(to);
 
-  await Fs.ensureFileAsync(Path.join(path, 'ReadMeUpdate1.txt'));
+  await Fs.ensureFile(Path.join(path, 'ReadMeUpdate1.txt'));
   await testRepo.add();
   await testRepo.commit('Adding test data');
 
