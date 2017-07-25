@@ -1,6 +1,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/jdalrymple/node-hg-plus/badge.svg?branch=master)](https://coveralls.io/github/jdalrymple/node-hg-plus?branch=master) [![Build Status](https://travis-ci.org/jdalrymple/node-hg-plus.svg?branch=master)](https://travis-ci.org/jdalrymple/node-hg-plus) [![Dependency Status](https://david-dm.org/jdalrymple/node-hg-plus/status.svg)](https://david-dm.org/jdalrymple/node-test#info=dependencies) [![devDependency Status](https://david-dm.org/jdalrymple/node-hg-plus/dev-status.svg)](https://david-dm.org/jdalrymple/node-test#info=devDependencies)
 
-node-hg-plus
+# node-hg-plus
 ==============
 
 A node js client for [Mercurial](http://mercurial.selenic.com). Supports both Async/Await/Promises and Standard callbacks.
@@ -8,7 +8,7 @@ A node js client for [Mercurial](http://mercurial.selenic.com). Supports both As
 Supported node version => 7.6.0
 
  
-Table of Contents
+# Table of Contents
 ==================
 * [Install](#install)
 * [Usage](#usage)
@@ -18,8 +18,8 @@ Table of Contents
 * [License](#licence)
 * [Changelog](#changelog)
 
-Install
-=======
+# Install
+=========
 
 ```bash
 # Install from npm
@@ -37,10 +37,10 @@ python2.7 setup.py install
 	
 Note this feature currently has mixed results on windows. Working on fixing that functionality for the next release.
 
-Usage
-=====
+# Usage
+=======
 
-## Basic 
+### Basic 
 
 ```javascript
 // Initialize with default python path ('python')
@@ -54,7 +54,7 @@ await repo.commit('my example commit')
 await repo.push({ password: 'myPassword', username: 'username' })
 ```
 
-## Create and push a repository
+### Create and push a repository
 
 ```javascript
 const Hg = require('hg-plus')();
@@ -71,7 +71,7 @@ await repo.push()
 
 ```
 
-## Cloning from multiple repositories into a new one
+### Cloning from multiple repositories into a new one
 
 ```javascript
 const Hg = require('hg-plus')();
@@ -96,8 +96,8 @@ await repo.push({
 
 ```
 
-Tests 
-=====
+# Tests 
+=======
 First make sure to change the global variable in tests/HgRepo called pythonPath to be a valid
 path to your python2.7.x installation. Then run:
 
@@ -105,13 +105,13 @@ path to your python2.7.x installation. Then run:
 npm test
 ```
 
-LICENSE
-=======
+# LICENSE
+=========
 
 [MIT](http://opensource.org/licenses/MIT), No Attribution Required, Copyright 2016 Justin Dalrymple
 
-Changelog
-=========
+# Changelog
+===========
 [1.0.0](https://github.com/jdalrymple/node-hg-plus/commit/) (2017-07-20)
 ------------------
 - Cleaned up old promise logic and replaced with async/await

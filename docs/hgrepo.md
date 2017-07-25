@@ -34,7 +34,7 @@ Note: These are only created through Hg.clone or Hg.create
 |------------------------|------------------|
 | HgRepo Instance        |                  |
 
-*Example:*
+
 ```javascript
 const Hg = require('hg-plus')();
 
@@ -57,7 +57,6 @@ Inits the Hg repo instance.
 | Promise &lt;String&gt; | Console output   |
 
 
-*Example:*
 ```javascript
 const Hg = require('hg-plus')();
 
@@ -90,7 +89,7 @@ Commits new changes in the the Hg repo instance.
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
-*Example:*
+
 ```javascript
 let output = repo.commit('my commit message');
 
@@ -123,7 +122,6 @@ Adds untracked files to the Hg repo instance.
 | Promise &lt;String&gt; | Console output   |
 
 
-*Example:*
 ```javascript
 let output = await repo.add();
 
@@ -157,7 +155,6 @@ Pushes untracked files to the Hg repo instance.
 | Promise &lt;String&gt; | Console output   |
 
 
-*Example:*
 ```javascript
 let output = await repo.push();
 
@@ -192,7 +189,7 @@ Pulls files to the Hg repo instance.
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
-*Example:*
+
 ```javascript
 let output = await repo.pull();
 
@@ -223,7 +220,6 @@ Update Hg repo instance.
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
-*Example:*
 ```javascript
 let output = await repo.update();
 
@@ -257,7 +253,6 @@ Rename files to the Hg repo instance.
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
-*Example:*
 ```javascript
 output = await repo.rename('one/path','destination/path');
 
@@ -288,7 +283,6 @@ Rename files to the Hg repo instance.
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
-*Example:*
 ```javascript
 let output = await repo.merge();
 
@@ -317,7 +311,6 @@ Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com
 | Promise &lt;String&gt; | Console output   |
 
 
-*Example:*
 ```javascript
 let output = await repo.gitify();
 console.log(result);

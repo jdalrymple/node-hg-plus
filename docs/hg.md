@@ -4,6 +4,7 @@
 * [Hg clone](#hg-clone)
 * [Hg create](#hg-create)
 * [Hg version](#hg-version) 
+* [Gitify the repo youre currently in](#gitify-the-repo-youre-currently-in)
 
 ### Hg Instance
 
@@ -17,7 +18,6 @@
 | Hg Instance            |                  |
 
 
-*Example*
 
 ```javascript
 const Hg = require('hg-plus')();
@@ -34,7 +34,7 @@ Clones a Mercurial repository.
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
-| from          |                       | Object OR String OR Array&lt;String&gt;  | Yes  |      |
+| from          |                       | Object OR String OR Array&lt;String&gt;  | Yes  |        |
 | to            |                       | Object   | Yes      |                   |
 | to.url*       |                       | String   | Yes      | null              |
 | to.name*      |                       | String   | Yes      | null              |
@@ -50,25 +50,53 @@ Clones a Mercurial repository.
 | Promise&lt;HgRepo&gt;  | Console output   |
 
 
-*Example:*
-
 ```javascript
-const Hg = require('hg-plus');
+const Hg = require('hg-plus')();
 
-let from = 'my/repository/url';
-let to = { url: 'another/url', username: 'user2', password: 'pass2', path: 'path2' };
+let to = { 
+	url: 'http://hostname.com/my/repository/url', 
+	username: 'me@host.com', 
+	password: 'secret', 
+	path: 'path/to/my/new/repo' 
+};
 
-let repo1 = await Hg.clone(from);
 
-let repo2 = await Hg.clone(from, to);
+// Basic from a repo url
+let fromURL = 'http://hostname.com/the/repo/i/want/to/clone';
 
+let repo1 = await Hg.clone(fromURL, to);
+
+// From a repo object
+let fromObj = { 
+	url: 'http://hostname.com/the/repo/i/want/to/clone', 
+	username: 'me@host.com', 
+	password: 'secret', 
+};
+
+let repo2 = await Hg.clone(fromObj, to);
+
+// From a list of repo urls/objects
+let fromArray = [
+{ 
+	url: 'http://hostname.com/the/repo/i/want/to/clone1', 
+	username: 'me@host.com', 
+	password: 'secret', 
+},{ 
+	url: 'http://hostname.com/the/repo/i/want/to/clone2', 
+	username: 'me@host.com', 
+	password: 'secret', 
+}];
+
+let repo3 = await Hg.clone(fromArray, to);
+
+// Similar functionality with the callback structure
 Hg.clone(from, to, (error, results) => {
 	console.log(results);
 });
 
 ```
 
-### Hg.create([options], [done = undefined])
+### Hg create
 
 Creates and initialized a Mercurial repository.
 
@@ -79,90 +107,86 @@ Creates and initialized a Mercurial repository.
 | options.to.username   |               | String   | No       | null              |
 | options.to.password   |               | String   | No       | null              |
 | options.to.path       |               | String   | No       | Current Directory |
+| done          | Callback function     | Function | No       |                   |
 
 | Returns                          | Description      |
 |----------------------------------|------------------|
 | Promise&lt;HgRepo&gt;            |                  |
 
 
-*Example:*
-
-To create a repo instance that is not initalized
-
 ```javascript
-const Hg = require('hg-plus');
+const Hg = require('hg-plus')();
 
+// Basic
 const repo = await Hg.create();
 
-await repo.init()
+await repo.init();
 
-await repo.add()
-.then((output) => {
-	console.log(output)
-})
+// With an object
+let to = { 
+	url: 'http://hostname.com/my/repository/url', 
+	username: 'me@host.com', 
+	password: 'secret', 
+	path: 'path/to/my/new/repo' 
+};
+
+let repo = await Hg.create(to);
+
+await repo.init();
 
 ```
+
+### Hg version
+
+Gets the version of the installed mercurial package
+
+| Argument      | Description           | Type     | Required | Default           |
+|---------------|-----------------------|----------|----------|-------------------|
+| done          | Callback function     | Function | No       |                   |
+
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;String&gt; | Console output   |
+
 
 ```javascript
-let to = { url: 'my/repository/url', username: 'user', password: 'pass', path: 'path' };
-let repo = await Hg.create(to);
+const Hg = require('hg-plus')();
+
+let version = await Hg.version();
+
+console.log(version);
+
+// OR
+
+Hg.version((error, results) => {
+	console.log(results);
+});
+
 ```
 
-### Hg.gitify([options], [done])
+### Gitify the repo youre currently in
 
 Create a git copy of this repository using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
 | options       |                       | Object   | No       |                   |
-| options.gitRepoPath   |               | String   | No       | Base Directory / Current Hg repo name-git              |
-| done          | Callback function     | Function | No       | null              |
+| options.path  |                       | String   | No       | Base Directory / Current Hg repo name-git              |
+| done          | Callback function     | Function | No       |                   |
 
 | Returns                | Description      |
 |------------------------|------------------|
 | Promise &lt;String&gt; | Console output   |
 
 
-*Example:*
-
 ```javascript
-const Hg = require('hg-plus');
+const Hg = require('hg-plus')();
 
-Hg.gitify()
-	.then((results) => {
-		console.log(results);
-	});
+await Hg.gitify();
+
+// OR
 
 Hg.gitify({gitRepoPath: 'some/path/here'}, (error, results) => {
-	console.log(results);
-});
-
-```
-
-### Hg.version([done])
-
-Gets the version of the installed mercurial package
-
-| Argument      | Description           | Type     | Required | Default           |
-|---------------|-----------------------|----------|----------|-------------------|
-| done          | Callback function     | Function | No       | null              |
-
-| Returns                | Description      |
-|------------------------|------------------|
-| Promise &lt;String&gt; | Console output   |
-
-
-*Example:*
-
-```javascript
-const Hg = require('hg-plus');
-
-Hg.version()
-	.then((version) => {
-		console.log(version);
-	});
-
-Hg.version((error, results) => {
 	console.log(results);
 });
 
