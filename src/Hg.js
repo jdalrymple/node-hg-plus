@@ -29,8 +29,7 @@ async function getSourceInfo(source, pythonPath) {
 
     await cloneSingle(source, { path: sourceRepoPath, url: sourceURL }, pythonPath);
   } catch (error) {
-    console.log(error);
-    if (!error.message.includes('INVALID_URL')) throw error;
+    if (error.code !== 'ERR_INVALID_URL') throw error;
 
     sourceRepoPath = source;
     sourceRepoName = Path.basename(source);
@@ -120,42 +119,48 @@ class Hg {
 
   async clone(from, to, done) {
     let repo;
+    let error = null;
 
-    switch (from.constructor) {
-      case Array: {
-        repo = await cloneMultipleAndMerge(from, to, this.pythonPath);
-        break;
+    try {
+      switch (from.constructor) {
+        case Array: {
+          repo = await cloneMultipleAndMerge(from, to, this.pythonPath);
+          break;
+        }
+        case String:
+        case Object: {
+          repo = await cloneSingle(from, to, this.pythonPath);
+          break;
+        }
+        default:
+          return new TypeError('Incorrect type of from parameter. Must be an array or an object');
       }
-      case String:
-      case Object: {
-        repo = await cloneSingle(from, to, this.pythonPath);
-        break;
-      }
-      default:
-        return new TypeError('Incorrect type of from parameter. Must be an array or an object');
+    } catch (e) {
+      error = e;
     }
 
-    return Utils.asCallback(repo, done);
+    return Utils.asCallback(error, repo, done);
   }
 
   async create(to, done) {
-    const repo = new HgRepo(to, this.pythonPath);
+    let repo;
+    let error = null;
 
-    await repo.init();
+    try {
+      repo = new HgRepo(to, this.pythonPath);
 
-    return Utils.asCallback(repo, done);
+      await repo.init();
+    } catch (e) {
+      error = e;
+    }
+
+    return Utils.asCallback(error, repo, done);
   }
 
   async gitify({ gitRepoPath } = {}, done) {
     const repo = new HgRepo({ name: ' ' }, this.pythonPath);
 
-    try {
-      await repo.gitify(gitRepoPath);
-    } catch(e) {
-      console.log(e);
-    }
-
-    return Utils.asCallback(null, done);
+    return repo.gitify(gitRepoPath, done);
   }
 
   version(done) {
@@ -163,9 +168,7 @@ class Hg {
   }
 
   static async version(done) {
-    const output = await Command.run('hg --version');
-
-    return Utils.asCallback(output.stdout, done);
+    return Command.runWithHandling('hg --version', undefined, undefined, done);
   }
 }
 

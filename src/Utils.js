@@ -3,10 +3,12 @@ const { URL } = require('url');
 const Fs = require('fs-extra');
 const Promise = require('bluebird');
 
-function asCallback(args, callback) {
+function asCallback(error, args, callback) {
   if (callback) {
-    return callback(args);
+    return callback(error, args);
   }
+
+  if (error) throw error;
 
   return args;
 }
