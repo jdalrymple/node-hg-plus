@@ -117,6 +117,10 @@ class Hg {
     this.pythonPath = path;
   }
 
+  getRepo(from) {
+    return new HgRepo(from, this.pythonPath);
+  }
+
   async clone(from, to, done) {
     let repo;
     let error = null;
