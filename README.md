@@ -110,7 +110,11 @@ npm test
 
 # Changelog
 
-[1.0.0](https://github.com/jdalrymple/node-hg-plus/commit/5d54b5e8871c13427f8bf2faaa296576952809c4) (2017-07-20)
+[1.0.1](https://github.com/jdalrymple/node-hg-plus/commit/510e70a4fff5bec35e2489c5228748e330559c87) (2017-07-26)
+------------------
+- Removed the .hgtags and hg folders from the gitified repo
+
+[1.0.0](https://github.com/jdalrymple/node-hg-plus/commit/5d54b5e8871c13427f8bf2faaa296576952809c4) (2017-07-25)
 ------------------
 - Cleaned up old promise logic and replaced with async/await
 - Removed usless rest param arguments from many of the Hg functions for clarity
