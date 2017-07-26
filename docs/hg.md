@@ -176,7 +176,7 @@ Create a git copy of this repository using the [gitifyhg](https://github.com/buc
 
 | Returns                | Description      |
 |------------------------|------------------|
-| Promise &lt;String&gt; | Console output   |
+| Promise                | null             |
 
 
 ```javascript

@@ -1,5 +1,6 @@
 const Fs = require('fs-extra');
 const Path = require('path');
+const Globby = require('globby');
 const Command = require('./Command');
 const Utils = require('./Utils');
 
@@ -137,7 +138,17 @@ class HgRepo {
 
     await ensureGitify(this.pythonPath);
 
-    return Command.runWithHandling(`git clone gitifyhg::${this.path}  ${path}`, done);
+    await Command.runWithHandling(`git clone gitifyhg::${this.path}  ${path}`, done);
+
+    // Remove .hgtags from each folder
+    const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
+    await Promise.all(files.map(hgpath => Fs.remove(Path.resolve(path, hgpath))));
+
+    await Command.runWithHandling('git add', path, ['-A'], done);
+    await Command.runWithHandling('git commit', path, ['-m "Removing .hgtags"'], done);
+
+    await Fs.remove(Path.join(path, '.git', 'hg'));
+    await Fs.remove(Path.join(path, '.git', 'refs', 'hg'));
   }
 
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {

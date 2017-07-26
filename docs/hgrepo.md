@@ -308,7 +308,7 @@ Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com
 
 | Returns                | Description      |
 |------------------------|------------------|
-| Promise &lt;String&gt; | Console output   |
+| Promise                | null             |
 
 
 ```javascript

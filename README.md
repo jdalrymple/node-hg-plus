@@ -26,7 +26,8 @@ Supported node version => 7.6.0
 npm install -S hg-plus
 ```
 
-To use the gitify function, you must also have python2.7.x installed as well as the shipped gitifyhg python addon. 
+To use the gitify function, you must also have python2.7.x, git as well as the shipped gitifyhg python addon installed.
+
 To install the addon simply run: 
 
 ```bash

@@ -2,11 +2,11 @@ const ShortID = require('shortid');
 const Path = require('path');
 const Tempy = require('tempy');
 const Globby = require('globby');
+const { URL } = require('url');
+const Promise = require('bluebird');
 const HgRepo = require('./HgRepo');
 const Command = require('./Command');
 const Utils = require('./Utils');
-const { URL } = require('url');
-const Promise = require('bluebird');
 
 async function getSourceInfo(source, pythonPath) {
   let sourceRepoPath;
