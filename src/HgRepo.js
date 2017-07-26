@@ -138,17 +138,42 @@ class HgRepo {
 
     await ensureGitify(this.pythonPath);
 
-    await Command.runWithHandling(`git clone gitifyhg::${this.path}  ${path}`, done);
+    await Command.run(`git clone gitifyhg::${this.path}  ${path}`);
 
     // Remove .hgtags from each folder
     const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
-    await Promise.all(files.map(hgpath => Fs.remove(Path.resolve(path, hgpath))));
 
-    await Command.runWithHandling('git add', path, ['-A'], done);
-    await Command.runWithHandling('git commit', path, ['-m "Removing .hgtags"'], done);
+    if (files.length) {
+      await Promise.all(files.map(hgpath => Fs.remove(Path.resolve(path, hgpath))));
+      await Command.run('git add', path, ['-A']);
+      await Command.run('git commit', path, ['-m "Removing .hgtags"']);
+    }
+
+    // Rename .hgignore to .gitignore, and remove the line syntax:*
+    const hgIgnoreFiles = await Globby(['**/.hgignore'], { dot: true, cwd: path });
+
+    if (hgIgnoreFiles.length) {
+      await Promise.all(hgIgnoreFiles.map(async (ignoreFile) => {
+        const dir = Path.dirname(ignoreFile);
+        const newPath = Path.resolve(path, dir, '.gitignore');
+
+        Fs.renameSync(Path.resolve(path, ignoreFile), newPath);
+
+        const data = Fs.readFileSync(newPath, 'utf8');
+
+        return Fs.outputFile(newPath, data.replace(/syntax(.*)\n/, ''));
+      }));
+
+      await Command.run('git add', path, ['-A']);
+      await Command.run('git commit', path, ['-m "Changing .hgignore to be .gitignore and removing syntax line"']);
+    }
 
     await Fs.remove(Path.join(path, '.git', 'hg'));
     await Fs.remove(Path.join(path, '.git', 'refs', 'hg'));
+
+    if (done) {
+      done();
+    }
   }
 
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {
