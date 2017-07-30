@@ -110,7 +110,7 @@ npm test
 
 # Changelog
 
-[1.0.2](https://github.com/jdalrymple/node-hg-plus/) (2017-07-30)
+[1.0.2](https://github.com/jdalrymple/node-hg-plus/ebecd5632bc762530b4bd796090ab4ed09c6cc56) (2017-07-30)
 ------------------
 - Adding Hg.getRepo, which allows users to get an HgRepo instance from a existing mecurial repository. [Merge pull request #5 from 52linyuepeng/master](https://github.com/jdalrymple/node-hg-plus/26eaecf4e231a55c1fe1d4634fad3d255d79e1fc)
 
