@@ -110,6 +110,10 @@ npm test
 
 # Changelog
 
+[1.0.2](https://github.com/jdalrymple/node-hg-plus/) (2017-07-30)
+------------------
+- Adding Hg.getRepo, which allows users to get an HgRepo instance from a existing mecurial repository. [Merge pull request #5 from 52linyuepeng/master](https://github.com/jdalrymple/node-hg-plus/26eaecf4e231a55c1fe1d4634fad3d255d79e1fc)
+
 [1.0.1](https://github.com/jdalrymple/node-hg-plus/commit/510e70a4fff5bec35e2489c5228748e330559c87) (2017-07-26)
 ------------------
 - Removed the .hgtags and hg folders from the gitified repo

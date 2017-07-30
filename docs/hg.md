@@ -139,28 +139,31 @@ await repo.init();
 
 ### Hg getRepo
 
-Get a cloned or created Mercurial repository.
+Get a HgRepo instance from an already existing Mercurial repository.
 
-| Argument              | Description   | Type     | Required | Default           |
-|-----------------------|---------------|----------|----------|-------------------|
-| options.from            |               | Object   | No       |                   |
-| options.from.url        |               | String   | No       | null              |
-| options.from.username   |               | String   | No       | null              |
-| options.from.password   |               | String   | No       | null              |
-| options.from.path       |               | String   | No       | Current Directory |
+| Argument               | Description   | Type     | Required | Default           |
+|------------------------|---------------|----------|----------|-------------------|
+| options.from           |               | Object   | No       |                   |
+| options.from.url       |               | String   | No       | null              |
+| options.from.username  |               | String   | No       | null              |
+| options.from.password  |               | String   | No       | null              |
+| options.from.path      |               | String   | No       | Current Directory |
 
 | Returns                          | Description      |
 |----------------------------------|------------------|
 | Promise&lt;HgRepo&gt;            |                  |
 
 ```javascript
+
 const repo = Hg.getRepo({
 	url: 'http://hostname.com/my/repository/url',
    	username: 'me@host.com',
    	password: 'secret',
     path: 'my/local/cloned/repo'
 })
+
 await repo.pull()
+
 ```
 
 
