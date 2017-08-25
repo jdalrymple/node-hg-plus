@@ -138,7 +138,7 @@ class HgRepo {
 
     await ensureGitify(this.pythonPath);
 
-    await Command.run(`git clone gitifyhg::${this.path}  ${path}`);
+    await Command.run(`git clone gitifyhg::-gu${this.path}  ${path}`);
 
     // Remove .hgtags from each folder
     const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
