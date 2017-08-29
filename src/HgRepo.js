@@ -129,7 +129,7 @@ class HgRepo {
     return Command.runWithHandling('hg update', this.path, optionArgs, done);
   }
 
-  async gitify({ path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), remoteURL, trackAll = false , clean=false} = {}, done) {
+  async gitify({ path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), remoteURL, trackAll = false, clean = false } = {}, done) {
     const checkVersion = await Command.run(`${this.pythonPath} -V`);
     let cloneCmd;
 

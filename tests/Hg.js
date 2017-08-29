@@ -211,7 +211,7 @@ Test('gitify a Hg repository.', async (assert) => {
 
   process.chdir(path);
 
-  await Hg.gitify({ gitRepoPath: gitPath });
+  await Hg.gitify({ path: gitPath });
 
   assert.true(IsThere(gitPath), 'Git repo exists');
   assert.true(IsThere(Path.join(gitPath, '.git')), '.git folder exists');
