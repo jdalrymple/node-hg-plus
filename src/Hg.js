@@ -161,10 +161,10 @@ class Hg {
     return Utils.asCallback(error, repo, done);
   }
 
-  async gitify({ gitRepoPath } = {}, done) {
+  async gitify({ path, trackAll, remoteURL } = {}, done) {
     const repo = new HgRepo({ name: ' ' }, this.pythonPath);
 
-    return repo.gitify(gitRepoPath, done);
+    return repo.gitify({ path, trackAll, remoteURL }, done);
   }
 
   version(done) {

@@ -30,7 +30,10 @@ const Hg = require('hg-plus')({ path: 'python2.7' });
 
 ### Hg clone
 
-Clones a Mercurial repository.
+Clones a Mercurial repository. When cloning from more than one Hg Repo, it will merge the two repositories
+into one Hg Repo. This repo will contain all the branches from both repositories but will have its `default`
+branches merged into one branch.
+
 
 | Argument      | Description           | Type     | Required | Default           |
 |---------------|-----------------------|----------|----------|-------------------|
@@ -199,11 +202,14 @@ Hg.version((error, results) => {
 
 Create a git copy of this repository using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
-| Argument      | Description           | Type     | Required | Default           |
-|---------------|-----------------------|----------|----------|-------------------|
-| options       |                       | Object   | No       |                   |
-| options.path  |                       | String   | No       | Base Directory / Current Hg repo name-git              |
-| done          | Callback function     | Function | No       |                   |
+| Argument          | Description           | Type     | Required | Default           |
+|-------------------|-----------------------|----------|----------|-------------------|
+| options           |                       | Object   | No       |                   |
+| options.path      | New git repository path | Boolean      | No       | Current base directory/current hg repo name-git            |
+| options.trackAll  | Tells git to track all the branches | Boolean | No  | False     |
+| options.remoteURL | Sets the remote URL of the new git repository | Boolean | No | null |
+| options.clean | Will attempt to clean up the converted git branch, tag etc names | Boolean | No       | False            |
+| done              | Callback function     | Function | No       |    null           |
 
 | Returns                | Description      |
 |------------------------|------------------|

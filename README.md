@@ -95,9 +95,14 @@ await repo.push({
 
 ```
 
+### Hg to Git conversion caveats
+This functionality is still in development. There are a few issues that arise if for example, there are conflicting branches during 
+the clean processing. If it errors out for you, try running the conversion without the clean option.
+
 # Tests 
 
-First make sure to change the global variable in tests/HgRepo called pythonPath to be a valid
+Ensure to install the gitifyhg library as outlined at the beginning of this README then
+make sure to change the global variable in tests/HgRepo called pythonPath to be a valid
 path to your python2.7.x installation. Then run:
 
 ```javascript
@@ -109,6 +114,13 @@ npm test
 [MIT](http://opensource.org/licenses/MIT), No Attribution Required, Copyright 2016 Justin Dalrymple
 
 # Changelog
+
+[1.1.0](https://github.com/jdalrymple/node-hg-plus/) (2017-08-29)
+------------------
+- Renamed the Hg.gitify function `gitRepoPath` parameter to be just `path`
+- Made HgRepo objects gitify function take in an object with a output path, `path`, a remoteURL option, an option to track
+all of the git branches after the conversion, and an option to clean the git branch names during conversion
+- Major updates the the gitifyhg library
 
 [1.0.2](https://github.com/jdalrymple/node-hg-plus/ebecd5632bc762530b4bd796090ab4ed09c6cc56) (2017-07-30)
 ------------------

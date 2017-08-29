@@ -129,8 +129,15 @@ class HgRepo {
     return Command.runWithHandling('hg update', this.path, optionArgs, done);
   }
 
-  async gitify(path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), done) {
+  async gitify({ path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), remoteURL, trackAll = false , clean=false} = {}, done) {
     const checkVersion = await Command.run(`${this.pythonPath} -V`);
+    let cloneCmd;
+
+    if (clean) {
+      cloneCmd = `git clone gitifyhg::-gu${this.path} ${path}`;
+    } else {
+      cloneCmd = `git clone gitifyhg::${this.path} ${path}`;
+    }
 
     if (!checkVersion.stderr.includes('2.7')) {
       throw new Error('Conversion library currently only supports Python 2.7.x.');
@@ -138,7 +145,13 @@ class HgRepo {
 
     await ensureGitify(this.pythonPath);
 
-    await Command.run(`git clone gitifyhg::-gu${this.path}  ${path}`);
+    try {
+      await Command.run(cloneCmd);
+    } catch (e) {
+      console.log(e);
+
+      throw e;
+    }
 
     // Remove .hgtags from each folder
     const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
@@ -166,6 +179,18 @@ class HgRepo {
 
       await Command.run('git add', path, ['-A']);
       await Command.run('git commit', path, ['-m "Changing .hgignore to be .gitignore and removing syntax line"']);
+    }
+
+    if (remoteURL) {
+      await Command.run('git remote set-url origin', path, [remoteURL]);
+    }
+
+    if (trackAll) {
+      let trackCmd = "for branch in  `git branch -r | grep -v 'HEAD\\|master'`; do   \n";
+      trackCmd += ' git branch --track ${branch##*/} $branch; \n'; // eslint-disable-line no-template-curly-in-string
+      trackCmd += 'done';
+   
+      await Command.run(trackCmd, path);
     }
 
     await Fs.remove(Path.join(path, '.git', 'hg'));

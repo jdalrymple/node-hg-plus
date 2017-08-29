@@ -300,11 +300,14 @@ repo.merge({force: true}, (error, result) => {
 
 Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com/buchuki/gitifyhg) python package
 
-| Argument         | Description           | Type         | Required | Default           |
-|------------------|-----------------------|--------------|----------|-------------------|
-| options          |                       | Object       | No       | N/A               |
-| options.path | New git repository path | Boolean | No       | Current base directory/current hg repo name-git            |
-| done             | Callback function     | Function     | No       |                   |
+| Argument          | Description             | Type         | Required | Default           |
+|-------------------|-------------------------|--------------|----------|-------------------|
+| options           |                         | Object       | No       | N/A               |
+| options.path      | New git repository path | Boolean      | No       | Current base directory/current hg repo name-git            |
+| options.trackAll  | Tells git to track all the branches | Boolean | No       | False            |
+| options.remoteURL | Sets the remote URL of the new git repository | Boolean | No       | null            |
+| options.clean | Will attempt to clean up the converted git branch, tag etc names | Boolean | No       | False            |
+| done              | Callback function        | Function    | No       |   null   |
 
 | Returns                | Description      |
 |------------------------|------------------|
