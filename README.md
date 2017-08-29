@@ -115,7 +115,7 @@ npm test
 
 # Changelog
 
-[1.1.0](https://github.com/jdalrymple/node-hg-plus/) (2017-08-29)
+[1.1.0](https://github.com/jdalrymple/node-hg-plus/840b1b4f25591c1191b70397067d007e9367e87c) (2017-08-29)
 ------------------
 - Renamed the Hg.gitify function `gitRepoPath` parameter to be just `path`
 - Made HgRepo objects gitify function take in an object with a output path, `path`, a remoteURL option, an option to track
