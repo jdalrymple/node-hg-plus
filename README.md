@@ -97,7 +97,7 @@ await repo.push({
 
 ### Hg to Git conversion caveats
 This functionality is still in development. There are a few issues that arise if for example, there are conflicting branches during 
-the clean processing. If it errors out for you, try running the conversion without the clean option.
+the clean processing. Before merging repositories, ensure that the branch names(besides default) do not conflict. If it errors out for you, try running the conversion without the clean option.
 
 # Tests 
 
