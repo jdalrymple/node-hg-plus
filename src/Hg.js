@@ -174,6 +174,10 @@ class Hg {
   static async version(done) {
     return Command.runWithHandling('hg --version', undefined, undefined, done);
   }
+
+  async identify(remoteUrl, done) {
+    return Command.runWithHandling(`hg identify ${remoteUrl}`, undefined, undefined, done);
+  }
 }
 
 module.exports = Hg;
