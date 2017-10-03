@@ -175,6 +175,10 @@ class Hg {
     return Command.runWithHandling('hg --version', undefined, undefined, done);
   }
 
+  identify(remoteUrl, done) {
+    return this.constructor.identify(remoteUrl, done);
+  }
+
   static async identify(remoteUrl, done) {
     return Command.runWithHandling(`hg identify ${remoteUrl}`, undefined, undefined, done);
   }
