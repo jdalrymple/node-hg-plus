@@ -167,16 +167,16 @@ class Hg {
     return repo.gitify({ path, trackAll, remoteURL }, done);
   }
 
-  version(done) {
+  async version(done) {
     return this.constructor.version(done);
   }
 
+  async identify(remoteUrl, done) {
+    return this.constructor.identify(remoteUrl, done);
+  }
+  
   static async version(done) {
     return Command.runWithHandling('hg --version', undefined, undefined, done);
-  }
-
-  identify(remoteUrl, done) {
-    return this.constructor.identify(remoteUrl, done);
   }
 
   static async identify(remoteUrl, done) {

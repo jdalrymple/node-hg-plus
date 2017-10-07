@@ -115,6 +115,11 @@ npm test
 
 # Changelog
 
+[1.2.0](https://github.com/jdalrymple/node-hg-plus/4a7dbff90189e015a1b35e3f53e63c4ce799c12d) (2017-10-03)
+------------------
+- Adding Hg.Indentify from [kfirprods](https://github.com/kfirprods)'s [pull request](https://github.com/jdalrymple/node-hg-plus/pull/6)
+- Updated docs
+
 [1.1.0](https://github.com/jdalrymple/node-hg-plus/840b1b4f25591c1191b70397067d007e9367e87c) (2017-08-29)
 ------------------
 - Renamed the Hg.gitify function `gitRepoPath` parameter to be just `path`

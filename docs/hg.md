@@ -4,6 +4,7 @@
 * [Hg clone](#hg-clone)
 * [Hg create](#hg-create)
 * [Hg version](#hg-version) 
+* [Hg Identify](#hg-identify)
 * [Gitify the repo youre currently in](#gitify-the-repo-youre-currently-in)
 
 ### Hg Instance
@@ -195,6 +196,26 @@ console.log(version);
 Hg.version((error, results) => {
 	console.log(results);
 });
+
+```
+
+### Hg Identify
+
+Checks the validity of a remote url
+
+| Argument               | Description   | Type     | Required | Default           |
+|------------------------|---------------|----------|----------|-------------------|
+| remoteURL              |               | String   | Yes      |                   |
+| done                   | Callback function     | Function | No       |                   |
+
+
+| Returns                          | Description      |
+|----------------------------------|------------------|
+| Promise&lt;String&gt;            |                  |
+
+```javascript
+
+let changeset = await Hg.identify('http://hostname.com/my/repository/url);
 
 ```
 
