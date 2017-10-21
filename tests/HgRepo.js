@@ -55,9 +55,9 @@ Test('Creating a HgRepo Object.', (assert) => {
   assert.end();
 });
 
-Test('Creating a HgRepo Object with default name.', (assert) => {
+Test('Creating a HgRepo Object with default name based on URL.', (assert) => {
   const currentDir = process.cwd();
-  const path = Path.resolve('tests', 'results', 'HgRepo', 'creation');
+  const path = Path.resolve('tests', 'results', 'HgRepo', 'creation', 'default-url');
   const to = { url: 'http://bitbucket.org/repo/default', username: 'testUser', password: 'testPass' };
 
   process.chdir(path);
@@ -73,15 +73,25 @@ Test('Creating a HgRepo Object with default name.', (assert) => {
   assert.end();
 });
 
-Test('Creating a HgRepo Object without required params.', (assert) => {
-  const path = Path.resolve('tests', 'results', 'HgRepo', 'creation', 'error');
+Test('Creating a HgRepo Object with default name based on path.', (assert) => {
+  const path = Path.resolve('tests', 'results', 'HgRepo', 'creation', 'default-path');
+  const to = { path, username: 'testUser', password: 'testPass' };
 
-  const to = { username: 'testUser', password: 'testPass', path };
+  const repo = new HgRepo(to);
+
+  // Test proper creation
+  assert.equal(repo.name, 'default-path', 'Default name property is set correctly');
+
+  assert.end();
+});
+
+Test('Creating a HgRepo Object without required params.', (assert) => {
+  const to = { username: 'testUser', password: 'testPass' };
 
   try {
     const fail = new HgRepo(to);
   } catch (error) {
-    assert.true(error.message.includes('Must supply a name or remote url when creating a HgRepo instance'));
+    assert.true(error.message.includes('Must supply a path or remote url when creating a HgRepo instance'));
   }
 
   assert.end();
