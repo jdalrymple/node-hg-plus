@@ -57,6 +57,8 @@ async function cloneSingle(from, to, pythonPath) {
     url = from;
   }
 
+  await Utils.ensureRepoPath(repo.path);
+
   await Command.run('hg clone', repo.path, [url, repo.path]);
 
   return repo;
@@ -65,6 +67,8 @@ async function cloneSingle(from, to, pythonPath) {
 async function cloneMultipleAndMerge(from, to, pythonPath) {
   const mergedRepos = [];
   const combinedRepo = new HgRepo(to, pythonPath);
+
+  await Utils.ensureRepoPath(combinedRepo.path);
 
   await combinedRepo.init();
 
@@ -152,6 +156,8 @@ class Hg {
 
     try {
       repo = new HgRepo(to, this.pythonPath);
+      
+      await Utils.ensureRepoPath(repo.path);
 
       await repo.init();
     } catch (e) {
@@ -162,9 +168,7 @@ class Hg {
   }
 
   async gitify({ path, trackAll, remoteURL } = {}, done) {
-    const repo = new HgRepo({ name: ' ' }, this.pythonPath);
-
-    return repo.gitify({ path, trackAll, remoteURL }, done);
+    return getRepo().gitify({ path, trackAll, remoteURL }, done);
   }
 
   async version(done) {
@@ -174,7 +178,7 @@ class Hg {
   async identify(remoteUrl, done) {
     return this.constructor.identify(remoteUrl, done);
   }
-  
+
   static async version(done) {
     return Command.runWithHandling('hg --version', undefined, undefined, done);
   }

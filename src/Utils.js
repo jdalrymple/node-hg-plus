@@ -43,7 +43,14 @@ function moveFiles(source, destination, files) {
   return Promise.all(movePromises);
 }
 
+async function ensureRepoPath(path) {
+  if (await Fs.pathExists(path)) throw new Error(`Repository already exists at this path: ${path}`);
+
+  return Fs.ensureDir(path);
+}
+
 module.exports = {
+  ensureRepoPath,
   asCallback,
   buildRepoURL,
   getRemoteRepoName,
