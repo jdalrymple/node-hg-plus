@@ -72,7 +72,7 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
 
   await combinedRepo.init();
 
-  await Promise.each(from, async (repo) => {
+  await Promise.each(from, async(repo) => {
     const [repoName, repoPath] = await getSourceInfo(repo, pythonPath);
     let repoDir = repoName;
 
@@ -121,7 +121,9 @@ class Hg {
     this.pythonPath = path;
   }
 
-  getRepo(from) {
+  async getRepo(from) {
+    await Utils.checkForHGFolder(from.path);
+
     return new HgRepo(from, this.pythonPath);
   }
 
@@ -131,15 +133,13 @@ class Hg {
 
     try {
       switch (from.constructor) {
-        case Array: {
+        case Array:
           repo = await cloneMultipleAndMerge(from, to, this.pythonPath);
           break;
-        }
         case String:
-        case Object: {
+        case Object:
           repo = await cloneSingle(from, to, this.pythonPath);
           break;
-        }
         default:
           return new TypeError('Incorrect type of from parameter. Must be an array or an object');
       }
@@ -156,9 +156,8 @@ class Hg {
 
     try {
       repo = new HgRepo(to, this.pythonPath);
-      
-      await Utils.ensureRepoPath(repo.path);
 
+      await Utils.ensureRepoPath(repo.path);
       await repo.init();
     } catch (e) {
       error = e;
@@ -168,7 +167,9 @@ class Hg {
   }
 
   async gitify({ path, trackAll, remoteURL } = {}, done) {
-    return getRepo().gitify({ path, trackAll, remoteURL }, done);
+    const repo = await this.getRepo();
+
+    return repo.gitify({ path, trackAll, remoteURL }, done);
   }
 
   async version(done) {

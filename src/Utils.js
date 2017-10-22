@@ -49,8 +49,17 @@ async function ensureRepoPath(path) {
   return Fs.ensureDir(path);
 }
 
+async function checkForHGFolder(path) {
+  const exists = await Fs.pathExists(Path.resolve(path, '.hg'));
+
+  if (!exists) {
+    throw new Error('There is no local repository at this filepath');
+  }
+}
+
 module.exports = {
   ensureRepoPath,
+  checkForHGFolder,
   asCallback,
   buildRepoURL,
   getRemoteRepoName,
