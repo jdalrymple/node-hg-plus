@@ -94,11 +94,10 @@ Test('Cloning multiple live Hg repositories into one.', async (assert) => {
   await Promise.all([
     DirectoryCompare.compare(Path.join(testDirectory, 'whoosh'), Path.join(outputDirectory, 'whoosh'), exclude),
     DirectoryCompare.compare(Path.join(testDirectory, 'hg-git'), Path.join(outputDirectory, 'hg-git'), exclude),
-  ])
-    .spread((compare1, compare2) => {
-      assert.true(compare1.same);
-      assert.true(compare2.same);
-    });
+  ]).spread((compare1, compare2) => {
+    assert.true(compare1.same);
+    assert.true(compare2.same);
+  });
 });
 
 Test('Cloning multiple clashing Hg repositories into one.', async (assert) => {
@@ -194,6 +193,24 @@ Test('Creating a Hg repository with default args.', async (assert) => {
   assert.true(IsThere(outputDirectory), 'Repo was successfully created');
 
   process.chdir(originalDir);
+});
+
+Test('Getting a HgRepo from a local repository.', async (assert) => {
+  const testDirectory = Path.resolve('tests', 'test-repositories', 'repository1');
+
+  const repo = await Hg.getRepo({ path: testDirectory });
+
+  assert.notNull(repo, 'Repo was successfully created');
+});
+
+Test('Getting a HgRepo from a local repository with a incorrect path', async (assert) => {
+  const testDirectory = Path.resolve('tests', 'test-repositories', 'repository1');
+
+  try {
+    await Hg.getRepo({ path: testDirectory });
+  } catch (e) {
+    assert.true(e.message.includes('A local repository does not exist'));
+  }
 });
 
 Test('gitify a Hg repository.', async (assert) => {

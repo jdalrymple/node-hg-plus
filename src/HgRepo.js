@@ -18,7 +18,7 @@ async function ensureGitify(pythonPath) {
 
 class HgRepo {
   constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
-    if (!url) throw new Error('Must supply a remote url when creating a HgRepo instance');
+    if (!url && !path) throw new Error('Must supply a remote url or a local path when creating a HgRepo instance');
 
     this.url = url;
     this.path = path || Path.join(process.cwd(), this.name);
