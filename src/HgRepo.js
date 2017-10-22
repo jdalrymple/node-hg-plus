@@ -140,14 +140,7 @@ class HgRepo {
     }
 
     await ensureGitify(this.pythonPath);
-
-    try {
-      await Command.run(cloneCmd);
-    } catch (e) {
-      console.log(e);
-
-      throw e;
-    }
+    await Command.run(cloneCmd);
 
     // Remove .hgtags from each folder
     const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
@@ -185,7 +178,7 @@ class HgRepo {
       let trackCmd = "for branch in  `git branch -r | grep -v 'HEAD\\|master'`; do   \n";
       trackCmd += ' git branch --track ${branch##*/} $branch; \n'; // eslint-disable-line no-template-curly-in-string
       trackCmd += 'done';
-   
+
       await Command.run(trackCmd, path);
     }
 

@@ -72,7 +72,7 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
 
   await combinedRepo.init();
 
-  await Promise.each(from, async(repo) => {
+  await Promise.each(from, async (repo) => {
     const [repoName, repoPath] = await getSourceInfo(repo, pythonPath);
     let repoDir = repoName;
 
