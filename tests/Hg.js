@@ -180,9 +180,9 @@ Test('Creating a Hg repository with basic arguments.', async (assert) => {
   assert.true(IsThere(outputDirectory), 'Repo was successfully created');
 });
 
-Test('Creating a Hg repository with default args.', async (assert) => {
+Test('Creating a Hg repository with one of the default args.', async (assert) => {
   const originalDir = process.cwd();
-  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default');
+  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default-1');
 
   await Fs.ensureDir(outputDirectory);
 
@@ -194,6 +194,23 @@ Test('Creating a Hg repository with default args.', async (assert) => {
 
   process.chdir(originalDir);
 });
+
+Test('Creating a Hg repository with another one of the default args.', async (assert) => {
+  const originalDir = process.cwd();
+  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default-2');
+
+  await Fs.ensureDir(outputDirectory);
+
+  process.chdir(outputDirectory);
+
+  const repo = await Hg.create({ path: outputDirectory });
+
+  assert.true(IsThere(outputDirectory), 'Repo was successfully created');
+  assert.true(repo.name, 'default-2', 'Repo was named correctly');
+
+  process.chdir(originalDir);
+});
+
 
 Test('Getting a HgRepo from a local repository.', async (assert) => {
   const testDirectory = Path.resolve('tests', 'test-repositories', 'repository1');

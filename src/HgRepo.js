@@ -18,7 +18,7 @@ async function ensureGitify(pythonPath) {
 
 class HgRepo {
   constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
-    if (!url && !path) throw new Error('Must supply a remote url or a local path when creating a HgRepo instance');
+    if (!url && !path && !name) throw new Error('Must supply a remote url, a name, or a path when creating a HgRepo instance');
 
     this.url = url;
     this.path = path || Path.join(process.cwd(), this.name);
@@ -84,6 +84,8 @@ class HgRepo {
   async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
     const optionArgs = [];
 
+    if (!destination) throw new Error('Missing remote url to push to');
+
     optionArgs.push(Utils.buildRepoURL({ username, password, url: destination }));
 
     if (force) optionArgs.push(' -f');
@@ -99,6 +101,8 @@ class HgRepo {
 
   async pull({ source = this.url, force = false, update = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false, } = {}, done) {
     const optionArgs = [];
+
+    if (!source) throw new Error('Missing remote url to pull from');
 
     optionArgs.push(source);
 
