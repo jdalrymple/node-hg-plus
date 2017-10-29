@@ -217,7 +217,7 @@ Test('gitify a HgRepo.', async (assert) => {
   const to = { name: 'original', username: 'testUser', password: 'testPass', path };
   const gitPath = Path.resolve('tests', 'results', 'HgRepo', 'gitify', 'original-git');
   const testRepo = new HgRepo(to, pythonPath);
-  
+
   await Fs.ensureDir(testRepo.path);
   await testRepo.init();
   await Fs.ensureFile(Path.join(testRepo.path, 'ReadMeUpdate1.txt'));
