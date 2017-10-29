@@ -46,19 +46,20 @@ Test('Creating a HgRepo Object.', (assert) => {
 
   // Test proper creation
   assert.equal(testRepo1.url, 'http://bitbucket.org/repo/default', 'URL property is set correctly');
+  assert.equal(testRepo1.name, 'creation', 'Name property is set correctly');
   assert.equal(testRepo1.path, path, 'Path property is set correctly');
   assert.equal(testRepo1.username, 'testUser', 'Username property is set correctly');
   assert.equal(testRepo1.password, 'testPass', 'Password property is set correctly');
 
-  // Test folder creation
-  assert.true(IsThere(path), 'HgRepo-creation folder exists');
   assert.end();
 });
 
-Test('Creating a HgRepo Object with default name based on URL.', (assert) => {
+Test('Creating a HgRepo Object with default name based on URL.', async (assert) => {
   const currentDir = process.cwd();
   const path = Path.resolve('tests', 'results', 'HgRepo', 'creation', 'default-url');
   const to = { url: 'http://bitbucket.org/repo/default', username: 'testUser', password: 'testPass' };
+
+  await Fs.ensureDir(path);
 
   process.chdir(path);
 
@@ -69,8 +70,6 @@ Test('Creating a HgRepo Object with default name based on URL.', (assert) => {
   assert.equal(repo.name, 'default', 'Default name property is set correctly');
 
   process.chdir(currentDir);
-
-  assert.end();
 });
 
 Test('Creating a HgRepo Object with default name based on path.', (assert) => {
@@ -91,7 +90,7 @@ Test('Creating a HgRepo Object without required params.', (assert) => {
   try {
     const fail = new HgRepo(to);
   } catch (error) {
-    assert.true(error.message.includes('Must supply a path or remote url when creating a HgRepo instance'));
+    assert.true(error.message.includes('Must supply a remote url, a name, or a path when creating a HgRepo instance'));
   }
 
   assert.end();
@@ -102,6 +101,7 @@ Test('Hg Init in a HgRepo.', async (assert) => {
   const to = { name: 'init', username: 'testUser', password: 'testPass', path };
   const testRepo = new HgRepo(to);
 
+  await Fs.ensureDir(path);
   await testRepo.init();
 
   assert.true(IsThere(Path.join(path, '.hg')), 'HgRepo-init hg folder exists');
@@ -112,6 +112,7 @@ Test('Hg commit in a HgRepo.', async (assert) => {
   const to = { name: 'commit', username: 'testUser', password: 'testPass', path };
   const testRepo = new HgRepo(to);
 
+  await Fs.ensureDir(path);
   await testRepo.init();
 
   try {
@@ -131,6 +132,7 @@ Test('Hg add in a HgRepo.', async (assert) => {
   const to = { name: 'add', username: 'testUser', password: 'testPass', path };
   const testRepo = new HgRepo(to);
 
+  await Fs.ensureDir(path);
   await testRepo.init();
   await Fs.ensureFile(Path.join(path, 'Readme.txt'));
   await testRepo.add();
@@ -146,6 +148,7 @@ Test('Hg pull in a HgRepo.', async (assert) => {
   const testDir = Path.resolve('tests', 'test-repositories', 'repository2');
   const testRepo = new HgRepo(to);
 
+  await Fs.ensureDir(testRepo.path);
   await testRepo.init();
   await testRepo.pull({ source: testDir, force: true });
   assert.true(IsThere(Path.join(testDir, 'ReadMe2.txt')),
@@ -158,10 +161,13 @@ Test('Hg push in a HgRepo.', async (assert) => {
   const sourceRepo = new HgRepo({ name: 'push', username: 'testUser', password: 'testPass', path: sourceSub });
   const destRepo = new HgRepo({ name: 'push', username: 'testUser', password: 'testPass', path: destSub });
 
+  await Fs.ensureDir(sourceRepo.path);
   await sourceRepo.init();
   await Fs.ensureFile(Path.join(sourceSub, 'ReadMePush1.txt'));
   await sourceRepo.add();
   await sourceRepo.commit('Making push test data');
+
+  await Fs.ensureDir(destRepo.path);
   await destRepo.init();
   await sourceRepo.push({ force: true, destination: destSub });
   await destRepo.update();
@@ -175,6 +181,7 @@ Test('Hg update in a HgRepo.', async (assert) => {
   const to = { name: 'update', username: 'testUser', password: 'testPass', path };
   const testRepo = new HgRepo(to);
 
+  await Fs.ensureDir(testRepo.path);
   await testRepo.init();
   await Fs.ensureFile(Path.join(testRepo.path, 'ReadMeUpdate1.txt'));
   await testRepo.add();
@@ -194,6 +201,7 @@ Test('Hg rename in a HgRepo.', async (assert) => {
   const innerDir = Path.join(path, 'inner-dir');
   const testRepo = new HgRepo(to);
 
+  await Fs.ensureDir(testRepo.path);
   await testRepo.init();
   await Fs.ensureFile(Path.join(testRepo.path, 'ReadMeUpdate1.txt'));
   await testRepo.add();
@@ -209,7 +217,8 @@ Test('gitify a HgRepo.', async (assert) => {
   const to = { name: 'original', username: 'testUser', password: 'testPass', path };
   const gitPath = Path.resolve('tests', 'results', 'HgRepo', 'gitify', 'original-git');
   const testRepo = new HgRepo(to, pythonPath);
-
+  
+  await Fs.ensureDir(testRepo.path);
   await testRepo.init();
   await Fs.ensureFile(Path.join(testRepo.path, 'ReadMeUpdate1.txt'));
   await testRepo.add();

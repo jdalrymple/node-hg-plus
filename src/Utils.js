@@ -32,6 +32,12 @@ function getRemoteRepoName(url) {
   return split[split.length - 1];
 }
 
+function getBasename(path){
+  if (!path) return null;
+
+  return Path.basename(path);
+}
+
 function moveFiles(source, destination, files) {
   const movePromises = files.map((file) => {
     const sourcePath = Path.join(source, file);
@@ -58,6 +64,7 @@ async function checkForHGFolder(path) {
 }
 
 module.exports = {
+  getBasename,
   ensureRepoPath,
   checkForHGFolder,
   asCallback,

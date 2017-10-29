@@ -121,7 +121,7 @@ class Hg {
     this.pythonPath = path;
   }
 
-  async getRepo(from) {
+  async getRepo(from = { path: process.cwd() }) {
     await Utils.checkForHGFolder(from.path);
 
     return new HgRepo(from, this.pythonPath);
@@ -167,6 +167,8 @@ class Hg {
   }
 
   async gitify({ path, trackAll, remoteURL } = {}, done) {
+        console.log('dddd')
+
     const repo = await this.getRepo();
 
     return repo.gitify({ path, trackAll, remoteURL }, done);

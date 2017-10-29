@@ -21,11 +21,11 @@ class HgRepo {
     if (!url && !path && !name) throw new Error('Must supply a remote url, a name, or a path when creating a HgRepo instance');
 
     this.url = url;
-    this.path = path || Path.join(process.cwd(), this.name);
     this.username = username;
     this.password = password;
-    this.name = name || Utils.getRemoteRepoName(url);
     this.pythonPath = pythonPath;
+    this.name = name || Utils.getBasename(path) || Utils.getRemoteRepoName(url);
+    this.path = path || Path.join(process.cwd(), this.name);
   }
 
   async init() {

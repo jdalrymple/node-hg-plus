@@ -77,28 +77,28 @@ Test('Cloning multiple local Hg repositories into one.', async (assert) => {
   assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
 });
 
-Test('Cloning multiple live Hg repositories into one.', async (assert) => {
-  const testRepo1 = 'https://bitbucket.org/mchaput/whoosh';
-  const testRepo2 = 'https://bitbucket.org/durin42/hg-git';
-  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
-  const testDirectory = Path.resolve('tests', 'test-repositories');
+// Test('Cloning multiple live Hg repositories into one.', async (assert) => {
+//   const testRepo1 = 'https://bitbucket.org/mchaput/whoosh';
+//   const testRepo2 = 'https://bitbucket.org/durin42/hg-git';
+//   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
+//   const testDirectory = Path.resolve('tests', 'test-repositories');
 
-  const exclude = { excludeFilter: '.hg' };
-  const to = { name: 'clone-multiple', path: outputDirectory };
+//   const exclude = { excludeFilter: '.hg' };
+//   const to = { name: 'clone-multiple', path: outputDirectory };
 
-  // Test that files exist
-  await Hg.clone([testRepo1, testRepo2], to);
-  await Command.run('hg clone', testDirectory, [testRepo1]);
-  await Command.run('hg clone', testDirectory, [testRepo2]);
+//   // Test that files exist
+//   await Hg.clone([testRepo1, testRepo2], to);
+//   await Command.run('hg clone', testDirectory, [testRepo1]);
+//   await Command.run('hg clone', testDirectory, [testRepo2]);
 
-  await Promise.all([
-    DirectoryCompare.compare(Path.join(testDirectory, 'whoosh'), Path.join(outputDirectory, 'whoosh'), exclude),
-    DirectoryCompare.compare(Path.join(testDirectory, 'hg-git'), Path.join(outputDirectory, 'hg-git'), exclude),
-  ]).spread((compare1, compare2) => {
-    assert.true(compare1.same);
-    assert.true(compare2.same);
-  });
-});
+//   await Promise.all([
+//     DirectoryCompare.compare(Path.join(testDirectory, 'whoosh'), Path.join(outputDirectory, 'whoosh'), exclude),
+//     DirectoryCompare.compare(Path.join(testDirectory, 'hg-git'), Path.join(outputDirectory, 'hg-git'), exclude),
+//   ]).spread((compare1, compare2) => {
+//     assert.true(compare1.same);
+//     assert.true(compare2.same);
+//   });
+// });
 
 Test('Cloning multiple clashing Hg repositories into one.', async (assert) => {
   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'clash');
@@ -182,15 +182,13 @@ Test('Creating a Hg repository with basic arguments.', async (assert) => {
 
 Test('Creating a Hg repository with one of the default args.', async (assert) => {
   const originalDir = process.cwd();
-  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default-1');
-
-  await Fs.ensureDir(outputDirectory);
+  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create');
 
   process.chdir(outputDirectory);
 
-  await Hg.create({ name: 'default' });
+  await Hg.create({ name: 'default-1' });
 
-  assert.true(IsThere(outputDirectory), 'Repo was successfully created');
+  assert.true(IsThere(Path.join(outputDirectory, 'default-1')), 'Repo was successfully created');
 
   process.chdir(originalDir);
 });
@@ -198,10 +196,6 @@ Test('Creating a Hg repository with one of the default args.', async (assert) =>
 Test('Creating a Hg repository with another one of the default args.', async (assert) => {
   const originalDir = process.cwd();
   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'create', 'default-2');
-
-  await Fs.ensureDir(outputDirectory);
-
-  process.chdir(outputDirectory);
 
   const repo = await Hg.create({ path: outputDirectory });
 
@@ -217,7 +211,7 @@ Test('Getting a HgRepo from a local repository.', async (assert) => {
 
   const repo = await Hg.getRepo({ path: testDirectory });
 
-  assert.notNull(repo, 'Repo was successfully created');
+  assert.ok(repo, 'Repo was successfully created');
 });
 
 Test('Getting a HgRepo from a local repository with a incorrect path', async (assert) => {
@@ -235,7 +229,7 @@ Test('gitify a Hg repository.', async (assert) => {
   const path = Path.resolve(base, 'original');
   const gitPath = Path.resolve(base, 'gitified');
   const origDirectory = process.cwd();
-
+ 
   const to = { name: 'original', username: 'testUser', password: 'testPass', path };
   const testRepo = await Hg.create(to);
 
