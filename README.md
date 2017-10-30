@@ -115,9 +115,10 @@ npm test
 
 # Changelog
 
-[1.2.1](https://github.com/jdalrymple/node-hg-plus/9a07ac3218ee07daed1980a62cc57f913582582f) (2017-10-29)
+[1.2.1](https://github.com/jdalrymple/node-hg-plus/) (2017-10-29)
 ------------------
 - Updating error messages for the creation of hg repositories
+- Updating Hg.getRepo to return the correct remote url in the HgRepo instance
 
 
 [1.2.0](https://github.com/jdalrymple/node-hg-plus/4a7dbff90189e015a1b35e3f53e63c4ce799c12d) (2017-10-03)

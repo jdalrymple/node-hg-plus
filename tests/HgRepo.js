@@ -14,8 +14,10 @@ async function deleteTestRepositories() {
 }
 
 async function createTestRepositories() {
-  const testDir1 = Path.resolve('tests', 'test-repositories', 'repository1');
-  const testDir2 = Path.resolve('tests', 'test-repositories', 'repository2');
+  const testDirectory = Path.resolve('tests', 'test-repositories');
+  const testDir1 = Path.resolve(testDirectory, 'repository1');
+  const testDir2 = Path.resolve(testDirectory, 'repository2');
+  const testRepo3 = 'https://bitbucket.org/mchaput/whoosh';
 
   const testFile1 = Path.resolve(testDir1, 'ReadMe1.txt');
   const testFile2 = Path.resolve(testDir2, 'ReadMe2.txt');
@@ -30,6 +32,8 @@ async function createTestRepositories() {
     await Command.run('hg add', directory);
     await Command.run('hg commit', directory, ['-m', '"Init Commit"']);
   });
+
+  await Command.run('hg clone', testDirectory, [testRepo3]);
 }
 
 Test('Setup test data', async (assert) => {
@@ -140,6 +144,14 @@ Test('Hg add in a HgRepo.', async (assert) => {
   const output = await testRepo.commit('Add commit');
 
   assert.true(output === '', 'Adding files was successfull');
+});
+
+Test('Hg Paths', async (assert) => {
+  const to = { name: 'pull', username: 'testUser', password: 'testPass', path: Path.resolve('tests', 'test-repositories', 'whoosh') };
+  const testRepo = new HgRepo(to);
+  const paths = await testRepo.paths();
+
+  assert.equals(paths.default, 'https://bitbucket.org/mchaput/whoosh', 'Retrieving the default path');
 });
 
 Test('Hg pull in a HgRepo.', async (assert) => {

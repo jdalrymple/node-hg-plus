@@ -13,9 +13,12 @@ async function deleteTestRepositories() {
 }
 
 async function createTestRepositories() {
-  const testDir1 = Path.resolve('tests', 'test-repositories', 'repository1');
-  const testDir2 = Path.resolve('tests', 'test-repositories', 'repository2');
-  const testDir3 = Path.resolve('tests', 'test-repositories', 'duplicate', 'repository2');
+  const testDirectory = Path.resolve('tests', 'test-repositories');
+  const testDir1 = Path.resolve(testDirectory, 'repository1');
+  const testDir2 = Path.resolve(testDirectory, 'repository2');
+  const testDir3 = Path.resolve(testDirectory, 'duplicate', 'repository2');
+  const testRepo3 = 'https://bitbucket.org/mchaput/whoosh';
+  const testRepo4 = 'https://bitbucket.org/durin42/hg-git';
 
   const testFile1 = Path.resolve(testDir1, 'ReadMe1.txt');
   const testFile2 = Path.resolve(testDir2, 'ReadMe2.txt');
@@ -33,6 +36,9 @@ async function createTestRepositories() {
     await Command.run('hg add', directory);
     await Command.run('hg commit', directory, ['-m', '"Init Commit"']);
   });
+
+  await Command.run('hg clone', testDirectory, [testRepo3]);
+  await Command.run('hg clone', testDirectory, [testRepo4]);
 }
 
 Test('Setup test data', async (assert) => {
@@ -77,28 +83,26 @@ Test('Cloning multiple local Hg repositories into one.', async (assert) => {
   assert.true(IsThere(file2), 'The file ReadMe2.txt in repository2 exists');
 });
 
-// Test('Cloning multiple live Hg repositories into one.', async (assert) => {
-//   const testRepo1 = 'https://bitbucket.org/mchaput/whoosh';
-//   const testRepo2 = 'https://bitbucket.org/durin42/hg-git';
-//   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
-//   const testDirectory = Path.resolve('tests', 'test-repositories');
+Test('Cloning multiple live Hg repositories into one.', async (assert) => {
+  const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'live');
+  const testDirectory = Path.resolve('tests', 'test-repositories');
+  const testRepo1 = 'https://bitbucket.org/mchaput/whoosh';
+  const testRepo2 = 'https://bitbucket.org/durin42/hg-git';
 
-//   const exclude = { excludeFilter: '.hg' };
-//   const to = { name: 'clone-multiple', path: outputDirectory };
+  const exclude = { excludeFilter: '.hg' };
+  const to = { name: 'clone-multiple', path: outputDirectory };
 
-//   // Test that files exist
-//   await Hg.clone([testRepo1, testRepo2], to);
-//   await Command.run('hg clone', testDirectory, [testRepo1]);
-//   await Command.run('hg clone', testDirectory, [testRepo2]);
+  // Test that files exist
+  await Hg.clone([testRepo1, testRepo2], to);
 
-//   await Promise.all([
-//     DirectoryCompare.compare(Path.join(testDirectory, 'whoosh'), Path.join(outputDirectory, 'whoosh'), exclude),
-//     DirectoryCompare.compare(Path.join(testDirectory, 'hg-git'), Path.join(outputDirectory, 'hg-git'), exclude),
-//   ]).spread((compare1, compare2) => {
-//     assert.true(compare1.same);
-//     assert.true(compare2.same);
-//   });
-// });
+  await Promise.all([
+    DirectoryCompare.compare(Path.join(testDirectory, 'whoosh'), Path.join(outputDirectory, 'whoosh'), exclude),
+    DirectoryCompare.compare(Path.join(testDirectory, 'hg-git'), Path.join(outputDirectory, 'hg-git'), exclude),
+  ]).spread((compare1, compare2) => {
+    assert.true(compare1.same);
+    assert.true(compare2.same);
+  });
+});
 
 Test('Cloning multiple clashing Hg repositories into one.', async (assert) => {
   const outputDirectory = Path.resolve('tests', 'results', 'Hg', 'clone-multiple', 'clash');

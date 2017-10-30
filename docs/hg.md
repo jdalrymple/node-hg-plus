@@ -160,13 +160,19 @@ Get a HgRepo instance from an already existing Mercurial repository.
 ```javascript
 
 const repo = Hg.getRepo({
-	url: 'http://hostname.com/my/repository/url',
    	username: 'me@host.com',
    	password: 'secret',
     path: 'my/local/cloned/repo'
 })
 
 await repo.pull()
+
+// OR from current directory
+
+const repo = Hg.getRepo({
+   	username: 'me@host.com',
+   	password: 'secret',
+});
 
 ```
 

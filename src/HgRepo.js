@@ -81,6 +81,22 @@ class HgRepo {
     return Command.runWithHandling('hg remove', this.path, optionArgs, done);
   }
 
+  async paths() {
+    const pathsString = await Command.run('hg paths', this.path);
+    const paths = {};
+    const lines = pathsString.stdout.split('\n');
+
+    lines.forEach((line) => {
+      if (line === '') return;
+      const name = line.match(/(^.+)\s=/)[0];
+      const cleanedName = name.replace('=', '').trim();
+
+      paths[cleanedName] = line.replace(name, '').trim();
+    });
+
+    return paths;
+  }
+
   async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
     const optionArgs = [];
 
@@ -159,7 +175,7 @@ class HgRepo {
     const hgIgnoreFiles = await Globby(['**/.hgignore'], { dot: true, cwd: path });
 
     if (hgIgnoreFiles.length) {
-      await Promise.all(hgIgnoreFiles.map(async (ignoreFile) => {
+      await Promise.all(hgIgnoreFiles.map(async(ignoreFile) => {
         const dir = Path.dirname(ignoreFile);
         const newPath = Path.resolve(path, dir, '.gitignore');
 

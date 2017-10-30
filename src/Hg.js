@@ -121,10 +121,14 @@ class Hg {
     this.pythonPath = path;
   }
 
-  async getRepo(from = { path: process.cwd() }) {
-    await Utils.checkForHGFolder(from.path);
+  async getRepo({ path = process.cwd(), username, password } = {}) {
+    await Utils.checkForHGFolder(path);
 
-    return new HgRepo(from, this.pythonPath);
+    const repo = new HgRepo({ path, username, password }, this.pythonPath);
+    const paths = await repo.paths();
+    repo.url = paths.default;
+
+    return repo;
   }
 
   async clone(from, to, done) {
@@ -167,8 +171,6 @@ class Hg {
   }
 
   async gitify({ path, trackAll, remoteURL } = {}, done) {
-        console.log('dddd')
-
     const repo = await this.getRepo();
 
     return repo.gitify({ path, trackAll, remoteURL }, done);
