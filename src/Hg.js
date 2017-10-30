@@ -57,6 +57,8 @@ async function cloneSingle(from, to, pythonPath) {
     url = from;
   }
 
+  await Utils.ensureRepoPath(repo.path);
+
   await Command.run('hg clone', repo.path, [url, repo.path]);
 
   return repo;
@@ -65,6 +67,8 @@ async function cloneSingle(from, to, pythonPath) {
 async function cloneMultipleAndMerge(from, to, pythonPath) {
   const mergedRepos = [];
   const combinedRepo = new HgRepo(to, pythonPath);
+
+  await Utils.ensureRepoPath(combinedRepo.path);
 
   await combinedRepo.init();
 
@@ -117,8 +121,14 @@ class Hg {
     this.pythonPath = path;
   }
 
-  getRepo(from) {
-    return new HgRepo(from, this.pythonPath);
+  async getRepo({ path = process.cwd(), username, password } = {}) {
+    await Utils.checkForHGFolder(path);
+
+    const repo = new HgRepo({ path, username, password }, this.pythonPath);
+    const paths = await repo.paths();
+    repo.url = paths.default;
+
+    return repo;
   }
 
   async clone(from, to, done) {
@@ -127,15 +137,13 @@ class Hg {
 
     try {
       switch (from.constructor) {
-        case Array: {
+        case Array:
           repo = await cloneMultipleAndMerge(from, to, this.pythonPath);
           break;
-        }
         case String:
-        case Object: {
+        case Object:
           repo = await cloneSingle(from, to, this.pythonPath);
           break;
-        }
         default:
           return new TypeError('Incorrect type of from parameter. Must be an array or an object');
       }
@@ -153,6 +161,7 @@ class Hg {
     try {
       repo = new HgRepo(to, this.pythonPath);
 
+      await Utils.ensureRepoPath(repo.path);
       await repo.init();
     } catch (e) {
       error = e;
@@ -162,7 +171,7 @@ class Hg {
   }
 
   async gitify({ path, trackAll, remoteURL } = {}, done) {
-    const repo = new HgRepo({ name: ' ' }, this.pythonPath);
+    const repo = await this.getRepo();
 
     return repo.gitify({ path, trackAll, remoteURL }, done);
   }
@@ -174,7 +183,7 @@ class Hg {
   async identify(remoteUrl, done) {
     return this.constructor.identify(remoteUrl, done);
   }
-  
+
   static async version(done) {
     return Command.runWithHandling('hg --version', undefined, undefined, done);
   }

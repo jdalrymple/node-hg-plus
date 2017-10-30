@@ -32,6 +32,12 @@ function getRemoteRepoName(url) {
   return split[split.length - 1];
 }
 
+function getBasename(path){
+  if (!path) return null;
+
+  return Path.basename(path);
+}
+
 function moveFiles(source, destination, files) {
   const movePromises = files.map((file) => {
     const sourcePath = Path.join(source, file);
@@ -43,7 +49,24 @@ function moveFiles(source, destination, files) {
   return Promise.all(movePromises);
 }
 
+async function ensureRepoPath(path) {
+  if (await Fs.pathExists(path)) throw new Error(`Repository already exists at this path: ${path}`);
+
+  return Fs.ensureDir(path);
+}
+
+async function checkForHGFolder(path) {
+  const exists = await Fs.pathExists(Path.resolve(path, '.hg'));
+
+  if (!exists) {
+    throw new Error('A local repository does not exist at this location. Check your path arguement');
+  }
+}
+
 module.exports = {
+  getBasename,
+  ensureRepoPath,
+  checkForHGFolder,
   asCallback,
   buildRepoURL,
   getRemoteRepoName,

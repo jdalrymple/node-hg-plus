@@ -115,6 +115,13 @@ npm test
 
 # Changelog
 
+[1.2.1](https://github.com/jdalrymple/node-hg-plus/93c85be35072e774cf9f8ffa4b2c9caeac8bca76) (2017-10-29)
+------------------
+- Updating error messages for the creation of hg repositories
+- Updating Hg.getRepo to return the correct remote url in the HgRepo instance
+- Adding HgRepo.paths()
+
+
 [1.2.0](https://github.com/jdalrymple/node-hg-plus/4a7dbff90189e015a1b35e3f53e63c4ce799c12d) (2017-10-03)
 ------------------
 - Adding Hg.Indentify from [kfirprods](https://github.com/kfirprods)'s [pull request](https://github.com/jdalrymple/node-hg-plus/pull/6)

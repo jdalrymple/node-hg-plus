@@ -18,18 +18,14 @@ async function ensureGitify(pythonPath) {
 
 class HgRepo {
   constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
-    if (!name && !url) throw new Error('Must supply a name or remote url when creating a HgRepo instance');
+    if (!url && !path && !name) throw new Error('Must supply a remote url, a name, or a path when creating a HgRepo instance');
 
     this.url = url;
     this.username = username;
     this.password = password;
-    this.name = Utils.getRemoteRepoName(url) || name;
-    this.path = path || Path.join(process.cwd(), this.name);
     this.pythonPath = pythonPath;
-
-    if (Fs.pathExistsSync(this.path)) throw new Error(`Repository already exists at this path: ${this.path}`);
-
-    Fs.ensureDirSync(this.path);
+    this.name = name || Utils.getBasename(path) || Utils.getRemoteRepoName(url);
+    this.path = path || Path.join(process.cwd(), this.name);
   }
 
   async init() {
@@ -85,8 +81,26 @@ class HgRepo {
     return Command.runWithHandling('hg remove', this.path, optionArgs, done);
   }
 
+  async paths(done) {
+    const pathsString = await Command.run('hg paths', this.path);
+    const paths = {};
+    const lines = pathsString.stdout.split('\n');
+
+    lines.forEach((line) => {
+      if (line === '') return;
+      const name = line.match(/(^.+)\s=/)[0];
+      const cleanedName = name.replace('=', '').trim();
+
+      paths[cleanedName] = line.replace(name, '').trim();
+    });
+
+    return Utils.asCallback(null, paths, done);
+  }
+
   async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
     const optionArgs = [];
+
+    if (!destination) throw new Error('Missing remote url to push to');
 
     optionArgs.push(Utils.buildRepoURL({ username, password, url: destination }));
 
@@ -103,6 +117,8 @@ class HgRepo {
 
   async pull({ source = this.url, force = false, update = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false, } = {}, done) {
     const optionArgs = [];
+
+    if (!source) throw new Error('Missing remote url to pull from');
 
     optionArgs.push(source);
 
@@ -144,14 +160,7 @@ class HgRepo {
     }
 
     await ensureGitify(this.pythonPath);
-
-    try {
-      await Command.run(cloneCmd);
-    } catch (e) {
-      console.log(e);
-
-      throw e;
-    }
+    await Command.run(cloneCmd);
 
     // Remove .hgtags from each folder
     const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
@@ -166,7 +175,7 @@ class HgRepo {
     const hgIgnoreFiles = await Globby(['**/.hgignore'], { dot: true, cwd: path });
 
     if (hgIgnoreFiles.length) {
-      await Promise.all(hgIgnoreFiles.map(async (ignoreFile) => {
+      await Promise.all(hgIgnoreFiles.map(async(ignoreFile) => {
         const dir = Path.dirname(ignoreFile);
         const newPath = Path.resolve(path, dir, '.gitignore');
 
@@ -189,16 +198,15 @@ class HgRepo {
       let trackCmd = "for branch in  `git branch -r | grep -v 'HEAD\\|master'`; do   \n";
       trackCmd += ' git branch --track ${branch##*/} $branch; \n'; // eslint-disable-line no-template-curly-in-string
       trackCmd += 'done';
-   
+
       await Command.run(trackCmd, path);
     }
 
     await Fs.remove(Path.join(path, '.git', 'hg'));
     await Fs.remove(Path.join(path, '.git', 'refs', 'hg'));
 
-    if (done) {
-      done();
-    }
+
+    return Utils.asCallback(null, null, done);
   }
 
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {
