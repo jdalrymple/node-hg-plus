@@ -119,6 +119,7 @@ npm test
 ------------------
 - Added Checkout alias for hg update
 - Added branch specification for hg update
+- Updating library dependencies
 
 
 [1.2.1](https://github.com/jdalrymple/node-hg-plus/93c85be35072e774cf9f8ffa4b2c9caeac8bca76) (2017-10-29)
