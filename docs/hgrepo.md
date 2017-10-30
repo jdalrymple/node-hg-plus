@@ -4,6 +4,7 @@
 * [Hg init](#hg-init)
 * [Hg commit](#hg-commit)
 * [Hg add](#hg-add) 
+* [Hg paths](#hg-paths)
 * [Hg push](#hg-push) 
 * [Hg pull](#hg-pull) 
 * [Hg update](#hg-update) 
@@ -130,6 +131,32 @@ console.log(result);
 // OR
 
 repo.add(['file.txt','file2.js'], (error, result) => {
+	console.log(result);
+});
+
+```
+
+### Hg paths
+
+Gets the paths related to the specific Hg repo instance.
+
+| Argument         | Description           | Type         | Required | Default           |
+|------------------|-----------------------|--------------|----------|-------------------|
+| done             | Callback function     | Function     | No       |                   |
+
+| Returns                | Description      |
+|------------------------|------------------|
+| Promise &lt;Object&gt; | Object represending the path name, and its correspinding path itself |
+
+
+```javascript
+let output = await repo.paths();
+
+console.log(result);
+	
+// OR
+
+repo.push({force: true}, (error, result) => {
 	console.log(result);
 });
 

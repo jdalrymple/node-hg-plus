@@ -81,7 +81,7 @@ class HgRepo {
     return Command.runWithHandling('hg remove', this.path, optionArgs, done);
   }
 
-  async paths() {
+  async paths(done) {
     const pathsString = await Command.run('hg paths', this.path);
     const paths = {};
     const lines = pathsString.stdout.split('\n');
@@ -94,7 +94,7 @@ class HgRepo {
       paths[cleanedName] = line.replace(name, '').trim();
     });
 
-    return paths;
+    return Utils.asCallback(null, paths, done);
   }
 
   async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
@@ -205,9 +205,8 @@ class HgRepo {
     await Fs.remove(Path.join(path, '.git', 'hg'));
     await Fs.remove(Path.join(path, '.git', 'refs', 'hg'));
 
-    if (done) {
-      done();
-    }
+
+    return Utils.asCallback(null, null, done);
   }
 
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {
