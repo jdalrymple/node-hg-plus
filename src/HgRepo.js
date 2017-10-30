@@ -41,8 +41,8 @@ class HgRepo {
     return Command.runWithHandling('hg add', this.path, optionArgs, done);
   }
 
-  async checkout({ clean = false, check = false, revision, branchOrTag, tool } = {}, done) {
-    return this.update({ clean, check, revision, branchOrTag, tool }, done);
+  async checkout(updateOptions = {}, done) {
+    return this.update(updateOptions, done);
   }
 
   async commit(message = null, { add = false } = {}, done) {
