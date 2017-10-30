@@ -28,11 +28,24 @@ class HgRepo {
     this.path = path || Path.join(process.cwd(), this.name);
   }
 
-  async init() {
-    return Command.runWithHandling('hg init', this.path);
+  async add({ files = [''], include, exclude, subrepos = false, dryRun = false } = {}, done) {
+    const optionArgs = [];
+
+    optionArgs.push(files.join(' '));
+
+    if (include) optionArgs.push(` -I ${include}`);
+    if (exclude) optionArgs.push(` -X ${exclude}`);
+    if (subrepos) optionArgs.push(' -S');
+    if (dryRun) optionArgs.push(' -n');
+
+    return Command.runWithHandling('hg add', this.path, optionArgs, done);
   }
 
-  async commit(message = null, { add = false } = {}, done = undefined) {
+  async checkout({ clean = false, check = false, revision, branchOrTag, tool } = {}, done) {
+    return this.update({ clean, check, revision, branchOrTag, tool }, done);
+  }
+
+  async commit(message = null, { add = false } = {}, done) {
     if (!message) throw new Error("Commit's must have a message");
 
     const optionalArgs = [];
@@ -52,97 +65,6 @@ class HgRepo {
     }
 
     return Utils.asCallback(output.error, output.stdout, done);
-  }
-
-  async add({ files = [''], include, exclude, subrepos = false, dryRun = false } = {}, done) {
-    const optionArgs = [];
-
-    optionArgs.push(files.join(' '));
-
-    if (include) optionArgs.push(` -I ${include}`);
-    if (exclude) optionArgs.push(` -X ${exclude}`);
-    if (subrepos) optionArgs.push(' -S');
-    if (dryRun) optionArgs.push(' -n');
-
-    return Command.runWithHandling('hg add', this.path, optionArgs, done);
-  }
-
-  async remove({ files = [''], include, exclude, subrepos = false, force = false, after = false } = {}, done) {
-    const optionArgs = [];
-
-    optionArgs.push(files.join(' '));
-
-    if (include) optionArgs.push(` -I ${include}`);
-    if (exclude) optionArgs.push(` -X ${exclude}`);
-    if (subrepos) optionArgs.push(' -S');
-    if (force) optionArgs.push(' -f');
-    if (after) optionArgs.push(' -A');
-
-    return Command.runWithHandling('hg remove', this.path, optionArgs, done);
-  }
-
-  async paths(done) {
-    const pathsString = await Command.run('hg paths', this.path);
-    const paths = {};
-    const lines = pathsString.stdout.split('\n');
-
-    lines.forEach((line) => {
-      if (line === '') return;
-      const name = line.match(/(^.+)\s=/)[0];
-      const cleanedName = name.replace('=', '').trim();
-
-      paths[cleanedName] = line.replace(name, '').trim();
-    });
-
-    return Utils.asCallback(null, paths, done);
-  }
-
-  async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
-    const optionArgs = [];
-
-    if (!destination) throw new Error('Missing remote url to push to');
-
-    optionArgs.push(Utils.buildRepoURL({ username, password, url: destination }));
-
-    if (force) optionArgs.push(' -f');
-    if (revision) optionArgs.push(` -r ${revision}`);
-    if (bookmark) optionArgs.push(` -B ${bookmark}`);
-    if (branch) optionArgs.push(` -b ${branch}`);
-    if (newBranch) optionArgs.push(' --new-branch');
-    if (ssh) optionArgs.push(` -e ${ssh}`);
-    if (insecure) optionArgs.push(' --insecure');
-
-    return Command.runWithHandling('hg push', this.path, optionArgs, done);
-  }
-
-  async pull({ source = this.url, force = false, update = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false, } = {}, done) {
-    const optionArgs = [];
-
-    if (!source) throw new Error('Missing remote url to pull from');
-
-    optionArgs.push(source);
-
-    if (force) optionArgs.push(' -f');
-    if (update) optionArgs.push(' -u');
-    if (revision) optionArgs.push(` -r ${revision}`);
-    if (bookmark) optionArgs.push(` -B ${bookmark}`);
-    if (branch) optionArgs.push(` -b ${branch}`);
-    if (newBranch) optionArgs.push(' --new-branch');
-    if (ssh) optionArgs.push(` -e ${ssh}`);
-    if (insecure) optionArgs.push(' --insecure');
-
-    return Command.runWithHandling('hg pull', this.path, optionArgs, done);
-  }
-
-  async update({ clean = false, check = false, revision, tool } = {}, done) {
-    const optionArgs = [];
-
-    if (clean) optionArgs.push(' -C');
-    if (revision) optionArgs.push(` -r ${revision}`);
-    if (check) optionArgs.push(' -c');
-    if (tool) optionArgs.push(` -t ${tool}`);
-
-    return Command.runWithHandling('hg update', this.path, optionArgs, done);
   }
 
   async gitify({ path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), remoteURL, trackAll = false, clean = false } = {}, done) {
@@ -209,6 +131,88 @@ class HgRepo {
     return Utils.asCallback(null, null, done);
   }
 
+  async init() {
+    return Command.runWithHandling('hg init', this.path);
+  }
+
+  async merge({ force = false, revision, preview = false, tool } = {}, done) {
+    const optionArgs = [];
+
+    if (force) optionArgs.push(' -f');
+    if (revision) optionArgs.push(` -r ${revision}`);
+    if (preview) optionArgs.push(' -p');
+    if (tool) optionArgs.push(` -t ${tool}`);
+
+    return Command.runWithHandling('hg merge', this.path, optionArgs, done);
+  }
+
+  async paths(done) {
+    const pathsString = await Command.run('hg paths', this.path);
+    const paths = {};
+    const lines = pathsString.stdout.split('\n');
+
+    lines.forEach((line) => {
+      if (line === '') return;
+      const name = line.match(/(^.+)\s=/)[0];
+      const cleanedName = name.replace('=', '').trim();
+
+      paths[cleanedName] = line.replace(name, '').trim();
+    });
+
+    return Utils.asCallback(null, paths, done);
+  }
+
+  async pull({ source = this.url, force = false, update = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
+    const optionArgs = [];
+
+    if (!source) throw new Error('Missing remote url to pull from');
+
+    optionArgs.push(source);
+
+    if (force) optionArgs.push(' -f');
+    if (update) optionArgs.push(' -u');
+    if (revision) optionArgs.push(` -r ${revision}`);
+    if (bookmark) optionArgs.push(` -B ${bookmark}`);
+    if (branch) optionArgs.push(` -b ${branch}`);
+    if (newBranch) optionArgs.push(' --new-branch');
+    if (ssh) optionArgs.push(` -e ${ssh}`);
+    if (insecure) optionArgs.push(' --insecure');
+
+    return Command.runWithHandling('hg pull', this.path, optionArgs, done);
+  }
+
+  async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
+    const optionArgs = [];
+
+    if (!destination) throw new Error('Missing remote url to push to');
+
+    optionArgs.push(Utils.buildRepoURL({ username, password, url: destination }));
+
+    if (force) optionArgs.push(' -f');
+    if (revision) optionArgs.push(` -r ${revision}`);
+    if (bookmark) optionArgs.push(` -B ${bookmark}`);
+    if (branch) optionArgs.push(` -b ${branch}`);
+    if (newBranch) optionArgs.push(' --new-branch');
+    if (ssh) optionArgs.push(` -e ${ssh}`);
+    if (insecure) optionArgs.push(' --insecure');
+
+    return Command.runWithHandling('hg push', this.path, optionArgs, done);
+  }
+
+  async remove({ files = [''], include, exclude, subrepos = false, force = false, after = false } = {}, done) {
+    const optionArgs = [];
+
+    optionArgs.push(files.join(' '));
+
+    if (include) optionArgs.push(` -I ${include}`);
+    if (exclude) optionArgs.push(` -X ${exclude}`);
+    if (subrepos) optionArgs.push(' -S');
+    if (force) optionArgs.push(' -f');
+    if (after) optionArgs.push(' -A');
+
+    return Command.runWithHandling('hg remove', this.path, optionArgs, done);
+  }
+
   async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {
     const optionArgs = [];
 
@@ -224,15 +228,18 @@ class HgRepo {
     return Command.runWithHandling('hg rename', this.path, optionArgs, done);
   }
 
-  async merge({ force = false, revision, preview = false, tool } = {}, done) {
+  async update({ clean = false, check = false, revision, tool, branchOrTag } = {}, done) {
     const optionArgs = [];
 
-    if (force) optionArgs.push(' -f');
+    if (branchOrTag) optionArgs.push(branchOrTag);
+    if (clean) optionArgs.push(' -C');
     if (revision) optionArgs.push(` -r ${revision}`);
-    if (preview) optionArgs.push(' -p');
+    if (revision) optionArgs.push(` -r ${revision}`);
+
+    if (check) optionArgs.push(' -c');
     if (tool) optionArgs.push(` -t ${tool}`);
 
-    return Command.runWithHandling('hg merge', this.path, optionArgs, done);
+    return Command.runWithHandling('hg update', this.path, optionArgs, done);
   }
 }
 
