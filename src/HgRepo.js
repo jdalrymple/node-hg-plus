@@ -97,7 +97,7 @@ class HgRepo {
     const hgIgnoreFiles = await Globby(['**/.hgignore'], { dot: true, cwd: path });
 
     if (hgIgnoreFiles.length) {
-      await Promise.all(hgIgnoreFiles.map(async(ignoreFile) => {
+      await Promise.all(hgIgnoreFiles.map(async (ignoreFile) => {
         const dir = Path.dirname(ignoreFile);
         const newPath = Path.resolve(path, dir, '.gitignore');
 
