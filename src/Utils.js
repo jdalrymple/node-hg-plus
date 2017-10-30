@@ -32,7 +32,7 @@ function getRemoteRepoName(url) {
   return split[split.length - 1];
 }
 
-function getBasename(path){
+function getBasename(path) {
   if (!path) return null;
 
   return Path.basename(path);

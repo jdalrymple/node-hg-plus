@@ -115,11 +115,17 @@ npm test
 
 # Changelog
 
+[1.2.2](https://github.com/jdalrymple/node-hg-plus/05ca18e106774172adecdf51e7fcd03c43036ed2) (2017-10-29)
+------------------
+- Added Checkout alias for hg update
+- Added branch specification for hg update
+
+
 [1.2.1](https://github.com/jdalrymple/node-hg-plus/93c85be35072e774cf9f8ffa4b2c9caeac8bca76) (2017-10-29)
 ------------------
 - Updating error messages for the creation of hg repositories
 - Updating Hg.getRepo to return the correct remote url in the HgRepo instance
-- Adding HgRepo.paths()
+- Added HgRepo.paths()
 
 
 [1.2.0](https://github.com/jdalrymple/node-hg-plus/4a7dbff90189e015a1b35e3f53e63c4ce799c12d) (2017-10-03)
@@ -136,7 +142,7 @@ all of the git branches after the conversion, and an option to clean the git bra
 
 [1.0.2](https://github.com/jdalrymple/node-hg-plus/ebecd5632bc762530b4bd796090ab4ed09c6cc56) (2017-07-30)
 ------------------
-- Adding Hg.getRepo, which allows users to get an HgRepo instance from a existing mecurial repository. [Merge pull request #5 from 52linyuepeng/master](https://github.com/jdalrymple/node-hg-plus/26eaecf4e231a55c1fe1d4634fad3d255d79e1fc)
+- Adding Hg.getRepo, which allows users to get an HgRepo instance from a existing mercurial repository. [Merge pull request #5 from 52linyuepeng/master](https://github.com/jdalrymple/node-hg-plus/26eaecf4e231a55c1fe1d4634fad3d255d79e1fc)
 
 [1.0.1](https://github.com/jdalrymple/node-hg-plus/commit/510e70a4fff5bec35e2489c5228748e330559c87) (2017-07-26)
 ------------------
@@ -146,14 +152,14 @@ all of the git branches after the conversion, and an option to clean the git bra
 [1.0.0](https://github.com/jdalrymple/node-hg-plus/commit/5d54b5e8871c13427f8bf2faaa296576952809c4) (2017-07-25)
 ------------------
 - Cleaned up old promise logic and replaced with async/await
-- Removed usless rest param arguments from many of the Hg functions for clarity
+- Removed useless rest param arguments from many of the Hg functions for clarity
 - Added Object input to the Hg.Clone function (See API Docs above)
 - Cleaned up folder structure
 - Fixed the setting of the default url if none is passed in by the user
 - Fixed cloning from urls instead of local paths
 - Added various callback tests to ensure the callback backwards compatibility is maintained
 - Added default state tests for the HgRepo Object
-- Removed old dependancies now that Promises are more widely supported
+- Removed old dependencies now that Promises are more widely supported
 - Standardized the callback support to return in the form callback(error, results) always
 
 NOTE: Upgrading from 0.8.0 to 1.0 will break your project. Ensure to add the function call to your require statement - require('hg-plus')()

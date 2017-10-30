@@ -7,7 +7,7 @@
 * [Hg paths](#hg-paths)
 * [Hg push](#hg-push) 
 * [Hg pull](#hg-pull) 
-* [Hg update](#hg-update) 
+* [Hg update / Hg checkout](#hg-update-hg-checkout) 
 * [Hg rename](#hg-rename) 
 * [Hg merge](#hg-merge) 
 * [Convert repo from Hg to Git](#convert-repo-from-hg-to-git) 
@@ -38,9 +38,7 @@ Note: These are only created through Hg.clone or Hg.create
 
 ```javascript
 const Hg = require('hg-plus')();
-
 let repo1 = await Hg.create({ name: 'my-fancy-repo' });
-
 let repo2 = await Hg.clone({ url: 'http://hostname.com/my/repository/url' });
 
 ```
@@ -60,12 +58,10 @@ Inits the Hg repo instance.
 
 ```javascript
 const Hg = require('hg-plus')();
-
 let repo = await Hg.create({ name: 'my-fancy-repo' });
-
 let output = await repo.init();
 
-console.log(result);
+console.log(output);
 
 // OR
 
@@ -126,7 +122,7 @@ Adds untracked files to the Hg repo instance.
 ```javascript
 let output = await repo.add();
 
-console.log(result);
+console.log(output);
 
 // OR
 
@@ -152,7 +148,7 @@ Gets the paths related to the specific Hg repo instance.
 ```javascript
 let output = await repo.paths();
 
-console.log(result);
+console.log(output);
 	
 // OR
 
@@ -185,7 +181,7 @@ Pushes untracked files to the Hg repo instance.
 ```javascript
 let output = await repo.push();
 
-console.log(result);
+console.log(output);
 	
 // OR
 
@@ -220,7 +216,7 @@ Pulls files to the Hg repo instance.
 ```javascript
 let output = await repo.pull();
 
-console.log(result);
+console.log(output);
 
 // OR
 
@@ -230,13 +226,14 @@ repo.pull({source: 'my/repository/url/', force: true}, (error, result) => {
 
 ```
 
-### Hg update
+### Hg update / Hg checkout
 
 Update Hg repo instance.
 
 | Argument         | Description           | Type         | Required | Default           |
 |------------------|-----------------------|--------------|----------|-------------------|
 | options          |                       | Object       | No       | N/A               |
+| options.branchOrTag| A branch or tag name| String       | No       | null              |
 | options.clean    |                       | Boolean      | No       | false             |
 | options.check    |                       | Boolean      | No       | false             |
 | options.revision |                       | String       | No       | null              |
@@ -250,7 +247,7 @@ Update Hg repo instance.
 ```javascript
 let output = await repo.update();
 
-console.log(result);
+console.log(output);
 
 // OR
 
@@ -281,9 +278,9 @@ Rename files to the Hg repo instance.
 | Promise &lt;String&gt; | Console output   |
 
 ```javascript
-output = await repo.rename('one/path','destination/path');
+let output = await repo.rename('one/path','destination/path');
 
-console.log(result);
+console.log(output);
 
 // OR
 
@@ -313,7 +310,7 @@ Rename files to the Hg repo instance.
 ```javascript
 let output = await repo.merge();
 
-console.log(result);
+console.log(output);
 
 // OR
 
@@ -343,7 +340,7 @@ Coverts Hg repo instance into a Git repo using the [gitifyhg](https://github.com
 
 ```javascript
 let output = await repo.gitify();
-console.log(result);
+console.log(output);
 
 
 // OR
