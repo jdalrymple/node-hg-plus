@@ -153,6 +153,7 @@ class HgRepo {
 
     lines.forEach((line) => {
       if (line === '') return;
+
       const name = line.match(/(^.+)\s=/)[0];
       const cleanedName = name.replace('=', '').trim();
 
@@ -235,7 +236,6 @@ class HgRepo {
     if (clean) optionArgs.push(' -C');
     if (revision) optionArgs.push(` -r ${revision}`);
     if (revision) optionArgs.push(` -r ${revision}`);
-
     if (check) optionArgs.push(' -c');
     if (tool) optionArgs.push(` -t ${tool}`);
 
