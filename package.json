@@ -34,7 +34,7 @@
     "bluebird": "^3.5.1",
     "dir-compare": "^1.4.0",
     "fs-extra": "^5.0.0",
-    "globby": "^8.0.1", 
+    "globby": "^7.1.1", 
     "is-there": "^4.4.3",
     "shortid": "^2.2.8",
     "tempy": "^0.2.1",
