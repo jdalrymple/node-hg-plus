@@ -11,14 +11,19 @@ async function ensureGitify(pythonPath) {
     if (output.error.message.includes('ImportError')) {
       const gitifyPath = Path.resolve('utils', 'gitifyhg', 'setup.py');
 
-      throw new ReferenceError(`Must install gitifyhg. Run this command: ${pythonPath} ${gitifyPath} install`);
+      throw new ReferenceError(
+        `Must install gitifyhg. Run this command: ${pythonPath} ${gitifyPath} install`,
+      );
     }
   }
 }
 
 class HgRepo {
   constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
-    if (!url && !path && !name) throw new Error('Must supply a remote url, a name, or a path when creating a HgRepo instance');
+    if (!url && !path && !name)
+      throw new Error(
+        'Must supply a remote url, a name, or a path when creating a HgRepo instance',
+      );
 
     this.url = url;
     this.username = username;
@@ -67,7 +72,15 @@ class HgRepo {
     return Utils.asCallback(output.error, output.stdout, done);
   }
 
-  async gitify({ path = Path.resolve(Path.dirname(this.path), `${this.name}-git`), remoteURL, trackAll = false, clean = false } = {}, done) {
+  async gitify(
+    {
+      path = Path.resolve(Path.dirname(this.path), `${this.name}-git`),
+      remoteURL,
+      trackAll = false,
+      clean = false,
+    } = {},
+    done,
+  ) {
     const checkVersion = await Command.run(`${this.pythonPath} -V`);
     let cloneCmd;
 
@@ -85,7 +98,7 @@ class HgRepo {
     await Command.run(cloneCmd);
 
     // Remove .hgtags from each folder
-    const files = await Globby(['**/.hgtags'], { dot: true, cwd: path });
+    const files = await Globby(['**/.hgtags'], { onlyFiles: false, dot: true, cwd: path });
 
     if (files.length) {
       await Promise.all(files.map(hgpath => Fs.remove(Path.resolve(path, hgpath))));
@@ -94,22 +107,30 @@ class HgRepo {
     }
 
     // Rename .hgignore to .gitignore, and remove the line syntax:*
-    const hgIgnoreFiles = await Globby(['**/.hgignore'], { dot: true, cwd: path });
+    const hgIgnoreFiles = await Globby(['**/.hgignore'], {
+      onlyFiles: false,
+      dot: true,
+      cwd: path,
+    });
 
     if (hgIgnoreFiles.length) {
-      await Promise.all(hgIgnoreFiles.map(async (ignoreFile) => {
-        const dir = Path.dirname(ignoreFile);
-        const newPath = Path.resolve(path, dir, '.gitignore');
+      await Promise.all(
+        hgIgnoreFiles.map(async ignoreFile => {
+          const dir = Path.dirname(ignoreFile);
+          const newPath = Path.resolve(path, dir, '.gitignore');
 
-        Fs.renameSync(Path.resolve(path, ignoreFile), newPath);
+          Fs.renameSync(Path.resolve(path, ignoreFile), newPath);
 
-        const data = Fs.readFileSync(newPath, 'utf8');
+          const data = Fs.readFileSync(newPath, 'utf8');
 
-        return Fs.outputFile(newPath, data.replace(/syntax(.*)\n/, ''));
-      }));
+          return Fs.outputFile(newPath, data.replace(/syntax(.*)\n/, ''));
+        }),
+      );
 
       await Command.run('git add', path, ['-A']);
-      await Command.run('git commit', path, ['-m "Changing .hgignore to be .gitignore and removing syntax line"']);
+      await Command.run('git commit', path, [
+        '-m "Changing .hgignore to be .gitignore and removing syntax line"',
+      ]);
     }
 
     if (remoteURL) {
@@ -126,7 +147,6 @@ class HgRepo {
 
     await Fs.remove(Path.join(path, '.git', 'hg'));
     await Fs.remove(Path.join(path, '.git', 'refs', 'hg'));
-
 
     return Utils.asCallback(null, null, done);
   }
@@ -151,8 +171,9 @@ class HgRepo {
     const paths = {};
     const lines = pathsString.stdout.split('\n');
 
-    lines.forEach((line) => {
+    lines.forEach(line => {
       if (line === '') return;
+
       const name = line.match(/(^.+)\s=/)[0];
       const cleanedName = name.replace('=', '').trim();
 
@@ -162,7 +183,20 @@ class HgRepo {
     return Utils.asCallback(null, paths, done);
   }
 
-  async pull({ source = this.url, force = false, update = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
+  async pull(
+    {
+      source = this.url,
+      force = false,
+      update = false,
+      revision,
+      bookmark,
+      branch,
+      newBranch = false,
+      ssh,
+      insecure = false,
+    } = {},
+    done,
+  ) {
     const optionArgs = [];
 
     if (!source) throw new Error('Missing remote url to pull from');
@@ -181,7 +215,21 @@ class HgRepo {
     return Command.runWithHandling('hg pull', this.path, optionArgs, done);
   }
 
-  async push({ destination = this.url, password, username, force = false, revision, bookmark, branch, newBranch = false, ssh, insecure = false } = {}, done) {
+  async push(
+    {
+      destination = this.url,
+      password,
+      username,
+      force = false,
+      revision,
+      bookmark,
+      branch,
+      newBranch = false,
+      ssh,
+      insecure = false,
+    } = {},
+    done,
+  ) {
     const optionArgs = [];
 
     if (!destination) throw new Error('Missing remote url to push to');
@@ -199,7 +247,10 @@ class HgRepo {
     return Command.runWithHandling('hg push', this.path, optionArgs, done);
   }
 
-  async remove({ files = [''], include, exclude, subrepos = false, force = false, after = false } = {}, done) {
+  async remove(
+    { files = [''], include, exclude, subrepos = false, force = false, after = false } = {},
+    done,
+  ) {
     const optionArgs = [];
 
     optionArgs.push(files.join(' '));
@@ -213,7 +264,12 @@ class HgRepo {
     return Command.runWithHandling('hg remove', this.path, optionArgs, done);
   }
 
-  async rename(source, destination, { after = false, force = false, include, exclude, dryRun = false } = {}, done) {
+  async rename(
+    source,
+    destination,
+    { after = false, force = false, include, exclude, dryRun = false } = {},
+    done,
+  ) {
     const optionArgs = [];
 
     optionArgs.push(source);
@@ -235,7 +291,6 @@ class HgRepo {
     if (clean) optionArgs.push(' -C');
     if (revision) optionArgs.push(` -r ${revision}`);
     if (revision) optionArgs.push(` -r ${revision}`);
-
     if (check) optionArgs.push(' -c');
     if (tool) optionArgs.push(` -t ${tool}`);
 
