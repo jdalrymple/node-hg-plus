@@ -1,6 +1,6 @@
 {
   "name": "hg-plus",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A Mercurial client for Node",
   "main": "src/index.js",
   "repository": {
@@ -34,7 +34,7 @@
     "bluebird": "^3.5.1",
     "dir-compare": "^1.4.0",
     "fs-extra": "^5.0.0",
-    "globby": "^8.0.1", 
+    "globby": "^8.0.1",
     "is-there": "^4.4.3",
     "shortid": "^2.2.8",
     "tempy": "^0.2.1",
