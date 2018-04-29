@@ -98,7 +98,7 @@ class HgRepo {
     await Command.run(cloneCmd);
 
     // Remove .hgtags from each folder
-    const files = await Globby(['**/.hgtags'], { expandDirectories: true, dot: true, cwd: path });
+    const files = await Globby(['**/.hgtags'], { nodir: false, dot: true, cwd: path });
 
     if (files.length) {
       await Promise.all(files.map(hgpath => Fs.remove(Path.resolve(path, hgpath))));
@@ -108,7 +108,7 @@ class HgRepo {
 
     // Rename .hgignore to .gitignore, and remove the line syntax:*
     const hgIgnoreFiles = await Globby(['**/.hgignore'], {
-      expandDirectories: true,
+      nodir: false,
       dot: true,
       cwd: path,
     });
