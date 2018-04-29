@@ -14,7 +14,9 @@ async function getSourceInfo(source, pythonPath) {
   let sourceURL = null;
 
   if (source.constructor !== String && source.constructor !== Object) {
-    throw new TypeError('Incorrect type of from parameter. Clone source in the array is an invalid type. Must be an String or an Object');
+    throw new TypeError(
+      'Incorrect type of from parameter. Clone source in the array is an invalid type. Must be an String or an Object',
+    );
   }
 
   if (source.constructor === Object) sourceURL = source.url;
@@ -29,7 +31,11 @@ async function getSourceInfo(source, pythonPath) {
 
     await cloneSingle(source, { path: sourceRepoPath, url: sourceURL }, pythonPath);
   } catch (error) {
-    if (error.code !== 'ERR_INVALID_URL' && !(error.message && error.message.includes('Invalid URL'))) throw error;
+    if (
+      error.code !== 'ERR_INVALID_URL' &&
+      !(error.message && error.message.includes('Invalid URL'))
+    )
+      throw error;
 
     sourceRepoPath = source;
     sourceRepoName = Path.basename(source);
@@ -43,22 +49,27 @@ async function cloneSingle(from, to, pythonPath) {
   let url;
 
   if (from.constructor === Object) {
-    repo = new HgRepo(to || {
-      url: from.url,
-      password: from.password,
-      username: from.username,
-    }, pythonPath);
+    repo = new HgRepo(
+      to || {
+        url: from.url,
+        password: from.password,
+        username: from.username,
+      },
+      pythonPath,
+    );
 
     url = Utils.buildRepoURL(from);
   } else {
-    repo = new HgRepo(to || {
-      url: from,
-    }, pythonPath);
+    repo = new HgRepo(
+      to || {
+        url: from,
+      },
+      pythonPath,
+    );
     url = from;
   }
 
   await Utils.ensureRepoPath(repo.path);
-
   await Command.run('hg clone', repo.path, [url, repo.path]);
 
   return repo;
@@ -69,10 +80,9 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
   const combinedRepo = new HgRepo(to, pythonPath);
 
   await Utils.ensureRepoPath(combinedRepo.path);
-
   await combinedRepo.init();
 
-  await Promise.each(from, async (repo) => {
+  await Promise.each(from, async repo => {
     const [repoName, repoPath] = await getSourceInfo(repo, pythonPath);
     let repoDir = repoName;
 
@@ -83,7 +93,11 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
     await combinedRepo.pull({ source: repoPath, force: true });
     await combinedRepo.update({ clean: true, revision: 'default' });
 
-    const files = await Globby(['*', '!.hg'], { dot: true, cwd: combinedRepo.path });
+    const files = await Globby(['*', '!.hg'], {
+      expandDirectories: true,
+      dot: true,
+      cwd: combinedRepo.path,
+    });
     const subDirectory = Path.join(combinedRepo.path, repoDir);
 
     await Utils.moveFiles(combinedRepo.path, subDirectory, files);
@@ -106,8 +120,10 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
     try {
       await combinedRepo.commit(`Merging ${repoName} into combined`);
     } catch (error) {
-      if (!error.message.includes('nothing to merge') &&
-        !error.message.includes('merging with a working directory ancestor')) {
+      if (
+        !error.message.includes('nothing to merge') &&
+        !error.message.includes('merging with a working directory ancestor')
+      ) {
         throw error;
       }
     }
