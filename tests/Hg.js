@@ -99,6 +99,8 @@ Test('Cloning multiple live Hg repositories into one.', async (assert) => {
     DirectoryCompare.compare(Path.join(testDirectory, 'whoosh'), Path.join(outputDirectory, 'whoosh'), exclude),
     DirectoryCompare.compare(Path.join(testDirectory, 'hg-git'), Path.join(outputDirectory, 'hg-git'), exclude),
   ]).spread((compare1, compare2) => {
+    console.log(compare1)
+    console.log(compare2)
     assert.true(compare1.same, 'First repo didnt match');
     assert.true(compare2.same, 'Second repo did not match');
   });
