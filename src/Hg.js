@@ -94,7 +94,7 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
     await combinedRepo.update({ clean: true, revision: 'default' });
 
     const files = await Globby(['*', '!.hg'], {
-      nodir: false,
+      onlyFiles: false,
       dot: true,
       cwd: combinedRepo.path,
     });
