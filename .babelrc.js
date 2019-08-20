@@ -1,13 +1,10 @@
-export default {
+module.exports = {
   "presets": [
     [
-      "es2015",
+      "@babel/preset-env",
       {
-        "modules": false
+        useBuiltIns: "usage"
       }
     ]
-  ],
-  "plugins": [
-    "external-helpers"
   ]
 }
