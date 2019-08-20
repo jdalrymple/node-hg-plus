@@ -20,24 +20,24 @@
     "coverall": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
-    "eslint": "^5.0.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0",
-    "nyc": "^11.7.1",
-    "tape": "^4.9.0"
+    "coveralls": "^3.0.6",
+    "eslint": "^6.2.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "nyc": "^14.1.1",
+    "tape": "^4.11.0"
   },
   "dependencies": {
     "blue-tape": "^1.0.0",
-    "bluebird": "^3.5.1",
-    "dir-compare": "^1.4.0",
-    "fs-extra": "^6.0.1",
-    "globby": "^9.1.0",
-    "is-there": "^4.4.3",
-    "shortid": "^2.2.8",
+    "bluebird": "^3.5.5",
+    "dir-compare": "^1.7.3",
+    "fs-extra": "^8.1.0",
+    "globby": "^10.0.1",
+    "is-there": "^4.4.4",
+    "shortid": "^2.2.14",
     "tempy": "^0.3.0",
-    "winston": "^2.4.2"
+    "winston": "^3.2.1"
   }
 }
