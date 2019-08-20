@@ -5,7 +5,7 @@ import {
   remove, ensureFile, writeFile, readdir,
 } from 'fs-extra';
 import { run } from '../src/Command';
-import HG from '../src/index';
+import HG from '../dist/index.min';
 
 const Hg = HG({ path: 'python2.7' });
 
@@ -141,8 +141,7 @@ test('Cloning multiple Hg repositories into one with invalid array input params.
   const outputDirectory = resolve('tests', 'results', 'Hg', 'clone-multiple', 'invalid-array');
   const to = { name: 'clone-multiple-invalid', path: outputDirectory };
 
-  expect.assertions(1);
-  expect(Hg.clone([testRepo1, testRepo2], to)).rejects.toBe('Incorrect type of from parameter.');
+  expect(Hg.clone([testRepo1, testRepo2], to)).rejects.toThrow(TypeError)
 });
 
 test('Cloning multiple Hg repositories into one with completely invalid input params.', async () => {
@@ -150,8 +149,7 @@ test('Cloning multiple Hg repositories into one with completely invalid input pa
   const outputDirectory = resolve('tests', 'results', 'Hg', 'clone-multiple', 'invalid-array');
   const to = { name: 'clone-multiple-invalid', path: outputDirectory };
 
-  expect.assertions(1);
-  expect(Hg.clone(testRepo, to)).rejects.toBe('Incorrect type of from parameter.');
+  expect(Hg.clone(testRepo, to)).rejects.toThrow(TypeError)
 });
 
 test('Cloning a Hg repository.', async () => {

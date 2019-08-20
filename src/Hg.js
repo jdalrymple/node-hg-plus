@@ -111,6 +111,7 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
     try {
       await combinedRepo.remove({ after: true });
     } catch (error) {
+      console.error(error);
       if (!error.message.includes('still exists')) throw error;
     }
 
