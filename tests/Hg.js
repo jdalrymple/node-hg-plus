@@ -5,7 +5,7 @@ import {
   remove, ensureFile, writeFile, readdir,
 } from 'fs-extra';
 import { run } from '../src/Command';
-import HG from '../dist/index.min';
+import HG from '../src/index';
 
 const Hg = HG({ path: 'python2.7' });
 
@@ -51,13 +51,13 @@ beforeAll(async () => {
 });
 
 test('Requiring the Hg Library', () => {
-  const HgLib1 = require('../src/index')(); // eslint-disable-line global-require
+  const HgLib1 = require('../src/index').default(); // eslint-disable-line global-require
 
   expect(HgLib1.clone).toBeInstanceOf(Function);
 });
 
 test('Setting the python path', () => {
-  const HgLib1 = require('../src/index')({ path: 'test' }); // eslint-disable-line global-require
+  const HgLib1 = require('../src/index').default({ path: 'test' }); // eslint-disable-line global-require
 
   expect(HgLib1.pythonPath).toBe('test');
 });
