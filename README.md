@@ -6,8 +6,6 @@
 
 A node js client for [Mercurial](http://mercurial.selenic.com). Supports both Async/Await/Promises and Standard callbacks.
 
-Supported node version => 7.6.0
-
  
 # Table of Contents
 
