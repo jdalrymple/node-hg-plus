@@ -1,0 +1,7 @@
+{
+  "testEnvironment": "node",
+  "testRegex": "test\\/.*\\.js$",
+  "testMatch": null,
+  "testURL": "http://localhost/",
+  "coverageDirectory": "./coverage/",
+}
