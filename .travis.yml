@@ -39,7 +39,7 @@ jobs:
         - sudo python2.7 setup.py install
         - cd $TRAVIS_BUILD_DIR
       script:
-        - npm run test:unit -- --collectCoverage
+        - npm run test -- --collectCoverage
 
     - stage: coverage
       node_js: node
