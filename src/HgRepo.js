@@ -56,7 +56,7 @@ class HgRepo {
     const optionalArgs = [];
     let output;
 
-    if (add) optionalArgs.push('-a');
+    if (add) optionalArgs.push('-A');
 
     optionalArgs.push(`-m "${message}"`);
 
@@ -295,6 +295,16 @@ class HgRepo {
     if (tool) optionArgs.push(` -t ${tool}`);
 
     return Command.runWithHandling('hg update', this.path, optionArgs, done);
+  }
+
+  async tag({ force = true, message, tagName } = {}, done) {
+    const optionArgs = [];
+
+    if (tagName) optionArgs.push(tagName);
+    if (force) optionArgs.push(' -f');
+    if (message) optionArgs.push(` -m ${message}`);
+
+    return Command.runWithHandling('hg tag', this.path, optionArgs, done);
   }
 }
 
