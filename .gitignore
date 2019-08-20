@@ -1,6 +1,7 @@
 test-repositories/
 results/
-node_modules/
-coverage/
+dist
+node_modules
+coverage
 venv/
-.nyc_output/*
+npm-debug.log
