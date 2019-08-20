@@ -3,5 +3,5 @@
   "testRegex": "test\\/.*\\.js$",
   "testMatch": null,
   "testURL": "http://localhost/",
-  "coverageDirectory": "./coverage/",
+  "coverageDirectory": "./coverage/"
 }
