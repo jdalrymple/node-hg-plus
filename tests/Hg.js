@@ -141,7 +141,7 @@ test('Cloning multiple Hg repositories into one with invalid array input params.
   const outputDirectory = resolve('tests', 'results', 'Hg', 'clone-multiple', 'invalid-array');
   const to = { name: 'clone-multiple-invalid', path: outputDirectory };
 
-  expect(Hg.clone([testRepo1, testRepo2], to)).rejects.toThrow(TypeError)
+  expect(Hg.clone([testRepo1, testRepo2], to)).rejects.toThrow(TypeError);
 });
 
 test('Cloning multiple Hg repositories into one with completely invalid input params.', async () => {
@@ -149,7 +149,7 @@ test('Cloning multiple Hg repositories into one with completely invalid input pa
   const outputDirectory = resolve('tests', 'results', 'Hg', 'clone-multiple', 'invalid-array');
   const to = { name: 'clone-multiple-invalid', path: outputDirectory };
 
-  expect(Hg.clone(testRepo, to)).rejects.toThrow(TypeError)
+  expect(Hg.clone(testRepo, to)).rejects.toThrow(TypeError);
 });
 
 test('Cloning a Hg repository.', async () => {
