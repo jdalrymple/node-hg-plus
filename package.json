@@ -1,36 +1,17 @@
 {
   "name": "hg-plus",
-  "version": "1.2.3",
   "description": "A Mercurial client for Node",
-  "main": "src/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jdalrymple/node-hg-plus"
-  },
-  "keywords": [
-    "mercurial",
-    "hg",
-    "client",
-    "gitify"
-  ],
+  "version": "1.2.3",
   "author": "Justin Dalrymple <justin.s.dalrymple@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "test": "nyc ./node_modules/tape/bin/tape tests/**/*.js",
-    "coverall": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+  "bugs": {
+    "url": "https://github.com/jdalrymple/node-hg-plus/issues"
   },
-  "devDependencies": {
-    "coveralls": "^3.0.6",
-    "eslint": "^6.2.1",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3",
-    "nyc": "^14.1.1",
-    "tape": "^4.11.0"
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "dependencies": {
-    "blue-tape": "^1.0.0",
     "bluebird": "^3.5.5",
     "dir-compare": "^1.7.3",
     "fs-extra": "^8.1.0",
@@ -39,5 +20,55 @@
     "shortid": "^2.2.14",
     "tempy": "^0.3.0",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/git": "^7.0.16",
+    "@semantic-release/npm": "^5.1.13",
+    "babel-eslint": "^10.0.2",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
+    "blue-tape": "^1.0.0",
+    "codecov": "^3.5.0",
+    "cz-conventional-changelog": "^3.0.2",
+    "eslint": "^6.2.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3",
+    "husky": "^3.0.4",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-eslint": "^7.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "semantic-release": "^15.13.22",
+    "tape": "^4.11.0"
+  },
+  "homepage": "https://github.com/jdalrymple/node-hg-plus#readme",
+  "keywords": [
+    "client",
+    "gitify",
+    "hg",
+    "mercurial"
+  ],
+  "license": "MIT",
+  "main": "dist/index.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jdalrymple/node-hg-plus"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "commit": "npx git-cz",
+    "coverage": "codecov",
+    "lint": "eslint .",
+    "lint:doc:fix": "prettier --write './*.json' './*.yml' './*.md'",
+    "lint:fix": "eslint --fix .",
+    "test": "nyc ./node_modules/tape/bin/tape tests/**/*.js"
   }
 }
