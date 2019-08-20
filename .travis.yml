@@ -1,16 +1,52 @@
 language: node_js
-node_js:
-  - "node"
-  - "7.6"
-  - "7"
-  - "8"
-  - "9"
-before_install:
-- sudo apt-get update
-- sudo apt-get install python2.7
-- sudo pip install -q https://www.mercurial-scm.org/release/mercurial-4.0.tar.gz
-- cd libs/gitifyhg/
-- sudo python2.7 setup.py install
-- cd $TRAVIS_BUILD_DIR
 
-after_script: "npm run-script coverall"
+stages:
+  - lint
+  - build
+  - test
+  - coverage
+  - release
+
+notifications:
+  email: false
+
+cache:
+  directories:
+    - coverage
+    - dist
+
+jobs:
+  include:
+    - stage: lint
+      node_js: node
+      script:
+        - npm run lint
+        - prettier --check './*.json' './*.yml'
+
+    - stage: build
+      node_js: lts/*
+      script:
+        - npm run build
+
+    - stage: test
+      node_js: lts/*
+      name: 'Unit Tests - Latest LTS'
+      before_install:
+        - sudo apt-get update
+        - sudo apt-get install python2.7
+        - sudo pip install -q https://www.mercurial-scm.org/release/mercurial-4.0.tar.gz
+        - cd libs/gitifyhg/
+        - sudo python2.7 setup.py install
+        - cd $TRAVIS_BUILD_DIR
+      script:
+        - npm run test:unit -- --collectCoverage
+
+    - stage: coverage
+      node_js: node
+      script:
+        - npm run coverage
+
+    - stage: release
+      node_js: node
+      script:
+        - npm run release
