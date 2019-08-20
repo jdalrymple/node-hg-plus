@@ -1,12 +1,11 @@
-const Exec = require('child_process').exec;
-const Promise = require('bluebird');
-const Utils = require('./Utils');
+import { exec } from 'child_process';
+import { asCallback } from './Utils';
 
-function run(command, directory = process.cwd(), options = []) {
+export function run(command, directory = process.cwd(), options = []) {
   return new Promise((resolve, reject) => {
     const commandString = `${command} ${options.join(' ')}`;
 
-    Exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
+    exec(commandString, { cwd: directory }, (error, stdout, stderr) => {
       const output = { error, stdout, stderr };
 
       if (error) {
@@ -19,17 +18,19 @@ function run(command, directory = process.cwd(), options = []) {
   });
 }
 
-async function runWithHandling(command, directory = process.cwd(), options = [], done) {
+export async function runWithHandling(
+  command,
+  directory = process.cwd(),
+  options = [],
+  done,
+) {
+  let output;
+
   try {
-    const output = await run(command, directory, options);
-
-    return Utils.asCallback(output.error, output.stdout, done);
-  } catch (output) {
-    return Utils.asCallback(output.error, output.stdout, done);
+    output = await run(command, directory, options);
+  } catch (error) {
+    output = { error };
   }
-}
 
-module.exports = {
-  run,
-  runWithHandling,
-};
+  return asCallback(output.error, output.stdout, done);
+}

@@ -1,3 +1,3 @@
-const Hg = require('./Hg');
+import Hg from './Hg';
 
-module.exports = options => new Hg(options);
+export default (options) => new Hg(options);

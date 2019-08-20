@@ -1,9 +1,8 @@
-const Path = require('path');
-const { URL } = require('url');
-const Fs = require('fs-extra');
-const Promise = require('bluebird');
+import { basename, join, resolve } from 'path';
+import { URL } from 'url';
+import { move, pathExists, ensureDir } from 'fs-extra';
 
-function asCallback(error, args, callback) {
+export function asCallback(error, args, callback) {
   if (callback) {
     return callback(error, args);
   }
@@ -13,7 +12,7 @@ function asCallback(error, args, callback) {
   return args;
 }
 
-function buildRepoURL(urlObject) {
+export function buildRepoURL(urlObject) {
   if (urlObject.password && urlObject.username) {
     const parsedURL = new URL(urlObject.url);
 
@@ -23,7 +22,7 @@ function buildRepoURL(urlObject) {
   return urlObject.url;
 }
 
-function getRemoteRepoName(url) {
+export function getRemoteRepoName(url) {
   if (!url) return null;
 
   const parsedURL = new URL(url);
@@ -32,43 +31,39 @@ function getRemoteRepoName(url) {
   return split[split.length - 1];
 }
 
-function getBasename(path) {
+export function getBasename(path) {
   if (!path) return null;
 
-  return Path.basename(path);
+  return basename(path);
 }
 
-function moveFiles(source, destination, files) {
+export function moveFiles(source, destination, files) {
   const movePromises = files.map((file) => {
-    const sourcePath = Path.join(source, file);
-    const destinationPath = Path.join(destination, file);
+    const sourcePath = join(source, file);
+    const destinationPath = join(destination, file);
 
-    return Fs.move(sourcePath, destinationPath);
+    return move(sourcePath, destinationPath);
   });
 
   return Promise.all(movePromises);
 }
 
-async function ensureRepoPath(path) {
-  if (await Fs.pathExists(path)) throw new Error(`Repository already exists at this path: ${path}`);
+export async function ensureRepoPath(path) {
+  try {
+    await pathExists(path);
+  } catch (e) {
+    throw new Error(`Repository already exists at this path: ${path}`);
+  }
 
-  return Fs.ensureDir(path);
+  return ensureDir(path);
 }
 
-async function checkForHGFolder(path) {
-  const exists = await Fs.pathExists(Path.resolve(path, '.hg'));
+export async function checkForHGFolder(path) {
+  const exists = await pathExists(resolve(path, '.hg'));
 
   if (!exists) {
-    throw new Error('A local repository does not exist at this location. Check your path arguement');
+    throw new Error(
+      'A local repository does not exist at this location. Check your path arguement',
+    );
   }
 }
-
-module.exports = {
-  getBasename,
-  ensureRepoPath,
-  checkForHGFolder,
-  asCallback,
-  buildRepoURL,
-  getRemoteRepoName,
-  moveFiles,
-};

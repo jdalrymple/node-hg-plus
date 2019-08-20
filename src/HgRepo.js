@@ -1,39 +1,50 @@
-const Fs = require('fs-extra');
-const Path = require('path');
-const Globby = require('globby');
-const Command = require('./Command');
-const Utils = require('./Utils');
+import {
+  readFileSync, renameSync, outputFile, remove,
+} from 'fs-extra';
+import { resolve, dirname, join } from 'path';
+import Globby from 'globby';
+import { run, runWithHandling } from './Command';
+import {
+  asCallback, buildRepoURL, getBasename, getRemoteRepoName,
+} from './Utils';
 
-async function ensureGitify(pythonPath) {
+function ensureGitify(pythonPath) {
   try {
-    await Command.run(`${pythonPath} -c 'import gitifyhg'`);
+    return run(`${pythonPath} -c 'import gitifyhg'`);
   } catch (output) {
     if (output.error.message.includes('ImportError')) {
-      const gitifyPath = Path.resolve('utils', 'gitifyhg', 'setup.py');
+      const gitifyPath = resolve('utils', 'gitifyhg', 'setup.py');
 
       throw new ReferenceError(
         `Must install gitifyhg. Run this command: ${pythonPath} ${gitifyPath} install`,
       );
     }
+
+    throw output;
   }
 }
 
-class HgRepo {
-  constructor({ name, url, username = '', password = '', path } = {}, pythonPath = 'python') {
-    if (!url && !path && !name)
+export default class HgRepo {
+  constructor({
+    name, url, username = '', password = '', path,
+  } = {}, pythonPath = 'python') {
+    if (!url && !path && !name) {
       throw new Error(
         'Must supply a remote url, a name, or a path when creating a HgRepo instance',
       );
+    }
 
     this.url = url;
     this.username = username;
     this.password = password;
     this.pythonPath = pythonPath;
-    this.name = name || Utils.getBasename(path) || Utils.getRemoteRepoName(url);
-    this.path = path || Path.join(process.cwd(), this.name);
+    this.name = name || getBasename(path) || getRemoteRepoName(url);
+    this.path = path || join(process.cwd(), this.name);
   }
 
-  async add({ files = [''], include, exclude, subrepos = false, dryRun = false } = {}, done) {
+  async add({
+    files = [''], include, exclude, subrepos = false, dryRun = false,
+  } = {}, done) {
     const optionArgs = [];
 
     optionArgs.push(files.join(' '));
@@ -43,7 +54,7 @@ class HgRepo {
     if (subrepos) optionArgs.push(' -S');
     if (dryRun) optionArgs.push(' -n');
 
-    return Command.runWithHandling('hg add', this.path, optionArgs, done);
+    return runWithHandling('hg add', this.path, optionArgs, done);
   }
 
   async checkout(updateOptions = {}, done) {
@@ -62,26 +73,26 @@ class HgRepo {
 
     // Cant use wrapper since this failure isnt an error
     try {
-      output = await Command.run('hg commit', this.path, optionalArgs);
+      output = await run('hg commit', this.path, optionalArgs);
     } catch (e) {
       output = { stdout: e.stdout };
 
       if (!e.stdout.includes('nothing changed')) output.error = e;
     }
 
-    return Utils.asCallback(output.error, output.stdout, done);
+    return asCallback(output.error, output.stdout, done);
   }
 
   async gitify(
     {
-      path = Path.resolve(Path.dirname(this.path), `${this.name}-git`),
+      path = resolve(dirname(this.path), `${this.name}-git`),
       remoteURL,
       trackAll = false,
       clean = false,
     } = {},
     done,
   ) {
-    const checkVersion = await Command.run(`${this.pythonPath} -V`);
+    const checkVersion = await run(`${this.pythonPath} -V`);
     let cloneCmd;
 
     if (clean) {
@@ -95,15 +106,15 @@ class HgRepo {
     }
 
     await ensureGitify(this.pythonPath);
-    await Command.run(cloneCmd);
+    await run(cloneCmd);
 
     // Remove .hgtags from each folder
     const files = await Globby(['**/.hgtags'], { onlyFiles: false, dot: true, cwd: path });
 
     if (files.length) {
-      await Promise.all(files.map(hgpath => Fs.remove(Path.resolve(path, hgpath))));
-      await Command.run('git add', path, ['-A']);
-      await Command.run('git commit', path, ['-m "Removing .hgtags"']);
+      await Promise.all(files.map((hgpath) => remove(resolve(path, hgpath))));
+      await run('git add', path, ['-A']);
+      await run('git commit', path, ['-m "Removing .hgtags"']);
     }
 
     // Rename .hgignore to .gitignore, and remove the line syntax:*
@@ -114,27 +125,26 @@ class HgRepo {
     });
 
     if (hgIgnoreFiles.length) {
-      await Promise.all(
-        hgIgnoreFiles.map(async ignoreFile => {
-          const dir = Path.dirname(ignoreFile);
-          const newPath = Path.resolve(path, dir, '.gitignore');
+      const ignoredFiles = hgIgnoreFiles.map((ignoreFile) => {
+        const dir = dirname(ignoreFile);
+        const newPath = resolve(path, dir, '.gitignore');
 
-          Fs.renameSync(Path.resolve(path, ignoreFile), newPath);
+        renameSync(resolve(path, ignoreFile), newPath);
 
-          const data = Fs.readFileSync(newPath, 'utf8');
+        const data = readFileSync(newPath, 'utf8');
 
-          return Fs.outputFile(newPath, data.replace(/syntax(.*)\n/, ''));
-        }),
-      );
+        return outputFile(newPath, data.replace(/syntax(.*)\n/, ''));
+      });
 
-      await Command.run('git add', path, ['-A']);
-      await Command.run('git commit', path, [
+      await Promise.all(ignoredFiles);
+      await run('git add', path, ['-A']);
+      await run('git commit', path, [
         '-m "Changing .hgignore to be .gitignore and removing syntax line"',
       ]);
     }
 
     if (remoteURL) {
-      await Command.run('git remote set-url origin', path, [remoteURL]);
+      await run('git remote set-url origin', path, [remoteURL]);
     }
 
     if (trackAll) {
@@ -142,20 +152,22 @@ class HgRepo {
       trackCmd += ' git branch --track ${branch##*/} $branch; \n'; // eslint-disable-line no-template-curly-in-string
       trackCmd += 'done';
 
-      await Command.run(trackCmd, path);
+      await run(trackCmd, path);
     }
 
-    await Fs.remove(Path.join(path, '.git', 'hg'));
-    await Fs.remove(Path.join(path, '.git', 'refs', 'hg'));
+    await remove(join(path, '.git', 'hg'));
+    await remove(join(path, '.git', 'refs', 'hg'));
 
-    return Utils.asCallback(null, null, done);
+    return asCallback(null, null, done);
   }
 
   async init() {
-    return Command.runWithHandling('hg init', this.path);
+    return runWithHandling('hg init', this.path);
   }
 
-  async merge({ force = false, revision, preview = false, tool } = {}, done) {
+  async merge({
+    force = false, revision, preview = false, tool,
+  } = {}, done) {
     const optionArgs = [];
 
     if (force) optionArgs.push(' -f');
@@ -163,15 +175,15 @@ class HgRepo {
     if (preview) optionArgs.push(' -p');
     if (tool) optionArgs.push(` -t ${tool}`);
 
-    return Command.runWithHandling('hg merge', this.path, optionArgs, done);
+    return runWithHandling('hg merge', this.path, optionArgs, done);
   }
 
   async paths(done) {
-    const pathsString = await Command.run('hg paths', this.path);
+    const pathsString = await run('hg paths', this.path);
     const paths = {};
     const lines = pathsString.stdout.split('\n');
 
-    lines.forEach(line => {
+    lines.forEach((line) => {
       if (line === '') return;
 
       const name = line.match(/(^.+)\s=/)[0];
@@ -180,7 +192,7 @@ class HgRepo {
       paths[cleanedName] = line.replace(name, '').trim();
     });
 
-    return Utils.asCallback(null, paths, done);
+    return asCallback(null, paths, done);
   }
 
   async pull(
@@ -212,7 +224,7 @@ class HgRepo {
     if (ssh) optionArgs.push(` -e ${ssh}`);
     if (insecure) optionArgs.push(' --insecure');
 
-    return Command.runWithHandling('hg pull', this.path, optionArgs, done);
+    return runWithHandling('hg pull', this.path, optionArgs, done);
   }
 
   async push(
@@ -234,7 +246,7 @@ class HgRepo {
 
     if (!destination) throw new Error('Missing remote url to push to');
 
-    optionArgs.push(Utils.buildRepoURL({ username, password, url: destination }));
+    optionArgs.push(buildRepoURL({ username, password, url: destination }));
 
     if (force) optionArgs.push(' -f');
     if (revision) optionArgs.push(` -r ${revision}`);
@@ -244,11 +256,13 @@ class HgRepo {
     if (ssh) optionArgs.push(` -e ${ssh}`);
     if (insecure) optionArgs.push(' --insecure');
 
-    return Command.runWithHandling('hg push', this.path, optionArgs, done);
+    return runWithHandling('hg push', this.path, optionArgs, done);
   }
 
   async remove(
-    { files = [''], include, exclude, subrepos = false, force = false, after = false } = {},
+    {
+      files = [''], include, exclude, subrepos = false, force = false, after = false,
+    } = {},
     done,
   ) {
     const optionArgs = [];
@@ -261,13 +275,15 @@ class HgRepo {
     if (force) optionArgs.push(' -f');
     if (after) optionArgs.push(' -A');
 
-    return Command.runWithHandling('hg remove', this.path, optionArgs, done);
+    return runWithHandling('hg remove', this.path, optionArgs, done);
   }
 
   async rename(
     source,
     destination,
-    { after = false, force = false, include, exclude, dryRun = false } = {},
+    {
+      after = false, force = false, include, exclude, dryRun = false,
+    } = {},
     done,
   ) {
     const optionArgs = [];
@@ -281,10 +297,12 @@ class HgRepo {
     if (exclude) optionArgs.push(` -X ${exclude}`);
     if (dryRun) optionArgs.push(' -n');
 
-    return Command.runWithHandling('hg rename', this.path, optionArgs, done);
+    return runWithHandling('hg rename', this.path, optionArgs, done);
   }
 
-  async update({ clean = false, check = false, revision, tool, branchOrTag } = {}, done) {
+  async update({
+    clean = false, check = false, revision, tool, branchOrTag,
+  } = {}, done) {
     const optionArgs = [];
 
     if (branchOrTag) optionArgs.push(branchOrTag);
@@ -294,7 +312,7 @@ class HgRepo {
     if (check) optionArgs.push(' -c');
     if (tool) optionArgs.push(` -t ${tool}`);
 
-    return Command.runWithHandling('hg update', this.path, optionArgs, done);
+    return runWithHandling('hg update', this.path, optionArgs, done);
   }
 
   async tag({ force = true, message, tagName } = {}, done) {
@@ -304,8 +322,6 @@ class HgRepo {
     if (force) optionArgs.push(' -f');
     if (message) optionArgs.push(` -m ${message}`);
 
-    return Command.runWithHandling('hg tag', this.path, optionArgs, done);
+    return runWithHandling('hg tag', this.path, optionArgs, done);
   }
 }
-
-module.exports = HgRepo;

@@ -1,12 +1,49 @@
-const ShortID = require('shortid');
-const Path = require('path');
-const Tempy = require('tempy');
-const Globby = require('globby');
-const { URL } = require('url');
-const Promise = require('bluebird');
-const HgRepo = require('./HgRepo');
-const Command = require('./Command');
-const Utils = require('./Utils');
+import ShortID from 'shortid';
+import { join, basename } from 'path';
+import { directory } from 'tempy';
+import Globby from 'globby';
+import { URL } from 'url';
+import HgRepo from './HgRepo';
+import { run, runWithHandling } from './Command';
+import {
+  getRemoteRepoName,
+  ensureRepoPath,
+  buildRepoURL,
+  moveFiles,
+  asCallback,
+  checkForHGFolder,
+} from './Utils';
+
+async function cloneSingle(from, to, pythonPath) {
+  let repo;
+  let url;
+
+  if (from.constructor === Object) {
+    repo = new HgRepo(
+      to || {
+        url: from.url,
+        password: from.password,
+        username: from.username,
+      },
+      pythonPath,
+    );
+
+    url = buildRepoURL(from);
+  } else {
+    repo = new HgRepo(
+      to || {
+        url: from,
+      },
+      pythonPath,
+    );
+    url = from;
+  }
+
+  await ensureRepoPath(repo.path);
+  await run('hg clone', repo.path, [url, repo.path]);
+
+  return repo;
+}
 
 async function getSourceInfo(source, pythonPath) {
   let sourceRepoPath;
@@ -24,65 +61,33 @@ async function getSourceInfo(source, pythonPath) {
 
   try {
     const url = new URL(sourceURL).hostname;
-    const tmpDir = Tempy.directory();
+    const tmpDir = directory();
 
-    sourceRepoName = Utils.getRemoteRepoName(sourceURL);
-    sourceRepoPath = Path.join(tmpDir, sourceRepoName);
+    sourceRepoName = getRemoteRepoName(url);
+    sourceRepoPath = join(tmpDir, sourceRepoName);
 
     await cloneSingle(source, { path: sourceRepoPath, url: sourceURL }, pythonPath);
   } catch (error) {
     if (
-      error.code !== 'ERR_INVALID_URL' &&
-      !(error.message && error.message.includes('Invalid URL'))
-    )
-      throw error;
+      error.code !== 'ERR_INVALID_URL'
+      && !(error.message && error.message.includes('Invalid URL'))
+    ) throw error;
 
     sourceRepoPath = source;
-    sourceRepoName = Path.basename(source);
+    sourceRepoName = basename(source);
   }
 
   return [sourceRepoName, sourceRepoPath];
-}
-
-async function cloneSingle(from, to, pythonPath) {
-  let repo;
-  let url;
-
-  if (from.constructor === Object) {
-    repo = new HgRepo(
-      to || {
-        url: from.url,
-        password: from.password,
-        username: from.username,
-      },
-      pythonPath,
-    );
-
-    url = Utils.buildRepoURL(from);
-  } else {
-    repo = new HgRepo(
-      to || {
-        url: from,
-      },
-      pythonPath,
-    );
-    url = from;
-  }
-
-  await Utils.ensureRepoPath(repo.path);
-  await Command.run('hg clone', repo.path, [url, repo.path]);
-
-  return repo;
 }
 
 async function cloneMultipleAndMerge(from, to, pythonPath) {
   const mergedRepos = [];
   const combinedRepo = new HgRepo(to, pythonPath);
 
-  await Utils.ensureRepoPath(combinedRepo.path);
+  await ensureRepoPath(combinedRepo.path);
   await combinedRepo.init();
 
-  await Promise.each(from, async repo => {
+  const processing = from.map(async (repo) => {
     const [repoName, repoPath] = await getSourceInfo(repo, pythonPath);
     let repoDir = repoName;
 
@@ -98,9 +103,9 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
       dot: true,
       cwd: combinedRepo.path,
     });
-    const subDirectory = Path.join(combinedRepo.path, repoDir);
+    const subDirectory = join(combinedRepo.path, repoDir);
 
-    await Utils.moveFiles(combinedRepo.path, subDirectory, files);
+    await moveFiles(combinedRepo.path, subDirectory, files);
     await combinedRepo.add();
 
     try {
@@ -121,18 +126,19 @@ async function cloneMultipleAndMerge(from, to, pythonPath) {
       await combinedRepo.commit(`Merging ${repoName} into combined`);
     } catch (error) {
       if (
-        !error.message.includes('nothing to merge') &&
-        !error.message.includes('merging with a working directory ancestor')
+        !error.message.includes('nothing to merge')
+        && !error.message.includes('merging with a working directory ancestor')
       ) {
         throw error;
       }
     }
   });
 
+  await Promise.all(processing);
   return combinedRepo;
 }
 
-class Hg {
+export default class Hg {
   constructor({ path = 'python' } = {}) {
     this.pythonPath = path;
   }
@@ -157,7 +163,7 @@ class Hg {
       error = e;
     }
 
-    return Utils.asCallback(error, repo, done);
+    return asCallback(error, repo, done);
   }
 
   async create(to, done) {
@@ -167,17 +173,17 @@ class Hg {
     try {
       repo = new HgRepo(to, this.pythonPath);
 
-      await Utils.ensureRepoPath(repo.path);
+      await ensureRepoPath(repo.path);
       await repo.init();
     } catch (e) {
       error = e;
     }
 
-    return Utils.asCallback(error, repo, done);
+    return asCallback(error, repo, done);
   }
 
   async getRepo({ path = process.cwd(), username, password } = {}) {
-    await Utils.checkForHGFolder(path);
+    await checkForHGFolder(path);
 
     const repo = new HgRepo({ path, username, password }, this.pythonPath);
     const paths = await repo.paths();
@@ -201,12 +207,10 @@ class Hg {
   }
 
   static async version(done) {
-    return Command.runWithHandling('hg --version', undefined, undefined, done);
+    return runWithHandling('hg --version', undefined, undefined, done);
   }
 
   static async identify(remoteUrl, done) {
-    return Command.runWithHandling(`hg identify ${remoteUrl}`, undefined, undefined, done);
+    return runWithHandling(`hg identify ${remoteUrl}`, undefined, undefined, done);
   }
 }
-
-module.exports = Hg;
