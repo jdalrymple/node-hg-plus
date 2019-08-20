@@ -65,9 +65,9 @@
     "build": "rollup -c",
     "commit": "npx git-cz",
     "coverage": "codecov",
-    "lint": "eslint .",
+    "lint": "eslint '**/*.js' --ignore-pattern node_modules/ --ignore-pattern dist/",
     "lint:doc:fix": "prettier --write './*.json' './*.yml' './*.md'",
-    "lint:fix": "eslint --fix .",
+    "lint:fix": "npm run lint -- --fix",
     "test": "jest test --debug -c=jest.config.json"
   }
 }
