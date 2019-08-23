@@ -1,9 +1,7 @@
 import { join, resolve } from 'path';
 import DirectoryCompare from 'dir-compare';
 import IsThere from 'is-there';
-import {
-  remove, ensureFile, writeFile, readdir,
-} from 'fs-extra';
+import { remove, ensureFile, writeFile, readdir } from 'fs-extra';
 import { run } from '../src/Command';
 import HG from '../src/index';
 
@@ -34,7 +32,7 @@ async function createTestRepositories() {
   await writeFile(testFile3, 'Readme3');
 
   await Promise.all(
-    [testDir1, testDir2, testDir3].map(async (directory) => {
+    [testDir1, testDir2, testDir3].map(async directory => {
       await run('hg init', directory);
       await run('hg add', directory);
       await run('hg commit', directory, ['-m', '"Init Commit"']);
@@ -116,9 +114,9 @@ test('Cloning multiple clashing Hg repositories into one.', async () => {
   await Hg.clone([testRepo1, testRepo2], to);
 
   const directories = await readdir(outputDirectory);
-  const noHiddenDirectories = directories.filter((directory) => !directory.includes('.'));
+  const noHiddenDirectories = directories.filter(directory => !directory.includes('.'));
 
-  noHiddenDirectories.forEach((directory) => {
+  noHiddenDirectories.forEach(directory => {
     expect(directory.includes('repository2')).toBeTruthy();
 
     if (directory === 'repository2') {
